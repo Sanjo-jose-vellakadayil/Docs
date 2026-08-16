@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VandiPilot — Implementation Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --bg: #0B1826;
+    --bg-panel: #0F1E30;
+    --bg-panel-2: #142A40;
+    --bg-panel-3: #18324B;
+    --grid-line: rgba(148,190,210,0.07);
+    --border: rgba(148,190,210,0.16);
+    --border-soft: rgba(148,190,210,0.09);
+    --cyan: #5FD0E0;
+    --cyan-dim: #3A8A99;
+    --amber: #F2A93B;
+    --amber-dim: #B87E22;
+    --text: #E8EFF3;
+    --text-muted: #92AAB8;
+    --text-dim: #5C7686;
+    --success: #6FCF97;
+    --danger: #E5697A;
+    --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+    --sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    --sidebar-w: 268px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- background grid texture ---------- */
+  .blueprint-grid{
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  a{color:var(--cyan);}
+  h1,h2,h3,h4{font-family:var(--mono); font-weight:600; letter-spacing:0.01em; margin:0;}
+  p{margin:0 0 14px 0;}
+  code, .mono{font-family:var(--mono);}
+
+  ::selection{background:var(--amber); color:#1a1206;}
+
+  /* scrollbar */
+  ::-webkit-scrollbar{width:10px; height:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--bg-panel-3); border-radius:6px;}
+
+  /* ---------- corner crop marks ---------- */
+  .crop{position:absolute; width:18px; height:18px; pointer-events:none;}
+  .crop::before, .crop::after{content:""; position:absolute; background:var(--cyan-dim);}
+  .crop.tl{top:14px; left:14px;}
+  .crop.tr{top:14px; right:14px;}
+  .crop.bl{bottom:14px; left:14px;}
+  .crop.br{bottom:14px; right:14px;}
+  .crop::before{width:100%; height:2px; top:0; left:0;}
+  .crop::after{width:2px; height:100%; top:0; left:0;}
+  .crop.tr::before{left:auto; right:0;}
+  .crop.tr::after{left:auto; right:0;}
+  .crop.bl::before{top:auto; bottom:0;}
+  .crop.bl::after{top:auto; bottom:0;}
+  .crop.br::before{top:auto; bottom:0; left:auto; right:0;}
+  .crop.br::after{top:auto; bottom:0; left:auto; right:0;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    padding:74px 40px 56px;
+    border-bottom:1px solid var(--border);
+    overflow:hidden;
+  }
+  .hero-inner{max-width:920px; margin:0 auto; position:relative; z-index:2;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:12px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--amber); border:1px solid var(--amber-dim); padding:5px 12px; border-radius:2px;
+    margin-bottom:26px;
+  }
+  .eyebrow::before{content:""; width:6px; height:6px; background:var(--amber); display:inline-block;}
+  .hero h1{
+    font-size:clamp(38px, 6vw, 64px);
+    line-height:1.02;
+    color:var(--text);
+  }
+  .hero h1 span{color:var(--cyan);}
+  .hero .sub{
+    font-size:18px; color:var(--text-muted); max-width:620px; margin-top:18px; font-family:var(--sans);
+  }
+  .stackline{
+    display:flex; flex-wrap:wrap; gap:10px; margin-top:32px;
+  }
+  .pill{
+    font-family:var(--mono); font-size:12.5px; color:var(--text-muted);
+    border:1px solid var(--border); padding:6px 12px; border-radius:2px; background:var(--bg-panel);
+  }
+  .pill b{color:var(--text); font-weight:600;}
+
+  /* ---------- layout ---------- */
+  .layout{display:flex; align-items:flex-start;}
+  .toc{
+    position:sticky; top:0; height:100vh; width:var(--sidebar-w); flex-shrink:0;
+    border-right:1px solid var(--border); padding:28px 0 28px 40px;
+    overflow-y:auto;
+  }
+  .toc-title{font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-dim); margin-bottom:16px;}
+  .toc nav a{
+    display:block; font-family:var(--mono); font-size:13px; color:var(--text-muted);
+    text-decoration:none; padding:6px 0; border-left:2px solid transparent; padding-left:12px;
+    transition:color .15s, border-color .15s;
+  }
+  .toc nav a:hover{color:var(--text);}
+  .toc nav a.active{color:var(--cyan); border-left-color:var(--cyan);}
+  .toc .grp{margin-top:16px;}
+
+  main{flex:1; min-width:0; padding:0 40px 20px;}
+  .content-wrap{max-width:900px; margin:0 auto; padding-top:8px;}
+
+  section{padding:56px 0; border-bottom:1px solid var(--border-soft); scroll-margin-top:24px;}
+  section:last-of-type{border-bottom:none;}
+
+  .sec-label{
+    font-family:var(--mono); font-size:12px; color:var(--cyan); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:10px;
+  }
+  h2.sec-title{font-size:28px; margin-bottom:8px;}
+  .sec-desc{color:var(--text-muted); max-width:640px; margin-bottom:30px; margin-top:10px;}
+
+  /* nav toggle for mobile */
+  #nav-toggle{display:none;}
+  .nav-btn{display:none;}
+
+  /* ---------- callouts ---------- */
+  .callout{
+    border:1px solid var(--border); border-left:3px solid var(--amber);
+    background:var(--bg-panel); padding:16px 18px; border-radius:2px; margin-bottom:14px;
+    position:relative;
+  }
+  .callout.warn{border-left-color:var(--danger);}
+  .callout .tag{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber);
+    display:block; margin-bottom:6px;
+  }
+  .callout.warn .tag{color:var(--danger);}
+  .callout p{margin:0; color:var(--text-muted); font-size:14.5px;}
+  .callout strong{color:var(--text);}
+
+  .qlist{list-style:none; margin:0; padding:0; counter-reset:q;}
+  .qlist li{
+    counter-increment:q; position:relative; padding:14px 0 14px 42px; border-top:1px solid var(--border-soft);
+    color:var(--text-muted); font-size:14.5px;
+  }
+  .qlist li:first-child{border-top:none;}
+  .qlist li::before{
+    content:counter(q,decimal-leading-zero); position:absolute; left:0; top:14px;
+    font-family:var(--mono); color:var(--cyan); font-size:13px;
+  }
+  .qlist li strong{color:var(--text); display:block; margin-bottom:3px; font-family:var(--sans);}
+
+  /* ---------- tech stack table ---------- */
+  table{width:100%; border-collapse:collapse; font-size:14.5px;}
+  th,td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--border-soft);}
+  th{font-family:var(--mono); font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-dim); font-weight:500;}
+  td{color:var(--text-muted);}
+  td b, td strong{color:var(--text); font-weight:500;}
+  tr:last-child td{border-bottom:none;}
+  .stack-table{margin-bottom:8px;}
+
+  /* ---------- diagram frame ---------- */
+  .diagram{
+    background:var(--bg-panel); border:1px solid var(--border); border-radius:3px;
+    padding:22px 18px 14px; margin:22px 0 8px; position:relative;
+  }
+  .diagram svg{width:100%; height:auto; display:block;}
+  .fig-caption{
+    font-family:var(--mono); font-size:11.5px; color:var(--text-dim); text-align:center;
+    padding-top:10px; margin-top:6px; border-top:1px dashed var(--border);
+    letter-spacing:0.04em;
+  }
+  .fig-caption b{color:var(--text-muted);}
+
+  /* ---------- sitemap tree (CSS) ---------- */
+  .tree{font-family:var(--mono); font-size:13.5px;}
+  .tree-root{color:var(--amber); margin-bottom:6px;}
+  .branch{margin-left:18px; border-left:1px solid var(--border); padding-left:18px; margin-top:6px;}
+  .branch-head{color:var(--cyan); position:relative; margin-bottom:4px;}
+  .branch-head::before{content:"├─"; color:var(--text-dim); margin-right:6px;}
+  .leaf{position:relative; color:var(--text-muted); padding:3px 0 3px 0;}
+  .leaf::before{content:"│  └─"; color:var(--text-dim); margin-right:6px; white-space:pre;}
+  .leaf .path{color:var(--text);}
+  .leaf .desc{color:var(--text-dim); font-family:var(--sans); font-size:12.5px; margin-left:8px;}
+  .leaf .tag-role{
+    font-size:10px; border:1px solid var(--border); color:var(--text-dim); padding:1px 6px; margin-left:8px; border-radius:8px; letter-spacing:0.05em;
+  }
+
+  /* ---------- module grid cards ---------- */
+  .mod-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:8px;}
+  .mod-card{background:var(--bg-panel); border:1px solid var(--border); border-radius:3px; padding:20px;}
+  .mod-card h3{font-size:14px; color:var(--cyan); margin-bottom:4px;}
+  .mod-card .role-tag{font-family:var(--mono); font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.1em;}
+  .mod-card ul{margin:14px 0 0; padding:0; list-style:none;}
+  .mod-card li{
+    font-size:13px; color:var(--text-muted); padding:8px 0 8px 16px; border-top:1px solid var(--border-soft); position:relative;
+  }
+  .mod-card li:first-child{border-top:none;}
+  .mod-card li::before{content:"›"; position:absolute; left:0; top:8px; color:var(--amber);}
+  .mod-card li b{color:var(--text); font-weight:500; display:block; font-family:var(--mono); font-size:12.5px; margin-bottom:2px;}
+
+  /* ---------- fare bar ---------- */
+  .fare-eq{font-family:var(--mono); font-size:14px; color:var(--text-muted); text-align:center; margin-bottom:18px;}
+  .fare-eq b{color:var(--text);}
+  .fare-bar{display:flex; height:44px; border-radius:2px; overflow:hidden; border:1px solid var(--border);}
+  .fare-bar .driver{width:90%; background:linear-gradient(180deg, var(--cyan-dim), var(--bg-panel-3)); display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:12.5px; color:var(--text);}
+  .fare-bar .commission{width:10%; background:linear-gradient(180deg, var(--amber-dim), var(--bg-panel-3)); display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:11px; color:var(--text);}
+  .fare-labels{display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--text-dim); margin-top:8px;}
+
+  /* ---------- checklist ---------- */
+  .checklist{list-style:none; margin:0; padding:0;}
+  .checklist li{
+    display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-top:1px solid var(--border-soft); font-size:14.5px; color:var(--text-muted);
+  }
+  .checklist li:first-child{border-top:none;}
+  .checklist .box{
+    flex-shrink:0; width:16px; height:16px; border:1px solid var(--cyan-dim); margin-top:3px; position:relative; border-radius:2px;
+  }
+  .checklist li strong{color:var(--text); font-weight:500;}
+  .col2{display:grid; grid-template-columns:1fr 1fr; gap:0 32px;}
+
+  /* ---------- timeline (build phases) ---------- */
+  .timeline{position:relative; margin-top:12px; padding-left:8px;}
+  .tl-item{position:relative; padding:0 0 34px 46px; border-left:1px dashed var(--border);}
+  .tl-item:last-child{border-left:1px dashed transparent; padding-bottom:0;}
+  .tl-badge{
+    position:absolute; left:-19px; top:0; width:38px; height:38px; border-radius:50%;
+    background:var(--bg-panel-2); border:1px solid var(--cyan-dim); color:var(--cyan);
+    display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:14px; font-weight:600;
+  }
+  .tl-content{background:var(--bg-panel); border:1px solid var(--border); border-radius:3px; padding:16px 18px;}
+  .tl-content h4{font-size:14.5px; color:var(--text); margin-bottom:8px;}
+  .tl-content ul{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:4px 18px;}
+  .tl-content li{font-size:13px; color:var(--text-muted); padding-left:14px; position:relative;}
+  .tl-content li::before{content:"–"; position:absolute; left:0; color:var(--text-dim);}
+
+  /* ---------- schema details ---------- */
+  details.schema{
+    background:var(--bg-panel); border:1px solid var(--border); border-radius:3px; margin-bottom:10px; overflow:hidden;
+  }
+  details.schema summary{
+    cursor:pointer; list-style:none; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;
+    font-family:var(--mono); font-size:13.5px; color:var(--text);
+  }
+  details.schema summary::-webkit-details-marker{display:none;}
+  details.schema summary::after{content:"+"; color:var(--cyan); font-size:16px;}
+  details.schema[open] summary::after{content:"–";}
+  details.schema summary .note{color:var(--text-dim); font-family:var(--sans); font-size:12px; margin-left:10px; font-weight:400;}
+  details.schema .schema-body{padding:0 18px 16px;}
+
+  /* ---------- footer title block ---------- */
+  .titleblock-wrap{position:relative; padding:60px 40px 50px; border-top:1px solid var(--border);}
+  .titleblock{
+    max-width:900px; margin:0 auto; background:var(--bg-panel); border:1px solid var(--border); position:relative;
+  }
+  .tb-grid{display:grid; grid-template-columns:2fr 1fr 1fr 1fr;}
+  .tb-cell{padding:16px 18px; border-right:1px solid var(--border); border-bottom:1px solid var(--border);}
+  .tb-cell:last-child{border-right:none;}
+  .tb-cell .k{font-family:var(--mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px;}
+  .tb-cell .v{font-family:var(--mono); font-size:13.5px; color:var(--text);}
+  .tb-full{grid-column:1/-1;}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:980px){
+    .mod-grid{grid-template-columns:1fr;}
+    .tl-content ul{grid-template-columns:1fr;}
+    .col2{grid-template-columns:1fr;}
+    .tb-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:860px){
+    .toc{
+      position:fixed; left:0; top:0; z-index:50; background:var(--bg);
+      transform:translateX(-100%); transition:transform .2s ease; box-shadow:20px 0 40px rgba(0,0,0,0.4);
+    }
+    #nav-toggle:checked ~ .layout .toc{transform:translateX(0);}
+    .nav-btn{
+      display:flex; position:fixed; bottom:20px; right:20px; z-index:60; width:52px; height:52px; border-radius:50%;
+      background:var(--cyan); color:#04222a; align-items:center; justify-content:center; font-family:var(--mono); font-size:20px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.4); cursor:pointer; border:none;
+    }
+    main{padding:0 20px 20px;}
+    .hero{padding:56px 20px 40px;}
+  }
+  @media (min-width:861px){
+    .nav-btn{display:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- shared arrow marker defs (referenced by url(#arrow) across all inline SVGs in this document) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5FD0E0"></path>
+    </marker>
+    <marker id="arrow-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#F2A93B"></path>
+    </marker>
+  </defs>
+</svg>
+
+<input type="checkbox" id="nav-toggle">
+<label for="nav-toggle" class="nav-btn">≡</label>
+
+<!-- ============ HERO ============ -->
+<div class="hero blueprint-grid">
+  <span class="crop tl"></span><span class="crop tr"></span>
+  <div class="hero-inner">
+    <span class="eyebrow">Implementation Blueprint · Rev 1.0</span>
+    <h1>Vandi<span>Pilot</span></h1>
+    <p class="sub">A responsive three-sided marketplace connecting <b style="color:var(--text)">customers</b>, <b style="color:var(--text)">driver-pilots</b>, and an <b style="color:var(--text)">admin operator</b> — booking, dispatch, live trip tracking, and fare settlement in one system.</p>
+    <div class="stackline">
+      <span class="pill"><b>Next.js 15</b> · App Router</span>
+      <span class="pill"><b>TypeScript</b></span>
+      <span class="pill"><b>Tailwind v4</b> + Shadcn/UI</span>
+      <span class="pill"><b>Supabase</b> · Auth / Postgres / Storage</span>
+      <span class="pill"><b>Vercel</b> · Hosting</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- ============ TOC ============ -->
+  <aside class="toc">
+    <div class="toc-title">Contents</div>
+    <nav>
+      <a href="#decisions">01 · Decisions Needed</a>
+      <a href="#stack">02 · Tech Stack</a>
+      <a href="#routes">03 · Route Architecture</a>
+      <a href="#schema">04 · Database Schema</a>
+      <a href="#lifecycle">05 · Booking Lifecycle</a>
+      <a href="#modules">06 · Customer / Driver / Admin</a>
+      <a href="#shared">07 · Shared Systems</a>
+      <a href="#verify">08 · Verification Plan</a>
+      <a href="#phases">09 · Build Phases</a>
+    </nav>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main>
+  <div class="content-wrap">
+
+    <!-- 01 DECISIONS -->
+    <section id="decisions">
+      <div class="sec-label">Fig. 00 — Open Items</div>
+      <h2 class="sec-title">Decisions needed before build</h2>
+      <p class="sec-desc">Three items block or reshape Phase 1, plus three open product questions that affect the booking flow and driver-profile schema.</p>
+
+      <div class="callout">
+        <span class="tag">⬤ Brand refresh</span>
+        <p>A completely new color scheme and design language has been requested. <strong>2–3 mockup options</strong> are needed for the client to pick a direction (warm vs. cool tones, light vs. dark primary theme) before UI build begins.</p>
+      </div>
+      <div class="callout">
+        <span class="tag">⬤ Supabase project</span>
+        <p>Requires a Supabase project URL + anon key, plus a <strong>Google OAuth client ID/secret</strong> configured in Supabase Auth settings.</p>
+      </div>
+      <div class="callout warn">
+        <span class="tag">▲ Admin email (hardcoded)</span>
+        <p>The admin role is resolved by matching a hardcoded Gmail address. <strong>Confirmation of which account</strong> is required before the auth middleware can be finalized.</p>
+      </div>
+
+      <ul class="qlist" style="margin-top:28px;">
+        <li><strong>Driver background-check criteria</strong>Which checks are actually performed (Aadhaar verification, police clearance, driving test, reference calls)? Displayed on the landing page and stored on the driver profile.</li>
+        <li><strong>Booking time granularity</strong>30-minute slots, 1-hour slots, or a free-form time picker?</li>
+        <li><strong>Multi-stop trips</strong>Does a trip support multiple stops (Pickup → Hospital → Pharmacy → Home), or is it always a single destination with round-trip?</li>
+      </ul>
+    </section>
+
+    <!-- 02 STACK -->
+    <section id="stack">
+      <div class="sec-label">Fig. 01 — Platform</div>
+      <h2 class="sec-title">Tech stack</h2>
+      <p class="sec-desc">A managed, low-ops stack: one hosting target, one framework, one backend platform covering auth, database, and file storage.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 880 330" xmlns="http://www.w3.org/2000/svg">
+          <rect x="40" y="18" width="800" height="58" rx="3" fill="#142A40" stroke="#5FD0E0" stroke-opacity="0.5"></rect>
+          <text x="440" y="42" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="14" font-weight="600">Vercel</text>
+          <text x="440" y="62" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="11.5">Hosting · Edge Network · CI/CD</text>
+
+          <line x1="440" y1="76" x2="440" y2="104" stroke="#3A8A99" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+          <rect x="40" y="106" width="800" height="58" rx="3" fill="#142A40" stroke="#5FD0E0" stroke-opacity="0.5"></rect>
+          <text x="440" y="130" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="14" font-weight="600">Next.js 15 — App Router</text>
+          <text x="440" y="150" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="11.5">TypeScript · Tailwind CSS v4 · Shadcn/UI</text>
+
+          <line x1="440" y1="164" x2="440" y2="184" stroke="#3A8A99" stroke-width="1.5"></line>
+          <line x1="170" y1="184" x2="710" y2="184" stroke="#3A8A99" stroke-width="1.5"></line>
+          <line x1="170" y1="184" x2="170" y2="204" stroke="#3A8A99" stroke-width="1.5" marker-end="url(#arrow)"></line>
+          <line x1="440" y1="184" x2="440" y2="204" stroke="#3A8A99" stroke-width="1.5" marker-end="url(#arrow)"></line>
+          <line x1="710" y1="184" x2="710" y2="204" stroke="#3A8A99" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+          <text x="440" y="200" text-anchor="middle" fill="#F2A93B" font-family="IBM Plex Mono" font-size="11" letter-spacing="0.08em">SUPABASE — BACKEND PLATFORM</text>
+
+          <rect x="40" y="210" width="260" height="100" rx="3" fill="#0F1E30" stroke="#F2A93B" stroke-opacity="0.45"></rect>
+          <text x="170" y="248" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="13" font-weight="600">Auth</text>
+          <text x="170" y="268" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="11">Google OAuth</text>
+          <text x="170" y="288" text-anchor="middle" fill="#5C7686" font-family="IBM Plex Mono" font-size="10.5">role-based routing</text>
+
+          <rect x="310" y="210" width="260" height="100" rx="3" fill="#0F1E30" stroke="#F2A93B" stroke-opacity="0.45"></rect>
+          <text x="440" y="248" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="13" font-weight="600">PostgreSQL</text>
+          <text x="440" y="268" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="11">Core relational database</text>
+          <text x="440" y="288" text-anchor="middle" fill="#5C7686" font-family="IBM Plex Mono" font-size="10.5">+ Row Level Security</text>
+
+          <rect x="580" y="210" width="260" height="100" rx="3" fill="#0F1E30" stroke="#F2A93B" stroke-opacity="0.45"></rect>
+          <text x="710" y="248" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="13" font-weight="600">Storage</text>
+          <text x="710" y="268" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="11">Profile photos · Documents</text>
+          <text x="710" y="288" text-anchor="middle" fill="#5C7686" font-family="IBM Plex Mono" font-size="10.5">license / Aadhaar uploads</text>
+        </svg>
+        <div class="fig-caption"><b>Fig. 01</b> — Deployment stack. Realtime subscriptions (notifications) also run on the Supabase layer.</div>
+      </div>
+
+      <table class="stack-table">
+        <tr><th>Layer</th><th>Technology</th></tr>
+        <tr><td>Framework</td><td><b>Next.js 15</b> (App Router)</td></tr>
+        <tr><td>Language</td><td>TypeScript</td></tr>
+        <tr><td>Styling</td><td>Tailwind CSS v4 + Shadcn/UI</td></tr>
+        <tr><td>Auth</td><td>Supabase Auth (Google OAuth)</td></tr>
+        <tr><td>Database</td><td>Supabase PostgreSQL</td></tr>
+        <tr><td>Storage</td><td>Supabase Storage</td></tr>
+        <tr><td>Hosting</td><td>Vercel (recommended) or self-hosted</td></tr>
+        <tr><td>Font</td><td>TBD — pending brand refresh</td></tr>
+      </table>
+    </section>
+
+    <!-- 03 ROUTES -->
+    <section id="routes">
+      <div class="sec-label">Fig. 02 — Sitemap</div>
+      <h2 class="sec-title">Route architecture</h2>
+      <p class="sec-desc">19 routes across a public surface and three protected, role-gated areas.</p>
+
+      <div class="diagram">
+        <div class="tree">
+          <div class="tree-root">/ (root)</div>
+
+          <div class="branch">
+            <div class="leaf"><span class="path">/</span><span class="tag-role">public</span><span class="desc">landing — marketing, services, pricing, CTA</span></div>
+            <div class="leaf"><span class="path">/auth/callback</span><span class="tag-role">public</span><span class="desc">Supabase OAuth callback handler</span></div>
+          </div>
+
+          <div class="branch">
+            <div class="branch-head">/customer <span class="tag-role">role: customer</span></div>
+            <div class="leaf"><span class="path">/customer</span><span class="desc">dashboard</span></div>
+            <div class="leaf"><span class="path">/customer/book</span><span class="desc">booking form</span></div>
+            <div class="leaf"><span class="path">/customer/trips/[id]</span><span class="desc">trip detail &amp; status</span></div>
+            <div class="leaf"><span class="path">/customer/profile</span><span class="desc">edit profile</span></div>
+          </div>
+
+          <div class="branch">
+            <div class="branch-head">/driver <span class="tag-role">role: driver</span></div>
+            <div class="leaf"><span class="path">/driver</span><span class="desc">dashboard</span></div>
+            <div class="leaf"><span class="path">/driver/trips/[id]</span><span class="desc">active trip controls</span></div>
+            <div class="leaf"><span class="path">/driver/earnings</span><span class="desc">earnings summary</span></div>
+            <div class="leaf"><span class="path">/driver/calendar</span><span class="desc">schedule &amp; availability</span></div>
+          </div>
+
+          <div class="branch">
+            <div class="branch-head">/admin <span class="tag-role">role: admin</span></div>
+            <div class="leaf"><span class="path">/admin</span><span class="desc">dashboard overview</span></div>
+            <div class="leaf"><span class="path">/admin/bookings</span><span class="desc">all bookings</span></div>
+            <div class="leaf"><span class="path">/admin/bookings/new</span><span class="desc">manual booking + inline customer</span></div>
+            <div class="leaf"><span class="path">/admin/drivers</span><span class="desc">driver management</span></div>
+            <div class="leaf"><span class="path">/admin/drivers/new</span><span class="desc">add driver</span></div>
+            <div class="leaf"><span class="path">/admin/customers</span><span class="desc">customer management</span></div>
+            <div class="leaf"><span class="path">/admin/commissions</span><span class="desc">commission tracker</span></div>
+            <div class="leaf"><span class="path">/admin/reports</span><span class="desc">revenue &amp; earnings reports</span></div>
+            <div class="leaf"><span class="path">/admin/pricing</span><span class="desc">pricing tiers</span></div>
+            <div class="leaf"><span class="path">/admin/ratings</span><span class="desc">ratings &amp; feedback</span></div>
+          </div>
+        </div>
+        <div class="fig-caption"><b>Fig. 02</b> — All routes under /customer, /driver, /admin sit behind auth middleware and a role check.</div>
+      </div>
+    </section>
+
+    <!-- 04 SCHEMA -->
+    <section id="schema">
+      <div class="sec-label">Fig. 03 — Data Model</div>
+      <h2 class="sec-title">Database schema</h2>
+      <p class="sec-desc">10 tables in Supabase Postgres. <code>profiles</code> is the hub table extending <code>auth.users</code>; everything else hangs off it or off <code>bookings</code>.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 1000 650" xmlns="http://www.w3.org/2000/svg">
+          <!-- connectors first (behind boxes) -->
+          <g stroke="#3A8A99" stroke-width="1.4" fill="none">
+            <path d="M500,74 L130,150" marker-end="url(#arrow)"></path>
+            <path d="M585,74 L790,150" marker-end="url(#arrow)"></path>
+            <path d="M660,47 L790,47" marker-end="url(#arrow)"></path>
+            <path d="M480,74 L470,300" marker-end="url(#arrow)"></path>
+            <path d="M875,204 L875,300" marker-end="url(#arrow)"></path>
+            <path d="M790,214 L590,300" marker-end="url(#arrow)"></path>
+            <path d="M470,354 L205,440" marker-end="url(#arrow)"></path>
+            <path d="M500,354 L500,440" marker-end="url(#arrow)"></path>
+            <path d="M540,354 L775,440" marker-end="url(#arrow)"></path>
+            <path d="M830,214 L800,440" marker-end="url(#arrow)"></path>
+          </g>
+          <g stroke="#B87E22" stroke-width="1.4" stroke-dasharray="4 4" fill="none">
+            <path d="M500,560 L500,494" marker-end="url(#arrow-amber)"></path>
+          </g>
+
+          <!-- profiles (hub) -->
+          <rect x="415" y="20" width="170" height="54" rx="3" fill="#142A40" stroke="#5FD0E0"></rect>
+          <text x="500" y="42" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="13" font-weight="600">profiles</text>
+          <text x="500" y="60" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="10">extends auth.users · role</text>
+
+          <!-- notifications -->
+          <rect x="790" y="20" width="170" height="54" rx="3" fill="#0F1E30" stroke="#3A8A99"></rect>
+          <text x="875" y="42" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="12.5" font-weight="600">notifications</text>
+          <text x="875" y="60" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="10">user_id FK</text>
+
+          <!-- customer_vehicles -->
+          <rect x="40" y="150" width="180" height="54" rx="3" fill="#0F1E30" stroke="#3A8A99"></rect>
+          <text x="130" y="172" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="12.5" font-weight="600">customer_vehicles</text>
+          <text x="130" y="190" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="10">customer_id FK</text>
+
+          <!-- driver_profiles -->
+          <rect x="790" y="150" width="170" height="54" rx="3" fill="#142A40" stroke="#5FD0E0"></rect>
+          <text x="875" y="172" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="12.5" font-weight="600">driver_profiles</text>
+          <text x="875" y="190" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="10">id FK (1:1)</text>
+
+          <!-- driver_availability -->
+          <rect x="790" y="300" width="170" height="54" rx="3" fill="#0F1E30" stroke="#3A8A99"></rect>
+          <text x="875" y="322" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="12.5" font-weight="600">driver_availability</text>
+          <text x="875" y="340" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="10">driver_id FK</text>
+
+          <!-- bookings (secondary hub) -->
+          <rect x="400" y="300" width="180" height="54" rx="3" fill="#142A40" stroke="#5FD0E0"></rect>
+          <text x="490" y="322" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="13" font-weight="600">bookings</text>
+          <text x="490" y="340" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="10">customer_id + driver_id FK</text>
+
+          <!-- trip_timestamps -->
+          <rect x="120" y="440" width="170" height="54" rx="3" fill="#0F1E30" stroke="#3A8A99"></rect>
+          <text x="205" y="462" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="12.5" font-weight="600">trip_timestamps</text>
+          <text x="205" y="480" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="10">booking_id FK</text>
+
+          <!-- trip_fares -->
+          <rect x="410" y="440" width="180" height="54" rx="3" fill="#0F1E30" stroke="#3A8A99"></rect>
+          <text x="500" y="462" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="12.5" font-weight="600">trip_fares</text>
+          <text x="500" y="480" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="10">booking_id FK</text>
+
+          <!-- ratings -->
+          <rect x="690" y="440" width="170" height="54" rx="3" fill="#0F1E30" stroke="#3A8A99"></rect>
+          <text x="775" y="462" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="12.5" font-weight="600">ratings</text>
+          <text x="775" y="480" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="10">booking_id + driver_id FK</text>
+
+          <!-- pricing -->
+          <rect x="410" y="560" width="180" height="54" rx="3" fill="#0F1E30" stroke="#F2A93B" stroke-dasharray="3 3"></rect>
+          <text x="500" y="582" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="12.5" font-weight="600">pricing</text>
+          <text x="500" y="600" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="10">admin-managed rate reference</text>
+        </svg>
+        <div class="fig-caption"><b>Fig. 03</b> — Simplified entity relationships. Dashed line = rate lookup, not a foreign key. Full columns below.</div>
+      </div>
+
+      <details class="schema">
+        <summary>profiles <span class="note">extends auth.users — role, contact, ban flag</span></summary>
+        <div class="schema-body">
+          <table><tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td>id</td><td>uuid PK / FK auth.users</td><td></td></tr>
+          <tr><td>role</td><td>enum</td><td>customer, driver, admin</td></tr>
+          <tr><td>full_name</td><td>text</td><td>required</td></tr>
+          <tr><td>phone</td><td>text</td><td>required</td></tr>
+          <tr><td>email</td><td>text</td><td>from Google auth</td></tr>
+          <tr><td>avatar_url</td><td>text</td><td>from Google auth</td></tr>
+          <tr><td>default_pickup_address</td><td>text</td><td>optional</td></tr>
+          <tr><td>is_banned</td><td>boolean</td><td>default false</td></tr>
+          <tr><td>created_at / updated_at</td><td>timestamptz</td><td></td></tr>
+          </table>
+        </div>
+      </details>
+
+      <details class="schema">
+        <summary>customer_vehicles <span class="note">default vehicle per customer</span></summary>
+        <div class="schema-body">
+          <table><tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td>id</td><td>uuid PK</td><td></td></tr>
+          <tr><td>customer_id</td><td>uuid FK → profiles</td><td></td></tr>
+          <tr><td>car_type</td><td>enum</td><td>hatchback, sedan, suv, luxury</td></tr>
+          <tr><td>transmission</td><td>enum</td><td>manual, automatic</td></tr>
+          <tr><td>registration_number</td><td>text</td><td>optional</td></tr>
+          <tr><td>is_default</td><td>boolean</td><td></td></tr>
+          </table>
+        </div>
+      </details>
+
+      <details class="schema">
+        <summary>driver_profiles <span class="note">extended driver details, ratings, trip count</span></summary>
+        <div class="schema-body">
+          <table><tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td>id</td><td>uuid PK / FK profiles</td><td></td></tr>
+          <tr><td>driving_license_number / license_expiry</td><td>text / date</td><td>optional</td></tr>
+          <tr><td>aadhaar_number</td><td>text</td><td>optional</td></tr>
+          <tr><td>address</td><td>text</td><td></td></tr>
+          <tr><td>years_of_experience</td><td>integer</td><td></td></tr>
+          <tr><td>vehicle_types</td><td>text[]</td><td>hatchback, sedan, suv, luxury</td></tr>
+          <tr><td>transmission_skills</td><td>text[]</td><td>manual, automatic</td></tr>
+          <tr><td>emergency_contact</td><td>text</td><td></td></tr>
+          <tr><td>bank_account_upi</td><td>text</td><td></td></tr>
+          <tr><td>profile_photo_url</td><td>text</td><td>optional</td></tr>
+          <tr><td>is_active</td><td>boolean</td><td>default true</td></tr>
+          <tr><td>average_rating</td><td>decimal(3,2)</td><td>computed</td></tr>
+          <tr><td>total_trips</td><td>integer</td><td>default 0</td></tr>
+          </table>
+        </div>
+      </details>
+
+      <details class="schema">
+        <summary>driver_availability <span class="note">days off set by drivers</span></summary>
+        <div class="schema-body">
+          <table><tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td>id</td><td>uuid PK</td><td></td></tr>
+          <tr><td>driver_id</td><td>uuid FK → driver_profiles</td><td></td></tr>
+          <tr><td>unavailable_date</td><td>date</td><td></td></tr>
+          <tr><td>reason</td><td>text</td><td>optional</td></tr>
+          </table>
+        </div>
+      </details>
+
+      <details class="schema">
+        <summary>bookings <span class="note">core booking record + status</span></summary>
+        <div class="schema-body">
+          <table><tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td>id</td><td>uuid PK</td><td></td></tr>
+          <tr><td>reference_id</td><td>text unique</td><td>e.g. VP-20260714-001</td></tr>
+          <tr><td>customer_id</td><td>uuid FK → profiles</td><td></td></tr>
+          <tr><td>driver_id</td><td>uuid FK → driver_profiles</td><td>null until assigned</td></tr>
+          <tr><td>pickup_location / destination</td><td>text</td><td></td></tr>
+          <tr><td>scheduled_date / scheduled_time</td><td>date / time</td><td></td></tr>
+          <tr><td>car_type / transmission</td><td>enum</td><td>from customer profile</td></tr>
+          <tr><td>status</td><td>enum</td><td>see lifecycle, Fig. 04</td></tr>
+          <tr><td>created_by</td><td>enum</td><td>customer, admin</td></tr>
+          <tr><td>created_at / updated_at</td><td>timestamptz</td><td></td></tr>
+          </table>
+        </div>
+      </details>
+
+      <details class="schema">
+        <summary>trip_timestamps <span class="note">auto-recorded status transitions</span></summary>
+        <div class="schema-body">
+          <table><tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td>id</td><td>uuid PK</td><td></td></tr>
+          <tr><td>booking_id</td><td>uuid FK → bookings</td><td></td></tr>
+          <tr><td>status</td><td>enum</td><td>booking status value</td></tr>
+          <tr><td>timestamp</td><td>timestamptz</td><td>auto-recorded on driver tap</td></tr>
+          </table>
+        </div>
+      </details>
+
+      <details class="schema">
+        <summary>trip_fares <span class="note">calculated fare + commission breakdown</span></summary>
+        <div class="schema-body">
+          <table><tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td>id</td><td>uuid PK</td><td></td></tr>
+          <tr><td>booking_id</td><td>uuid FK → bookings</td><td></td></tr>
+          <tr><td>running_minutes / waiting_minutes</td><td>integer</td><td></td></tr>
+          <tr><td>running_rate_per_hour / waiting_rate_per_15min</td><td>decimal</td><td>rate applied</td></tr>
+          <tr><td>running_charge / waiting_charge / total_fare</td><td>decimal</td><td>calculated</td></tr>
+          <tr><td>commission_amount</td><td>decimal</td><td>10% of total</td></tr>
+          <tr><td>driver_earnings</td><td>decimal</td><td>90% of total</td></tr>
+          <tr><td>commission_status</td><td>enum</td><td>pending, driver_marked_paid, admin_confirmed</td></tr>
+          <tr><td>commission_paid_at</td><td>timestamptz</td><td></td></tr>
+          </table>
+        </div>
+      </details>
+
+      <details class="schema">
+        <summary>pricing <span class="note">admin-managed rate tiers</span></summary>
+        <div class="schema-body">
+          <table><tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td>id</td><td>uuid PK</td><td></td></tr>
+          <tr><td>pricing_type</td><td>enum</td><td>hourly_local, hourly_outstation, daily_within_200, daily_above_200, special_service_centre, special_family_function</td></tr>
+          <tr><td>rate / unit</td><td>decimal / text</td><td>e.g. "per hour", "per 15 min"</td></tr>
+          <tr><td>min_charge / min_duration</td><td>decimal / text</td><td>e.g. ₹300 for 2 hrs</td></tr>
+          <tr><td>tier_label</td><td>text</td><td>e.g. "1 Day", "3+ Days"</td></tr>
+          <tr><td>is_active / updated_at</td><td>boolean / timestamptz</td><td></td></tr>
+          </table>
+        </div>
+      </details>
+
+      <details class="schema">
+        <summary>ratings <span class="note">customer feedback per trip</span></summary>
+        <div class="schema-body">
+          <table><tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td>id</td><td>uuid PK</td><td></td></tr>
+          <tr><td>booking_id / customer_id / driver_id</td><td>uuid FK</td><td></td></tr>
+          <tr><td>rating</td><td>integer 1–5</td><td></td></tr>
+          <tr><td>comment</td><td>text</td><td>optional</td></tr>
+          <tr><td>created_at</td><td>timestamptz</td><td></td></tr>
+          </table>
+        </div>
+      </details>
+
+      <details class="schema">
+        <summary>notifications <span class="note">in-app notification bell backing store</span></summary>
+        <div class="schema-body">
+          <table><tr><th>Column</th><th>Type</th><th>Notes</th></tr>
+          <tr><td>id</td><td>uuid PK</td><td></td></tr>
+          <tr><td>user_id</td><td>uuid FK → profiles</td><td></td></tr>
+          <tr><td>title / message</td><td>text</td><td></td></tr>
+          <tr><td>type</td><td>enum</td><td>booking_new, driver_assigned, trip_status, commission_reminder, system</td></tr>
+          <tr><td>is_read</td><td>boolean</td><td>default false</td></tr>
+          <tr><td>link</td><td>text</td><td>optional deep link</td></tr>
+          <tr><td>created_at</td><td>timestamptz</td><td></td></tr>
+          </table>
+        </div>
+      </details>
+    </section>
+
+    <!-- 05 LIFECYCLE -->
+    <section id="lifecycle">
+      <div class="sec-label">Fig. 04 — State Machine</div>
+      <h2 class="sec-title">Booking lifecycle</h2>
+      <p class="sec-desc">Every status change is auto-timestamped in <code>trip_timestamps</code>; the gap between "arrived" and "left" destination becomes billable waiting time.</p>
+
+      <div class="diagram">
+        <svg viewBox="0 0 1000 230" xmlns="http://www.w3.org/2000/svg">
+          <g font-family="IBM Plex Mono">
+          <!-- main chain -->
+          <rect x="10" y="30" width="150" height="50" rx="3" fill="#142A40" stroke="#5FD0E0"></rect>
+          <text x="85" y="60" text-anchor="middle" fill="#E8EFF3" font-size="12">requested</text>
+
+          <line x1="160" y1="55" x2="188" y2="55" stroke="#5FD0E0" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+          <rect x="190" y="30" width="150" height="50" rx="3" fill="#142A40" stroke="#5FD0E0"></rect>
+          <text x="265" y="55" text-anchor="middle" fill="#E8EFF3" font-size="11.5">driver_</text>
+          <text x="265" y="68" text-anchor="middle" fill="#E8EFF3" font-size="11.5">assigned</text>
+
+          <line x1="340" y1="55" x2="368" y2="55" stroke="#5FD0E0" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+          <rect x="370" y="30" width="150" height="50" rx="3" fill="#142A40" stroke="#5FD0E0"></rect>
+          <text x="445" y="55" text-anchor="middle" fill="#E8EFF3" font-size="11.5">running</text>
+          <text x="445" y="68" text-anchor="middle" fill="#E8EFF3" font-size="11.5">(leg 1)</text>
+
+          <line x1="520" y1="55" x2="548" y2="55" stroke="#5FD0E0" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+          <rect x="550" y="30" width="150" height="50" rx="3" fill="#18324B" stroke="#F2A93B"></rect>
+          <text x="625" y="60" text-anchor="middle" fill="#E8EFF3" font-size="12">waiting</text>
+
+          <line x1="700" y1="55" x2="728" y2="55" stroke="#5FD0E0" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+          <rect x="730" y="30" width="150" height="50" rx="3" fill="#142A40" stroke="#5FD0E0"></rect>
+          <text x="805" y="55" text-anchor="middle" fill="#E8EFF3" font-size="11.5">running</text>
+          <text x="805" y="68" text-anchor="middle" fill="#E8EFF3" font-size="11.5">(leg 2)</text>
+
+          <line x1="880" y1="55" x2="905" y2="55" stroke="#5FD0E0" stroke-width="1.5"></line>
+          <line x1="905" y1="55" x2="905" y2="55" stroke="#5FD0E0" stroke-width="1.5"></line>
+
+          <rect x="835" y="120" width="150" height="50" rx="3" fill="#0F1E30" stroke="#6FCF97" transform="translate(0,-40)" x2="0"></rect>
+          </g>
+          <!-- completed box placed to the right, wrap chain down -->
+          <path d="M880,55 L940,55 L940,120 L 910,120" stroke="#5FD0E0" stroke-width="1.5" fill="none" marker-end="url(#arrow)"></path>
+          <rect x="750" y="120" width="160" height="50" rx="3" fill="#0F1E30" stroke="#6FCF97"></rect>
+          <text x="830" y="150" text-anchor="middle" fill="#6FCF97" font-family="IBM Plex Mono" font-size="12" font-weight="600">completed</text>
+
+          <!-- cancelled branch -->
+          <path d="M85,80 L85,120 L 400,120 L400,150 L 470,150" stroke="#E5697A" stroke-width="1.3" stroke-dasharray="4 3" fill="none" marker-end="url(#arrow)"></path>
+          <path d="M265,80 L265,105 L 400,105 L400,150" stroke="#E5697A" stroke-width="1.3" stroke-dasharray="4 3" fill="none"></path>
+          <rect x="330" y="150" width="150" height="50" rx="3" fill="#0F1E30" stroke="#E5697A"></rect>
+          <text x="405" y="180" text-anchor="middle" fill="#E5697A" font-family="IBM Plex Mono" font-size="12" font-weight="600">cancelled</text>
+        </svg>
+        <div class="fig-caption"><b>Fig. 04</b> — Dashed lines: cancellation is only meaningful before a trip is running — shown here from <code>requested</code> / <code>driver_assigned</code>. Exact cutoff rules are one of the open questions.</div>
+      </div>
+    </section>
+
+    <!-- 06 MODULES -->
+    <section id="modules">
+      <div class="sec-label">Fig. 05 — Surfaces</div>
+      <h2 class="sec-title">Customer · Driver · Admin</h2>
+      <p class="sec-desc">Each role gets a dedicated dashboard and a small set of task-specific pages.</p>
+
+      <div class="mod-grid">
+        <div class="mod-card">
+          <span class="role-tag">Customer</span>
+          <h3>Book, track, rate</h3>
+          <ul>
+            <li><b>/customer</b>Welcome banner, "Book a Pilot" CTA, active/upcoming trips, trip history, services &amp; pricing cards, notification bell</li>
+            <li><b>/customer/book</b>Pre-filled car type/transmission, pickup, destination, date &amp; time picker → creates a <code>requested</code> booking, notifies admin. Round-trip by default</li>
+            <li><b>/customer/trips/[id]</b>Status timeline; driver name/phone/photo once assigned; fare breakdown + 1–5 star rating after completion</li>
+            <li><b>/customer/profile</b>Edit name, phone, default pickup address, default vehicle. Email &amp; photo read-only from Google</li>
+          </ul>
+        </div>
+        <div class="mod-card">
+          <span class="role-tag">Driver / Pilot</span>
+          <h3>Run trips, get paid</h3>
+          <ul>
+            <li><b>/driver</b>Upcoming trips, active-trip card with contextual status buttons, quick stats, notifications, calendar link</li>
+            <li><b>/driver/trips/[id]</b>Full trip detail; large next-action button only (Start Running → Arrived → Left → Complete); fare + commission shown after completion, "Mark Commission Paid"</li>
+            <li><b>/driver/earnings</b>Per-trip breakdown (running/waiting/fare/commission/net), weekly/monthly toggle, commission status</li>
+            <li><b>/driver/calendar</b>Assigned trips by date; mark days off; visual booked/available/off indicators</li>
+          </ul>
+        </div>
+        <div class="mod-card">
+          <span class="role-tag">Admin</span>
+          <h3>Dispatch &amp; oversee</h3>
+          <ul>
+            <li><b>/admin</b>KPI cards (bookings, active trips, drivers, customers, revenue, pending commissions), recent bookings, alerts</li>
+            <li><b>/admin/bookings(/new)</b>Filterable table; assign driver (filtered by availability + vehicle match); cancel with reason; manual booking incl. inline new-customer creation</li>
+            <li><b>/admin/drivers(/new)</b>Driver table w/ status, trips, rating; add/edit; deactivate/ban toggle</li>
+            <li><b>/admin/customers</b>Customer table, booking history, ban/unban</li>
+            <li><b>/admin/commissions</b>Pending / Driver Marked Paid / Admin Confirmed, filterable, "Confirm Payment"</li>
+            <li><b>/admin/reports</b>Revenue summary, per-driver report, trend charts</li>
+            <li><b>/admin/pricing</b>Editable rate tiers feeding the landing page &amp; fare engine</li>
+            <li><b>/admin/ratings</b>All ratings, filter by driver/level</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 SHARED -->
+    <section id="shared">
+      <div class="sec-label">Fig. 06 / 07 — Cross-cutting</div>
+      <h2 class="sec-title">Shared systems</h2>
+      <p class="sec-desc">Three systems every module depends on: role-based auth, realtime notifications, and the fare engine.</p>
+
+      <h4 style="font-size:14px; color:var(--text); margin-bottom:12px;">Auth &amp; role routing</h4>
+      <div class="diagram">
+        <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg">
+          <rect x="290" y="10" width="180" height="46" rx="3" fill="#142A40" stroke="#5FD0E0"></rect>
+          <text x="380" y="38" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="12.5">Sign in with Google</text>
+
+          <line x1="380" y1="56" x2="380" y2="86" stroke="#3A8A99" stroke-width="1.4" marker-end="url(#arrow)"></line>
+
+          <polygon points="380,88 480,138 380,188 280,138" fill="#0F1E30" stroke="#F2A93B"></polygon>
+          <text x="380" y="132" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="11">Email matches</text>
+          <text x="380" y="146" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="11">admin address?</text>
+
+          <line x1="480" y1="138" x2="560" y2="138" stroke="#3A8A99" stroke-width="1.4" marker-end="url(#arrow)"></line>
+          <text x="510" y="128" text-anchor="middle" fill="#6FCF97" font-family="IBM Plex Mono" font-size="10">yes</text>
+          <rect x="562" y="113" width="170" height="50" rx="3" fill="#0F1E30" stroke="#6FCF97"></rect>
+          <text x="647" y="142" text-anchor="middle" fill="#6FCF97" font-family="IBM Plex Mono" font-size="12">Admin Dashboard</text>
+
+          <line x1="380" y1="188" x2="380" y2="216" stroke="#3A8A99" stroke-width="1.4" marker-end="url(#arrow)"></line>
+          <text x="392" y="205" fill="#E5697A" font-family="IBM Plex Mono" font-size="10">no</text>
+
+          <polygon points="380,218 500,258 380,298 260,258" fill="#0F1E30" stroke="#F2A93B"></polygon>
+          <text x="380" y="252" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="10.5">Pre-registered</text>
+          <text x="380" y="266" text-anchor="middle" fill="#E8EFF3" font-family="IBM Plex Mono" font-size="10.5">as driver by admin?</text>
+
+          <line x1="500" y1="258" x2="560" y2="258" stroke="#3A8A99" stroke-width="1.4" marker-end="url(#arrow)"></line>
+          <text x="520" y="248" text-anchor="middle" fill="#6FCF97" font-family="IBM Plex Mono" font-size="10">yes</text>
+          <rect x="562" y="233" width="170" height="50" rx="3" fill="#0F1E30" stroke="#6FCF97"></rect>
+          <text x="647" y="262" text-anchor="middle" fill="#6FCF97" font-family="IBM Plex Mono" font-size="12">Driver Dashboard</text>
+
+          <line x1="260" y1="258" x2="200" y2="258" stroke="#3A8A99" stroke-width="1.4" marker-end="url(#arrow)"></line>
+          <text x="220" y="248" text-anchor="middle" fill="#E5697A" font-family="IBM Plex Mono" font-size="10">no</text>
+          <rect x="10" y="233" width="190" height="50" rx="3" fill="#0F1E30" stroke="#6FCF97"></rect>
+          <text x="105" y="255" text-anchor="middle" fill="#6FCF97" font-family="IBM Plex Mono" font-size="11.5">Customer Dashboard</text>
+          <text x="105" y="270" text-anchor="middle" fill="#92AAB8" font-family="IBM Plex Mono" font-size="9.5">auto-created + onboarding</text>
+        </svg>
+        <div class="fig-caption"><b>Fig. 06</b> — New Google sign-ups default to <code>customer</code>; drivers must be pre-registered by admin; the admin match is a hardcoded email (see Decisions Needed).</div>
+      </div>
+
+      <h4 style="font-size:14px; color:var(--text); margin:30px 0 12px;">Notification triggers</h4>
+      <table>
+        <tr><th>Role</th><th>Fires on</th></tr>
+        <tr><td>Customer</td><td>Booking confirmed · driver assigned · trip status changes</td></tr>
+        <tr><td>Driver</td><td>New trip assigned · commission reminder</td></tr>
+        <tr><td>Admin</td><td>New booking received · commission marked paid by driver</td></tr>
+      </table>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:8px;">Delivered in-app via a shared bell component, powered by Supabase Realtime subscriptions.</p>
+
+      <h4 style="font-size:14px; color:var(--text); margin:34px 0 4px;">Fare calculation engine</h4>
+      <p class="fare-eq"><b>total_fare</b> = running_charge + waiting_charge &nbsp;·&nbsp; running = leg 1 + leg 2 &nbsp;·&nbsp; waiting = time between arrival &amp; departure at destination</p>
+      <div class="fare-bar">
+        <div class="driver">Driver earnings — 90%</div>
+        <div class="commission">10%</div>
+      </div>
+      <div class="fare-labels"><span>driver_earnings</span><span>commission_amount</span></div>
+    </section>
+
+    <!-- 08 VERIFY -->
+    <section id="verify">
+      <div class="sec-label">Fig. 08 — QA</div>
+      <h2 class="sec-title">Verification plan</h2>
+      <div class="col2">
+        <div>
+          <h4 style="font-size:13px; color:var(--cyan); margin-bottom:10px;">Automated tests</h4>
+          <ul class="checklist">
+            <li><span class="box"></span><span><strong>RLS policies</strong> — customers see only their bookings; drivers see only assigned trips; admin sees everything</span></li>
+            <li><span class="box"></span><span><strong>Fare calculation</strong> unit tests against sample timestamps</span></li>
+            <li><span class="box"></span><span><strong>Auth flow</strong> integration tests — Google sign-in → role routing</span></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-size:13px; color:var(--cyan); margin-bottom:10px;">Manual verification</h4>
+          <ul class="checklist">
+            <li><span class="box"></span><span>End-to-end: customer books → admin assigns driver → status transitions → fare calculated → rating submitted</span></li>
+            <li><span class="box"></span><span>Commission flow: driver marks paid → admin confirms</span></li>
+            <li><span class="box"></span><span>Admin manually creates a customer + booking</span></li>
+            <li><span class="box"></span><span>Driver sets days off → excluded from availability</span></li>
+            <li><span class="box"></span><span>Responsive testing on mobile browsers — primary use case for drivers</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 PHASES -->
+    <section id="phases">
+      <div class="sec-label">Fig. 09 — Roadmap</div>
+      <h2 class="sec-title">Build phases</h2>
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-badge">1</div>
+          <div class="tl-content">
+            <h4>Foundation</h4>
+            <ul>
+              <li>Next.js + Shadcn/UI setup</li>
+              <li>Supabase project (auth, db, storage)</li>
+              <li>Schema + RLS policies</li>
+              <li>Google OAuth + role routing</li>
+              <li>Landing page (redesigned)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-badge">2</div>
+          <div class="tl-content">
+            <h4>Customer module</h4>
+            <ul>
+              <li>Onboarding flow</li>
+              <li>Dashboard</li>
+              <li>Booking form</li>
+              <li>Trip detail &amp; status</li>
+              <li>Profile management</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-badge">3</div>
+          <div class="tl-content">
+            <h4>Admin module</h4>
+            <ul>
+              <li>Dashboard + KPIs</li>
+              <li>Booking mgmt + driver assignment</li>
+              <li>Driver mgmt (add/edit/deactivate)</li>
+              <li>Customer mgmt</li>
+              <li>Manual booking + inline customer</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-badge">4</div>
+          <div class="tl-content">
+            <h4>Driver module</h4>
+            <ul>
+              <li>Dashboard</li>
+              <li>Trip controls + timestamps</li>
+              <li>Earnings view</li>
+              <li>Calendar + availability</li>
+              <li>Commission "mark paid" flow</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-badge">5</div>
+          <div class="tl-content">
+            <h4>Cross-cutting features</h4>
+            <ul>
+              <li>Notifications (Realtime)</li>
+              <li>Fare calculation engine</li>
+              <li>Commission tracker (admin)</li>
+              <li>Pricing management (admin)</li>
+              <li>Reports &amp; analytics</li>
+              <li>Rating system</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-badge">6</div>
+          <div class="tl-content">
+            <h4>Polish</h4>
+            <ul>
+              <li>Brand refresh finalization</li>
+              <li>Responsive mobile optimization</li>
+              <li>Performance optimization</li>
+              <li>Security audit (RLS, auth edge cases)</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+  </main>
+</div>
+
+<!-- ============ FOOTER TITLE BLOCK ============ -->
+<div class="titleblock-wrap blueprint-grid">
+  <span class="crop bl"></span><span class="crop br"></span>
+  <div class="titleblock">
+    <div class="tb-grid">
+      <div class="tb-cell tb-full"><div class="k">Project</div><div class="v">VandiPilot — Web Application</div></div>
+    </div>
+    <div class="tb-grid">
+      <div class="tb-cell"><div class="k">Drawing</div><div class="v">Implementation Plan — Full System</div></div>
+      <div class="tb-cell"><div class="k">Rev</div><div class="v">1.0 — Draft</div></div>
+      <div class="tb-cell"><div class="k">Scale</div><div class="v">N.T.S.</div></div>
+      <div class="tb-cell" style="border-right:none;"><div class="k">Status</div><div class="v" style="color:var(--amber);">Pending review</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // active-link highlighting for the sticky TOC
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc nav a'));
+    var sections = links.map(function(l){ return document.querySelector(l.getAttribute('href')); }).filter(Boolean);
+    if(!('IntersectionObserver' in window) || sections.length === 0) return;
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var id = '#' + entry.target.id;
+        var link = links.find(function(l){ return l.getAttribute('href') === id; });
+        if(!link) return;
+        if(entry.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('active'); });
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+    sections.forEach(function(s){ io.observe(s); });
+
+    // close mobile nav on link click
+    var toggle = document.getElementById('nav-toggle');
+    links.forEach(function(l){ l.addEventListener('click', function(){ if(toggle) toggle.checked = false; }); });
+  })();
+</script>
+
+</body>
+</html>
