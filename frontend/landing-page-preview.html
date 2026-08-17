@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VandiPilot — Professional Drivers for Your Car</title>
+<meta name="description" content="Book a professional driver for your car. VandiPilot provides verified, trained pilots for local trips, outstation journeys, and special occasions. Safe, reliable, transparent pricing.">
+<meta name="theme-color" content="#FFFBF5">
+<meta property="og:title" content="VandiPilot — Professional Drivers for Your Car">
+<meta property="og:description" content="Book a professional driver for your car. Safe, reliable, transparent pricing.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   VandiPilot Design Tokens — design.md §2–§5 (revised 2026-08-17)
+   All colour values WCAG AA verified against the three product
+   surfaces: #FFFBF5, #FFFFFF, #F1F5F9
+   ============================================================ */
+:root{
+  /* Primary — corrected: white text on #0F766E = 5.47:1 */
+  --color-primary:#0F766E;
+  --color-primary-hover:#115E59;
+  --color-primary-light:#CCFBF1;
+  --color-primary-viz:#0D9488;         /* charts/decorative icons only, 3:1 bar */
+  --color-on-primary:#FFFFFF;
+  --color-secondary:#10827A;            /* gradient endpoint, 4.67:1 */
+  --color-footer-link:#5EEAD4;          /* 11.53:1 on dark footer */
+
+  --color-accent:#C2740A;               /* stars/icons, 3.62:1 */
+  --color-accent-decorative:#F59E0B;    /* ≥24px decorative fills only */
+  --color-accent-warm:#EA580C;
+
+  --color-background:#FFFBF5;
+  --color-surface:#FFFFFF;
+  --color-foreground:#1A1A2E;
+  --color-foreground-muted:#475569;     /* 6.92:1 worst case */
+  --color-foreground-subtle:#64748B;    /* not on --color-muted */
+  --color-border:#E2E8F0;
+  --color-border-hover:#CBD5E1;
+  --color-muted:#F1F5F9;
+
+  --color-destructive:#B91C1C;
+  --color-on-destructive:#FFFFFF;
+  --color-success:#15803D;
+  --color-warning:#B45309;
+  --color-info:#0369A1;
+  --color-ring:#0F766E;
+
+  /* Gradients — both CTA endpoints ≥4.5:1 with white */
+  --gradient-cta:linear-gradient(135deg,#0F766E 0%,#10827A 100%);
+  --gradient-cta-hover:linear-gradient(135deg,#115E59 0%,#0F766E 100%);
+  --gradient-hero:linear-gradient(135deg,#F0FDFA 0%,#FFFBF5 50%,#FEF3C7 100%);
+  --gradient-pricing:linear-gradient(145deg,#F0FDFA 0%,#CCFBF1 100%);
+
+  /* Type scale */
+  --text-display:3.5rem; --text-display-mobile:2.25rem;
+  --text-h1:2.5rem; --text-h1-mobile:1.75rem;
+  --text-h2:1.875rem; --text-h2-mobile:1.375rem;
+  --text-h3:1.5rem; --text-h3-mobile:1.25rem;
+  --text-body-lg:1.125rem; --text-body:1rem; --text-body-sm:0.875rem;
+  --text-caption:0.75rem; --text-button:1rem; --text-nav:0.9375rem;
+
+  /* Spacing */
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:20px; --space-6:24px; --space-8:32px; --space-10:40px;
+  --space-12:48px; --space-16:64px; --space-20:80px; --space-24:96px; --space-32:128px;
+
+  --max-width-page:1280px; --max-width-text:640px; --max-width-hero-text:560px;
+  --gutter-mobile:16px; --gutter-tablet:32px; --gutter-desktop:48px;
+
+  --radius-sm:6px; --radius-md:8px; --radius-lg:12px;
+  --radius-xl:16px; --radius-2xl:24px; --radius-pill:9999px;
+
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:0 4px 12px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 24px rgba(0,0,0,.1);
+  --shadow-xl:0 16px 48px rgba(0,0,0,.12);
+  --shadow-cta:0 4px 14px rgba(15,118,110,.3);
+  --shadow-cta-hover:0 6px 20px rgba(15,118,110,.4);
+
+  --nav-h:64px;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+body{
+  margin:0;background:var(--color-background);color:var(--color-foreground);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:var(--text-body);line-height:1.6;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{margin:0;line-height:1.2;}
+p{margin:0;}
+img,svg{display:block;max-width:100%;}
+a{color:var(--color-primary);text-decoration:none;}
+a:hover{text-decoration:underline;}
+ul{margin:0;padding:0;list-style:none;}
+button{font-family:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px;border-radius:2px;}
+
+/* Skip link — design.md §11 */
+.skip-link{
+  position:absolute;left:var(--space-4);top:-100px;z-index:200;
+  background:var(--color-surface);color:var(--color-primary);
+  padding:var(--space-3) var(--space-5);border-radius:var(--radius-md);
+  border:2px solid var(--color-primary);font-weight:600;font-size:var(--text-body-sm);
+  transition:top .2s ease;
+}
+.skip-link:focus{top:var(--space-4);text-decoration:none;}
+
+.container{max-width:var(--max-width-page);margin:0 auto;padding:0 var(--gutter-mobile);}
+@media(min-width:640px){.container{padding:0 var(--gutter-tablet);}}
+@media(min-width:1024px){.container{padding:0 var(--gutter-desktop);}}
+
+section{padding:var(--space-16) 0;}
+@media(min-width:1024px){section{padding:var(--space-24) 0;}}
+.bg-muted{background:var(--color-muted);}
+.bg-base{background:var(--color-background);}
+
+.sec-head{text-align:center;max-width:var(--max-width-text);margin:0 auto var(--space-12);}
+.sec-head h2{font-size:var(--text-h1-mobile);font-weight:700;letter-spacing:-.01em;}
+.sec-head p{margin-top:var(--space-4);color:var(--color-foreground-muted);font-size:var(--text-body);}
+@media(min-width:1024px){.sec-head h2{font-size:var(--text-h1);}}
+
+/* ---------- Buttons — design.md §8 ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);
+  height:44px;padding:0 var(--space-6);border-radius:var(--radius-md);
+  font-size:var(--text-button);font-weight:600;letter-spacing:.01em;
+  border:none;transition:all 200ms ease;white-space:nowrap;text-decoration:none;
+}
+.btn:hover{text-decoration:none;}
+.btn--lg{height:52px;padding:0 var(--space-8);}
+.btn--sm{height:36px;padding:0 var(--space-4);font-size:var(--text-body-sm);border-radius:var(--radius-sm);}
+.btn--primary{background:var(--gradient-cta);color:var(--color-on-primary);box-shadow:var(--shadow-cta);}
+.btn--primary:hover{background:var(--gradient-cta-hover);box-shadow:var(--shadow-cta-hover);transform:translateY(-1px);}
+.btn--primary:active{transform:translateY(0);box-shadow:var(--shadow-sm);}
+.btn--secondary{background:var(--color-surface);color:var(--color-foreground);border:1px solid var(--color-border);box-shadow:var(--shadow-sm);}
+.btn--secondary:hover{border-color:var(--color-primary);color:var(--color-primary);transform:translateY(-1px);}
+.btn--ghost{background:transparent;color:var(--color-foreground);}
+.btn--ghost:hover{color:var(--color-primary);}
+.btn--block{width:100%;}
+@media(prefers-reduced-motion:reduce){.btn:hover{transform:none;}}
+
+/* ---------- Nav — design.md §7.1 ----------
+   Sticky, not fixed: this preview has a "Demo preview" banner ABOVE the
+   nav (not part of the production spec — see design.md's pre-launch
+   checklist). A fixed nav at top:0 would sit on top of that banner and
+   silently swallow clicks on the hamburger/CTA behind it. Sticky keeps
+   the nav pinned once scrolled without overlapping the banner. In the
+   real Next.js build (no preview banner) this reverts to position:fixed
+   exactly as design.md §7.1 specifies, restoring the transparent-over-hero
+   overlay effect. */
+.nav{
+  position:sticky;top:0;z-index:100;height:var(--nav-h);
+  display:flex;align-items:center;background:rgba(255,251,245,.95);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--color-border);
+  transition:transform .3s ease,background .3s ease,box-shadow .3s ease;
+}
+.nav--scrolled{
+  background:rgba(255,251,245,.95);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);box-shadow:var(--shadow-sm);
+}
+.nav--hidden{transform:translateY(-100%);}
+.nav__inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
+.logo{font-size:1.25rem;font-weight:700;letter-spacing:0;color:var(--color-foreground);text-decoration:none;}
+.logo:hover{text-decoration:none;}
+.logo span{color:var(--color-primary);}
+@media(min-width:1024px){.logo{font-size:1.5rem;}}
+
+.nav__links{display:none;}
+.nav__actions{display:none;}
+@media(min-width:1024px){
+  .nav__links{display:flex;align-items:center;gap:var(--space-8);}
+  .nav__actions{display:flex;align-items:center;gap:var(--space-3);}
+  .nav__burger{display:none !important;}
+}
+.nav__links a{
+  font-size:var(--text-nav);font-weight:500;color:var(--color-foreground);
+  position:relative;padding:var(--space-2) 0;text-decoration:none;
+}
+.nav__links a::after{
+  content:"";position:absolute;left:0;bottom:0;height:2px;width:0;
+  background:var(--color-primary);transition:width 200ms ease;
+}
+.nav__links a:hover{color:var(--color-primary);text-decoration:none;}
+.nav__links a:hover::after{width:100%;}
+
+.nav__burger{
+  display:flex;align-items:center;justify-content:center;
+  width:44px;height:44px;background:transparent;border:none;
+  color:var(--color-foreground);border-radius:var(--radius-md);
+}
+.nav__burger:hover{background:rgba(0,0,0,.04);}
+
+/* Drawer */
+.overlay{
+  position:fixed;inset:0;background:rgba(26,26,46,.4);z-index:110;
+  opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease;
+}
+.overlay--open{opacity:1;visibility:visible;}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(320px,85vw);z-index:120;
+  background:var(--color-surface);box-shadow:var(--shadow-xl);
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+  display:flex;flex-direction:column;padding:var(--space-5);
+}
+.drawer--open{transform:translateX(0);}
+@media(prefers-reduced-motion:reduce){
+  .drawer{transition:none;}.overlay{transition:none;}
+}
+.drawer__top{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-8);}
+.drawer__close{
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  background:transparent;border:none;color:var(--color-foreground);border-radius:var(--radius-md);
+}
+.drawer__close:hover{background:var(--color-muted);}
+.drawer__links{display:flex;flex-direction:column;gap:var(--space-2);flex:1;}
+.drawer__links a{
+  font-size:var(--text-body-lg);font-weight:500;color:var(--color-foreground);
+  padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);text-decoration:none;
+}
+.drawer__links a:hover{background:var(--color-primary-light);color:var(--color-primary);text-decoration:none;}
+.drawer__actions{display:flex;flex-direction:column;gap:var(--space-3);padding-top:var(--space-6);border-top:1px solid var(--color-border);}
+
+/* ---------- Hero — design.md §7.2 ---------- */
+.hero{
+  background:var(--gradient-hero);padding-top:calc(var(--nav-h) + var(--space-16));
+  padding-bottom:var(--space-16);
+}
+@media(min-width:1024px){
+  .hero{padding-top:calc(var(--nav-h) + var(--space-32));padding-bottom:var(--space-32);}
+}
+.hero__grid{display:grid;grid-template-columns:1fr;gap:var(--space-12);align-items:center;}
+@media(min-width:1024px){.hero__grid{grid-template-columns:1fr 1fr;gap:var(--space-16);}}
+.hero h1{
+  font-size:var(--text-display-mobile);font-weight:800;line-height:1.15;letter-spacing:-.02em;
+}
+@media(min-width:1024px){.hero h1{font-size:var(--text-display);line-height:1.02;}}
+.hero__sub{
+  margin-top:var(--space-5);font-size:var(--text-body-lg);
+  color:var(--color-foreground-muted);max-width:var(--max-width-hero-text);
+}
+.hero__ctas{display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-8);}
+@media(min-width:640px){.hero__ctas{flex-direction:row;}}
+.hero__proof{
+  display:flex;flex-wrap:wrap;gap:var(--space-6);margin-top:var(--space-8);
+  font-size:var(--text-body-sm);color:var(--color-foreground-muted);
+}
+.hero__proof div{display:flex;align-items:center;gap:var(--space-2);}
+.hero__art{
+  border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);overflow:hidden;
+  background:var(--color-surface);
+}
+@media(min-width:1024px){.hero__art{border-radius:var(--radius-2xl);}}
+
+/* ---------- Steps — design.md §7.3 ---------- */
+.steps{display:grid;grid-template-columns:1fr;gap:var(--space-6);position:relative;}
+@media(min-width:640px){.steps{grid-template-columns:repeat(3,1fr);gap:var(--space-8);}}
+.step{
+  background:var(--color-surface);box-shadow:var(--shadow-md);border-radius:var(--radius-lg);
+  padding:var(--space-8);text-align:center;position:relative;
+  transition:transform 250ms ease,box-shadow 250ms ease;
+}
+.step:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+@media(prefers-reduced-motion:reduce){.step:hover{transform:none;}}
+.step__num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:var(--radius-pill);
+  background:var(--color-primary-light);color:var(--color-primary);
+  font-size:var(--text-caption);font-weight:600;margin-bottom:var(--space-4);
+}
+.step__icon{
+  width:80px;height:80px;border-radius:var(--radius-pill);
+  background:var(--color-primary-light);color:var(--color-primary);
+  display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-5);
+}
+.step h3{font-size:var(--text-h3-mobile);font-weight:600;}
+@media(min-width:1024px){.step h3{font-size:var(--text-h3);}}
+.step p{margin-top:var(--space-3);color:var(--color-foreground-muted);font-size:var(--text-body-sm);}
+.steps__line{display:none;}
+@media(min-width:640px){
+  .steps__line{
+    display:block;position:absolute;top:96px;left:16.66%;right:16.66%;
+    height:2px;border-top:2px dashed var(--color-border);z-index:0;
+  }
+  .step{z-index:1;}
+}
+
+/* ---------- Pricing — design.md §7.4 ---------- */
+.price-group{margin-bottom:var(--space-12);}
+.price-group:last-child{margin-bottom:0;}
+.price-group__title{
+  font-size:var(--text-h3-mobile);font-weight:600;margin-bottom:var(--space-6);
+}
+.price-scroll{
+  display:flex;gap:var(--space-4);overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-bottom:var(--space-4);margin:0 calc(-1 * var(--gutter-mobile));
+  padding-left:var(--gutter-mobile);padding-right:var(--gutter-mobile);
+  -webkit-overflow-scrolling:touch;
+}
+.price-scroll::-webkit-scrollbar{height:6px;}
+.price-scroll::-webkit-scrollbar-thumb{background:var(--color-border-hover);border-radius:3px;}
+@media(min-width:640px){
+  .price-scroll{
+    display:grid;grid-template-columns:repeat(2,1fr);overflow:visible;
+    margin:0;padding:0;
+  }
+}
+@media(min-width:1024px){
+  .price-scroll{grid-template-columns:repeat(4,1fr);}
+  .price-scroll--special{grid-template-columns:repeat(2,1fr);max-width:640px;}
+}
+.price-card{
+  flex:0 0 260px;min-width:260px;scroll-snap-align:start;
+  background:var(--color-surface);box-shadow:var(--shadow-md);
+  border-radius:var(--radius-lg);padding:var(--space-6);
+  transition:transform 250ms ease,box-shadow 250ms ease;
+}
+@media(min-width:640px){.price-card{flex:1 1 auto;min-width:0;}}
+.price-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-xl);}
+@media(prefers-reduced-motion:reduce){.price-card:hover{transform:none;}}
+.price-card--featured{background:var(--gradient-pricing);box-shadow:var(--shadow-lg);border-radius:var(--radius-xl);}
+.price-card__icon{color:var(--color-primary);margin-bottom:var(--space-4);}
+.price-card h4{font-size:var(--text-h3-mobile);font-weight:600;}
+.price-card__rate{
+  font-size:var(--text-h2-mobile);font-weight:700;color:var(--color-primary);
+  margin-top:var(--space-3);font-variant-numeric:tabular-nums;
+}
+@media(min-width:1024px){.price-card__rate{font-size:var(--text-h2);}}
+.price-card__unit{font-size:var(--text-body-sm);color:var(--color-foreground-muted);}
+.price-card__min{
+  display:inline-block;margin-top:var(--space-4);padding:var(--space-1) var(--space-3);
+  background:var(--color-primary-light);color:var(--color-primary);
+  border-radius:var(--radius-pill);font-size:var(--text-caption);font-weight:500;
+}
+.price-card--featured .price-card__min{background:rgba(255,255,255,.7);}
+.scroll-hint{
+  display:flex;justify-content:center;gap:var(--space-2);margin-top:var(--space-2);
+  font-size:var(--text-caption);color:var(--color-foreground-subtle);
+}
+@media(min-width:640px){.scroll-hint{display:none;}}
+
+/* ---------- Trust signals — design.md §7.5 ---------- */
+.trust{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-6);}
+@media(min-width:640px){.trust{grid-template-columns:repeat(2,1fr);gap:var(--space-8);}}
+@media(min-width:1024px){.trust{grid-template-columns:repeat(3,1fr);}}
+.trust__item{text-align:center;}
+.trust__icon{
+  width:64px;height:64px;border-radius:var(--radius-pill);
+  background:var(--color-primary-light);color:var(--color-primary);
+  display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-4);
+}
+@media(min-width:640px){.trust__icon{width:72px;height:72px;}}
+.trust__item h3{font-size:var(--text-h3-mobile);font-weight:600;}
+.trust__item p{
+  margin-top:var(--space-2);font-size:var(--text-body-sm);
+  color:var(--color-foreground-muted);max-width:280px;margin-left:auto;margin-right:auto;
+}
+
+/* ---------- Testimonials — design.md §7.6 / PRD FR-LAND-03 ---------- */
+.tst-track{
+  display:flex;gap:var(--space-4);overflow-x:auto;scroll-snap-type:x mandatory;
+  margin:0 calc(-1 * var(--gutter-mobile));padding:0 var(--gutter-mobile) var(--space-4);
+  -webkit-overflow-scrolling:touch;
+}
+.tst-track::-webkit-scrollbar{display:none;}
+.tst-track{scrollbar-width:none;}
+@media(min-width:640px){
+  .tst-track{display:grid;grid-template-columns:repeat(2,1fr);overflow:visible;margin:0;padding:0;}
+}
+@media(min-width:1024px){.tst-track{grid-template-columns:repeat(3,1fr);gap:var(--space-6);}}
+.tst{
+  flex:0 0 88%;scroll-snap-align:center;
+  background:var(--color-surface);box-shadow:var(--shadow-md);
+  border-radius:var(--radius-lg);padding:var(--space-8);
+  display:flex;flex-direction:column;position:relative;overflow:hidden;
+}
+@media(min-width:640px){.tst{flex:1 1 auto;}}
+.tst__mark{
+  position:absolute;top:-8px;right:var(--space-5);font-size:5rem;line-height:1;
+  color:var(--color-primary-light);font-weight:800;pointer-events:none;user-select:none;
+}
+.tst__stars{display:flex;gap:2px;color:var(--color-accent);margin-bottom:var(--space-4);}
+.tst__quote{font-style:italic;color:var(--color-foreground);flex:1;position:relative;}
+.tst__who{display:flex;align-items:center;gap:var(--space-3);margin-top:var(--space-6);}
+.tst__avatar{
+  width:48px;height:48px;border-radius:var(--radius-pill);flex-shrink:0;
+  background:var(--color-primary-light);color:var(--color-primary);
+  display:flex;align-items:center;justify-content:center;font-weight:600;font-size:var(--text-body-sm);
+}
+.tst__name{font-weight:600;font-size:var(--text-body);}
+.tst__ctx{font-size:var(--text-body-sm);color:var(--color-foreground-muted);}
+.dots{display:flex;justify-content:center;gap:var(--space-2);margin-top:var(--space-4);}
+@media(min-width:640px){.dots{display:none;}}
+.dots button{
+  width:8px;height:8px;padding:0;border:none;border-radius:var(--radius-pill);
+  background:var(--color-border-hover);transition:background 200ms ease,width 200ms ease;
+}
+.dots button[aria-current="true"]{background:var(--color-primary);width:24px;}
+
+/* ---------- Contact — design.md §7.7 / PRD FR-LAND-04 ---------- */
+.contact{display:grid;grid-template-columns:1fr;gap:var(--space-10);}
+@media(min-width:768px){.contact{grid-template-columns:1.2fr 1fr;gap:var(--space-16);}}
+.field{margin-bottom:var(--space-5);}
+.field label{
+  display:block;font-size:var(--text-body-sm);font-weight:500;
+  color:var(--color-foreground);margin-bottom:var(--space-2);
+}
+.field .req{color:var(--color-destructive);}
+.field input,.field textarea{
+  width:100%;font-family:inherit;font-size:var(--text-body);color:var(--color-foreground);
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-sm);padding:0 var(--space-3);height:48px;
+  transition:border-color 200ms ease,box-shadow 200ms ease;
+}
+.field textarea{height:auto;padding:var(--space-3);resize:vertical;min-height:120px;line-height:1.6;}
+.field input::placeholder,.field textarea::placeholder{color:var(--color-foreground-subtle);}
+.field input:hover,.field textarea:hover{border-color:var(--color-border-hover);}
+.field input:focus,.field textarea:focus{
+  outline:none;border-color:var(--color-ring);box-shadow:0 0 0 1px var(--color-ring),var(--shadow-sm);
+}
+.field.is-error input,.field.is-error textarea{border-color:var(--color-destructive);border-width:2px;background:#FEF2F2;}
+.field__err{
+  display:none;align-items:center;gap:var(--space-1);margin-top:var(--space-2);
+  font-size:var(--text-caption);color:var(--color-destructive);
+}
+.field.is-error .field__err{display:flex;}
+.info-card{display:flex;gap:var(--space-4);margin-bottom:var(--space-6);}
+.info-card__icon{color:var(--color-primary);flex-shrink:0;margin-top:2px;}
+.info-card__label{font-size:var(--text-caption);color:var(--color-foreground-subtle);text-transform:uppercase;letter-spacing:.04em;font-weight:500;}
+.info-card__val{color:var(--color-foreground);}
+
+/* ---------- Footer — design.md §7.8 ---------- */
+.footer{background:var(--color-foreground);color:rgba(255,255,255,.8);padding:var(--space-12) 0 var(--space-6);}
+@media(min-width:1024px){.footer{padding:var(--space-16) 0 var(--space-8);}}
+.footer__grid{display:grid;grid-template-columns:1fr;gap:var(--space-8);}
+@media(min-width:640px){.footer__grid{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:1024px){.footer__grid{grid-template-columns:2fr 1fr 1fr;gap:var(--space-16);}}
+.footer .logo{color:#FFFFFF;}
+.footer .logo span{color:var(--color-footer-link);}
+.footer h4{color:#FFFFFF;font-size:var(--text-body);font-weight:600;margin-bottom:var(--space-4);}
+.footer a{color:var(--color-footer-link);}
+.footer__blurb{margin-top:var(--space-4);font-size:var(--text-body-sm);max-width:320px;}
+.footer__list li{margin-bottom:var(--space-3);font-size:var(--text-body-sm);display:flex;gap:var(--space-2);align-items:flex-start;}
+.footer__social{display:flex;gap:var(--space-4);}
+.footer__social a{
+  color:#FFFFFF;display:flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:var(--radius-md);transition:color 200ms ease,transform 200ms ease,background 200ms ease;
+}
+.footer__social a:hover{color:var(--color-footer-link);background:rgba(255,255,255,.08);transform:scale(1.06);}
+@media(prefers-reduced-motion:reduce){.footer__social a:hover{transform:none;}}
+.footer__bar{
+  margin-top:var(--space-10);padding-top:var(--space-5);
+  border-top:1px solid rgba(255,255,255,.1);
+  display:flex;flex-direction:column;gap:var(--space-3);
+  font-size:var(--text-caption);color:rgba(255,255,255,.5);
+}
+@media(min-width:640px){.footer__bar{flex-direction:row;justify-content:space-between;align-items:center;}}
+.footer__bar a{color:rgba(255,255,255,.5);}
+.footer__bar a:hover{color:var(--color-footer-link);}
+.footer__legal{display:flex;gap:var(--space-4);}
+
+/* ---------- Sticky CTA — design.md §7.9 / PRD FR-LAND-05 ---------- */
+.sticky-cta{
+  position:fixed;left:0;right:0;bottom:0;z-index:90;
+  background:var(--color-surface);box-shadow:0 -8px 24px rgba(0,0,0,.1);
+  padding:var(--space-3) var(--gutter-mobile);
+  padding-bottom:calc(var(--space-3) + env(safe-area-inset-bottom));
+  transform:translateY(110%);transition:transform .3s ease;
+}
+.sticky-cta--show{transform:translateY(0);}
+@media(prefers-reduced-motion:reduce){.sticky-cta{transition:none;}}
+@media(min-width:1024px){.sticky-cta{display:none;}}
+body{padding-bottom:0;}
+
+/* ---------- Toast — design.md §25 ---------- */
+.toast-wrap{
+  position:fixed;z-index:150;display:flex;flex-direction:column;gap:var(--space-3);
+  top:var(--space-4);left:var(--space-4);right:var(--space-4);
+}
+@media(min-width:640px){
+  .toast-wrap{top:auto;left:auto;bottom:var(--space-6);right:var(--space-6);width:380px;}
+}
+.toast{
+  display:flex;gap:var(--space-3);align-items:flex-start;
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-left:4px solid var(--color-success);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-xl);
+  padding:var(--space-4);animation:toastIn .25s ease;
+}
+@keyframes toastIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;}}
+@media(prefers-reduced-motion:reduce){.toast{animation:none;}}
+.toast__icon{color:var(--color-success);flex-shrink:0;}
+.toast__title{font-size:var(--text-body-sm);font-weight:600;}
+.toast__body{font-size:var(--text-body-sm);color:var(--color-foreground-muted);margin-top:2px;}
+.toast__x{
+  margin-left:auto;background:transparent;border:none;color:var(--color-foreground-subtle);
+  padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.toast__x:hover{color:var(--color-foreground);}
+
+/* ---------- Scroll reveal — design.md §10 ---------- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .5s ease,transform .5s ease;}
+.reveal.is-visible{opacity:1;transform:none;}
+.reveal[data-i]{transition-delay:calc(var(--i,0) * 80ms);}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+}
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+/* Demo banner */
+.demo-note{
+  background:var(--color-primary-light);border-bottom:1px solid #5EEAD4;
+  color:#0F766E;font-size:var(--text-caption);text-align:center;
+  padding:var(--space-2) var(--space-4);position:relative;z-index:1;
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<div class="demo-note">
+  <strong>Demo preview</strong> — dummy data per PRD Data Strategy. Stats, testimonials and contact details are placeholders pending the pre-launch gate (design.md §15).
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="container nav__inner">
+    <a href="#" class="logo">Vandi<span>Pilot</span></a>
+    <nav class="nav__links" aria-label="Main navigation">
+      <a href="#how">How It Works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#why">Why Us</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav__actions">
+      <a href="#" class="btn btn--ghost">Sign In</a>
+      <a href="#" class="btn btn--primary">Book a Pilot</a>
+    </div>
+    <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="overlay" id="overlay" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+  <div class="drawer__top">
+    <span class="logo">Vandi<span>Pilot</span></span>
+    <button class="drawer__close" id="drawerClose" aria-label="Close menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <nav class="drawer__links" aria-label="Mobile navigation">
+    <a href="#how">How It Works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#why">Why Us</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="drawer__actions">
+    <a href="#" class="btn btn--secondary btn--block">Sign In</a>
+    <a href="#" class="btn btn--primary btn--block">Book a Pilot</a>
+  </div>
+</aside>
+
+<main id="main-content">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero__grid">
+      <div>
+        <h1>Your Car.<br>Our Pilot.<br>Your Peace of Mind.</h1>
+        <p class="hero__sub">Book a professional driver for your own car. Safe, reliable, always on time — for city errands, outstation trips and everything between.</p>
+        <div class="hero__ctas">
+          <a href="#" class="btn btn--primary btn--lg">
+            Book a Pilot
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#" class="btn btn--secondary btn--lg">Sign In</a>
+        </div>
+        <div class="hero__proof">
+          <div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:var(--color-accent)" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg>
+            <span><strong>4.8</strong> Rating</span>
+          </div>
+          <div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-primary)" aria-hidden="true"><path d="M5 17h14M5 17l1.5-5.5A2 2 0 018.4 10h7.2a2 2 0 011.9 1.5L19 17M5 17v2M19 17v2"/><circle cx="7.5" cy="14.5" r="1"/><circle cx="16.5" cy="14.5" r="1"/></svg>
+            <span><strong>10,000+</strong> Trips</span>
+          </div>
+          <div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-primary)" aria-hidden="true"><path d="M12 3l7.5 3.5v5c0 4.4-3.1 8.2-7.5 9.5-4.4-1.3-7.5-5.1-7.5-9.5v-5z"/><path d="M9 12l2 2 4-4"/></svg>
+            <span>Verified Pilots</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Abstract on-brand hero illustration (placeholder per design decision) -->
+      <div class="hero__art">
+        <svg viewBox="0 0 640 480" role="img" aria-label="Illustration of a car on a road with a verified pilot badge" style="width:100%;height:auto;display:block">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#F0FDFA"/><stop offset="1" stop-color="#CCFBF1"/>
+            </linearGradient>
+            <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#0D9488"/><stop offset="1" stop-color="#0F766E"/>
+            </linearGradient>
+          </defs>
+          <rect width="640" height="480" fill="url(#sky)"/>
+          <circle cx="512" cy="104" r="56" fill="#FEF3C7"/>
+          <circle cx="120" cy="72" r="10" fill="#5EEAD4" opacity=".7"/>
+          <circle cx="168" cy="112" r="6" fill="#5EEAD4" opacity=".5"/>
+          <circle cx="88" cy="128" r="5" fill="#5EEAD4" opacity=".5"/>
+          <!-- buildings -->
+          <rect x="40" y="196" width="72" height="140" rx="6" fill="#0F766E" opacity=".14"/>
+          <rect x="126" y="164" width="58" height="172" rx="6" fill="#0F766E" opacity=".2"/>
+          <rect x="198" y="212" width="80" height="124" rx="6" fill="#0F766E" opacity=".12"/>
+          <rect x="404" y="180" width="64" height="156" rx="6" fill="#0F766E" opacity=".18"/>
+          <rect x="482" y="214" width="88" height="122" rx="6" fill="#0F766E" opacity=".12"/>
+          <!-- road -->
+          <rect x="0" y="336" width="640" height="144" fill="#1A1A2E" opacity=".9"/>
+          <g stroke="#FFFBF5" stroke-width="6" stroke-linecap="round" opacity=".75">
+            <path d="M40 424h60M150 424h60M260 424h60M370 424h60M480 424h60"/>
+          </g>
+          <!-- car -->
+          <g transform="translate(196 232)">
+            <rect x="12" y="52" width="224" height="56" rx="20" fill="url(#body)"/>
+            <path d="M52 52l26-34a20 20 0 0116-8h58a20 20 0 0116 8l26 34z" fill="url(#body)"/>
+            <path d="M66 50l20-26a10 10 0 018-4h26v30z" fill="#CCFBF1"/>
+            <path d="M130 50V20h26a10 10 0 018 4l20 26z" fill="#CCFBF1"/>
+            <rect x="20" y="66" width="18" height="12" rx="6" fill="#FEF3C7"/>
+            <rect x="210" y="66" width="18" height="12" rx="6" fill="#FCA5A5"/>
+            <circle cx="66" cy="108" r="24" fill="#1A1A2E"/>
+            <circle cx="66" cy="108" r="10" fill="#94A3B8"/>
+            <circle cx="182" cy="108" r="24" fill="#1A1A2E"/>
+            <circle cx="182" cy="108" r="10" fill="#94A3B8"/>
+          </g>
+          <!-- verified badge -->
+          <g transform="translate(430 254)">
+            <circle cx="0" cy="0" r="46" fill="#FFFFFF"/>
+            <circle cx="0" cy="0" r="46" fill="none" stroke="#CCFBF1" stroke-width="4"/>
+            <path d="M0 -26l17 8v12c0 10.5-7 19.5-17 22.5C-10 13.5-17 4.5-17 -6v-12z" fill="#0F766E"/>
+            <path d="M-7 -5l5 5 9-9" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how" class="bg-base">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>How It Works</h2>
+      <p>Three steps from booking to arriving. No apps to learn, no surprises.</p>
+    </div>
+    <div class="steps">
+      <div class="steps__line" aria-hidden="true"></div>
+      <div class="step reveal" data-i style="--i:0">
+        <span class="step__num">01</span>
+        <div class="step__icon">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M9 15l2 2 4-4"/></svg>
+        </div>
+        <h3>Book a Pilot</h3>
+        <p>Schedule a professional driver in seconds. Pick your date, time and location.</p>
+      </div>
+      <div class="step reveal" data-i style="--i:1">
+        <span class="step__num">02</span>
+        <div class="step__icon">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="4"/><path d="M3 21a7 7 0 0114 0M16 11l2 2 4-4"/></svg>
+        </div>
+        <h3>Pilot Arrives</h3>
+        <p>Your verified, road-tested pilot arrives at your doorstep, ready to drive.</p>
+      </div>
+      <div class="step reveal" data-i style="--i:2">
+        <span class="step__num">03</span>
+        <div class="step__icon">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg>
+        </div>
+        <h3>Enjoy the Ride</h3>
+        <p>Sit back and relax while your pilot drives your car safely there — and back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="pricing" class="bg-muted">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>Services &amp; Pricing</h2>
+      <p>Clear rates upfront. No surge pricing, no hidden fees.</p>
+    </div>
+
+    <div class="price-group reveal">
+      <h3 class="price-group__title">Regular Services</h3>
+      <div class="price-scroll">
+        <article class="price-card">
+          <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
+          <h4>Hourly Local</h4>
+          <div class="price-card__rate">₹150 <span class="price-card__unit">/ hour</span></div>
+          <span class="price-card__min">Min ₹300 · 2 hrs</span>
+        </article>
+        <article class="price-card">
+          <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></div>
+          <h4>Hourly Outstation</h4>
+          <div class="price-card__rate">₹200 <span class="price-card__unit">/ hour</span></div>
+          <span class="price-card__min">Min ₹400 · 2 hrs</span>
+        </article>
+        <article class="price-card">
+          <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18c0-3 3-3 3-6s-3-3-3-6"/><path d="M20 6c0 3-3 3-3 6s3 3 3 6"/><circle cx="4" cy="18" r="1.6"/><circle cx="20" cy="6" r="1.6"/></svg></div>
+          <h4>Daily · Within 200km</h4>
+          <div class="price-card__rate">₹1,500 <span class="price-card__unit">/ day</span></div>
+          <span class="price-card__min">Min ₹1,500 · 1 day</span>
+        </article>
+        <article class="price-card">
+          <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l8-1.5V5a1.5 1.5 0 013 0v6.5L22 13v2l-8-1v4l2.5 2v1.5L12 20l-4.5 1.5V20L10 18v-4l-7 1z"/></svg></div>
+          <h4>Daily · Above 200km</h4>
+          <div class="price-card__rate">₹2,000 <span class="price-card__unit">/ day</span></div>
+          <span class="price-card__min">Min ₹2,000 · 1 day</span>
+        </article>
+      </div>
+      <p class="scroll-hint">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        Swipe for more
+      </p>
+    </div>
+
+    <div class="price-group reveal">
+      <h3 class="price-group__title">Special Services</h3>
+      <div class="price-scroll price-scroll--special">
+        <article class="price-card price-card--featured">
+          <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5a4 4 0 105.7 5.7L21 10.4 13.6 3l-.8.8z" transform="translate(-1 1)"/><path d="M12.5 11.5L4 20a2 2 0 002.8 2.8l8.5-8.5" transform="translate(-1 -1)"/></svg></div>
+          <h4>Service Centre Trip</h4>
+          <div class="price-card__rate">₹500 <span class="price-card__unit">flat</span></div>
+          <span class="price-card__min">Drop &amp; collect</span>
+        </article>
+        <article class="price-card price-card--featured">
+          <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9.5" r="2.4"/><path d="M3 20a6 6 0 0112 0M15 20a5 5 0 016-4.8"/></svg></div>
+          <h4>Family Function</h4>
+          <div class="price-card__rate">₹1,200 <span class="price-card__unit">/ day</span></div>
+          <span class="price-card__min">Min ₹1,200 · 1 day</span>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY US ============ -->
+<section id="why" class="bg-base">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>Why Choose VandiPilot</h2>
+      <p>Your car is personal. We treat it that way.</p>
+    </div>
+    <!-- 6 published cards. "Real-Time Trip Tracking" is unpublished per PRD FR-LAND-06 -->
+    <div class="trust">
+      <div class="trust__item reveal" data-i style="--i:0">
+        <div class="trust__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3.5v5c0 4.4-3.1 8.2-7.5 9.5-4.4-1.3-7.5-5.1-7.5-9.5v-5z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Verified &amp; Road-Tested</h3>
+        <p>Every pilot is Aadhaar-verified and passes a practical driving test before their first trip.</p>
+      </div>
+      <div class="trust__item reveal" data-i style="--i:1">
+        <div class="trust__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg></div>
+        <h3>Your Car, Your Comfort</h3>
+        <p>Drive in your own vehicle. No unfamiliar cars, no adjusting to a new ride.</p>
+      </div>
+      <div class="trust__item reveal" data-i style="--i:2">
+        <div class="trust__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h9a3 3 0 010 6H7a3 3 0 000 6h10"/><path d="M9 2v4M9 14v4M4 8h4M4 16h4"/></svg></div>
+        <h3>Transparent Pricing</h3>
+        <p>No surge pricing, no hidden fees. Clear rates upfront, always.</p>
+      </div>
+      <div class="trust__item reveal" data-i style="--i:3">
+        <div class="trust__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div>
+        <h3>Early to Late</h3>
+        <p>From 4 AM airport runs to late-night returns — book a pilot when you actually need one.</p>
+      </div>
+      <div class="trust__item reveal" data-i style="--i:4">
+        <div class="trust__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg></div>
+        <h3>4.8★ Average Rating</h3>
+        <p>Our pilots maintain an exceptional rating from thousands of customers.</p>
+      </div>
+      <div class="trust__item reveal" data-i style="--i:5">
+        <div class="trust__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+        <h3>10,000+ Trips Completed</h3>
+        <p>Trusted by thousands of car owners across the city.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS (PRD FR-LAND-03) ============ -->
+<section id="testimonials" class="bg-muted">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>What Our Customers Say</h2>
+      <p>Real journeys, in their words.</p>
+    </div>
+    <div class="tst-track" id="tstTrack">
+      <article class="tst reveal" data-i style="--i:0">
+        <span class="tst__mark" aria-hidden="true">&ldquo;</span>
+        <div class="tst__stars" role="img" aria-label="Rated 5 out of 5 stars">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+        </div>
+        <p class="tst__quote">I was nervous about handing my car keys to someone, but my VandiPilot was incredibly professional. Now I book every week for my hospital visits.</p>
+        <div class="tst__who">
+          <div class="tst__avatar" aria-hidden="true">PN</div>
+          <div><div class="tst__name">Priya Nair</div><div class="tst__ctx">Regular Customer</div></div>
+        </div>
+      </article>
+
+      <article class="tst reveal" data-i style="--i:1">
+        <span class="tst__mark" aria-hidden="true">&ldquo;</span>
+        <div class="tst__stars" role="img" aria-label="Rated 5 out of 5 stars">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+        </div>
+        <p class="tst__quote">Airport runs at 4 AM? No problem. My pilot is always on time, and I can relax instead of dealing with early morning traffic.</p>
+        <div class="tst__who">
+          <div class="tst__avatar" aria-hidden="true">RK</div>
+          <div><div class="tst__name">Rajesh Kumar</div><div class="tst__ctx">Business Professional</div></div>
+        </div>
+      </article>
+
+      <article class="tst reveal" data-i style="--i:2">
+        <span class="tst__mark" aria-hidden="true">&ldquo;</span>
+        <div class="tst__stars" role="img" aria-label="Rated 5 out of 5 stars">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+        </div>
+        <p class="tst__quote">At my age, driving long distances is tiring. VandiPilot gives me the freedom to travel in my own car without the stress.</p>
+        <div class="tst__who">
+          <div class="tst__avatar" aria-hidden="true">MT</div>
+          <div><div class="tst__name">Meena Thomas</div><div class="tst__ctx">Senior Citizen</div></div>
+        </div>
+      </article>
+    </div>
+    <div class="dots" id="tstDots" role="tablist" aria-label="Testimonial navigation">
+      <button role="tab" aria-current="true" aria-label="Testimonial 1"></button>
+      <button role="tab" aria-current="false" aria-label="Testimonial 2"></button>
+      <button role="tab" aria-current="false" aria-label="Testimonial 3"></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT (PRD FR-LAND-04) ============ -->
+<section id="contact" class="bg-base">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>Get in Touch</h2>
+      <p>Questions about a booking, or want to become a pilot? Reach out.</p>
+    </div>
+    <div class="contact">
+      <form class="reveal" id="contactForm" novalidate>
+        <div class="field" id="f-name">
+          <label for="c-name">Name <span class="req" aria-hidden="true">*</span></label>
+          <input type="text" id="c-name" name="name" placeholder="Your full name" required aria-required="true" aria-describedby="e-name">
+          <span class="field__err" id="e-name">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+            Please enter your name
+          </span>
+        </div>
+        <div class="field" id="f-email">
+          <label for="c-email">Email <span class="req" aria-hidden="true">*</span></label>
+          <input type="email" id="c-email" name="email" placeholder="you@example.com" required aria-required="true" aria-describedby="e-email">
+          <span class="field__err" id="e-email">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+            Please enter a valid email address
+          </span>
+        </div>
+        <div class="field" id="f-msg">
+          <label for="c-msg">Message <span class="req" aria-hidden="true">*</span></label>
+          <textarea id="c-msg" name="message" rows="4" placeholder="How can we help?" required aria-required="true" aria-describedby="e-msg"></textarea>
+          <span class="field__err" id="e-msg">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+            Please enter a message
+          </span>
+        </div>
+        <button type="submit" class="btn btn--primary btn--block btn--lg" id="submitBtn">Send Message</button>
+      </form>
+
+      <div class="reveal">
+        <div class="info-card">
+          <span class="info-card__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+          <div>
+            <div class="info-card__label">Office</div>
+            <div class="info-card__val">VandiPilot HQ<br>123 MG Road, Kochi<br>Kerala 682001</div>
+          </div>
+        </div>
+        <div class="info-card">
+          <span class="info-card__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h3l2 5-2.5 1.5a12 12 0 006 6L15 13l5 2v3a2 2 0 01-2.2 2A16 16 0 013 5.2A2 2 0 015 3z"/></svg></span>
+          <div>
+            <div class="info-card__label">Phone</div>
+            <div class="info-card__val"><a href="tel:+919876543210">+91 98765 43210</a></div>
+          </div>
+        </div>
+        <div class="info-card">
+          <span class="info-card__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></span>
+          <div>
+            <div class="info-card__label">Email</div>
+            <div class="info-card__val"><a href="mailto:hello@vandipilot.com">hello@vandipilot.com</a></div>
+          </div>
+        </div>
+        <div class="info-card">
+          <span class="info-card__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
+          <div>
+            <div class="info-card__label">Hours</div>
+            <div class="info-card__val">Mon – Sun · 6:00 AM – 11:00 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <span class="logo">Vandi<span>Pilot</span></span>
+        <p class="footer__blurb">Professional drivers for your car. Safe, reliable, always on time.</p>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul class="footer__list">
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M5 3h3l2 5-2.5 1.5a12 12 0 006 6L15 13l5 2v3a2 2 0 01-2.2 2A16 16 0 013 5.2A2 2 0 015 3z"/></svg> <a href="tel:+919876543210">+91 98765 43210</a></li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg> <a href="mailto:hello@vandipilot.com">hello@vandipilot.com</a></li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg> Kochi, Kerala</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Follow Us</h4>
+        <div class="footer__social">
+          <a href="#" aria-label="VandiPilot on Facebook"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v7h3v-7h2.5l.5-3H13v-2c0-.6.4-1 1-1z"/></svg></a>
+          <a href="#" aria-label="VandiPilot on Instagram"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17" cy="7" r="1.1" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="VandiPilot on X"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3l-6.6 7.6L21.5 21h-5.4l-4.2-5.5L6.9 21H3.8l7-8L2.9 3h5.5l3.9 5.2z"/></svg></a>
+          <a href="#" aria-label="VandiPilot on LinkedIn"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 9H8v11H5zM6.5 4a1.8 1.8 0 100 3.6 1.8 1.8 0 000-3.6zM10 9h2.9v1.5A3.3 3.3 0 0116 9c2.4 0 4 1.6 4 4.6V20h-3v-6c0-1.5-.6-2.4-1.9-2.4-1.1 0-1.8.7-2.1 1.5V20h-3z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <span>© 2026 VandiPilot. All rights reserved.</span>
+      <span class="footer__legal"><a href="#">Terms</a><a href="#">Privacy</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- Sticky CTA (< 1024px) -->
+<div class="sticky-cta" id="stickyCta">
+  <a href="#" class="btn btn--primary btn--block">Book a Pilot</a>
+</div>
+
+<div class="toast-wrap" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script>
+(function(){
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Scroll reveal (IntersectionObserver, design.md §10) ---- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if(reduced || !('IntersectionObserver' in window)){
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
+  } else {
+    var ro = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('is-visible'); ro.unobserve(e.target); }
+      });
+    },{threshold:0.15, rootMargin:'0px 0px -50px 0px'});
+    revealEls.forEach(function(el){ ro.observe(el); });
+  }
+
+  /* ---- Nav: scrolled background + auto-hide on scroll down ---- */
+  var nav = document.getElementById('nav');
+  var lastY = window.scrollY, ticking = false;
+  function onScroll(){
+    var y = window.scrollY;
+    if(y > 8) nav.classList.add('nav--scrolled'); else nav.classList.remove('nav--scrolled');
+    if(y < 80){
+      nav.classList.remove('nav--hidden');
+    } else if(y > lastY + 6){
+      nav.classList.add('nav--hidden');
+    } else if(y < lastY - 6){
+      nav.classList.remove('nav--hidden');
+    }
+    lastY = y; ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){ ticking = true; window.requestAnimationFrame(onScroll); }
+  },{passive:true});
+  onScroll();
+
+  /* ---- Sticky CTA: hide while the hero CTA is visible ---- */
+  var sticky = document.getElementById('stickyCta');
+  var heroCta = document.querySelector('.hero__ctas');
+  if('IntersectionObserver' in window && heroCta){
+    var so = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting) sticky.classList.remove('sticky-cta--show');
+        else sticky.classList.add('sticky-cta--show');
+      });
+    },{threshold:0});
+    so.observe(heroCta);
+  } else {
+    sticky.classList.add('sticky-cta--show');
+  }
+
+  /* ---- Mobile drawer with focus trap (design.md §11) ---- */
+  var burger = document.getElementById('burger');
+  var drawer = document.getElementById('drawer');
+  var overlay = document.getElementById('overlay');
+  var closeBtn = document.getElementById('drawerClose');
+  var lastFocused = null;
+
+  function focusables(){
+    return drawer.querySelectorAll('a[href], button:not([disabled])');
+  }
+  function openDrawer(){
+    lastFocused = document.activeElement;
+    drawer.hidden = false; overlay.hidden = false;
+    requestAnimationFrame(function(){
+      drawer.classList.add('drawer--open');
+      overlay.classList.add('overlay--open');
+    });
+    burger.setAttribute('aria-expanded','true');
+    document.body.style.overflow = 'hidden';
+    var f = focusables(); if(f.length) f[0].focus();
+    document.addEventListener('keydown', trap, true);
+  }
+  function closeDrawer(){
+    drawer.classList.remove('drawer--open');
+    overlay.classList.remove('overlay--open');
+    burger.setAttribute('aria-expanded','false');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', trap, true);
+    var done = function(){ drawer.hidden = true; overlay.hidden = true; };
+    if(reduced) done(); else setTimeout(done, 300);
+    if(lastFocused) lastFocused.focus();
+  }
+  function trap(e){
+    if(e.key === 'Escape'){ e.preventDefault(); closeDrawer(); return; }
+    if(e.key !== 'Tab') return;
+    var f = focusables(); if(!f.length) return;
+    var first = f[0], last = f[f.length-1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  }
+  burger.addEventListener('click', openDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+  drawer.querySelectorAll('.drawer__links a').forEach(function(a){
+    a.addEventListener('click', closeDrawer);
+  });
+
+  /* ---- Testimonial carousel dots ---- */
+  var track = document.getElementById('tstTrack');
+  var dots = Array.prototype.slice.call(document.querySelectorAll('#tstDots button'));
+  var cards = Array.prototype.slice.call(track.querySelectorAll('.tst'));
+  dots.forEach(function(dot, i){
+    dot.addEventListener('click', function(){
+      cards[i].scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'nearest', inline:'center'});
+    });
+  });
+  var st;
+  track.addEventListener('scroll', function(){
+    clearTimeout(st);
+    st = setTimeout(function(){
+      var mid = track.scrollLeft + track.clientWidth/2, best = 0, bd = Infinity;
+      cards.forEach(function(c,i){
+        var d = Math.abs((c.offsetLeft + c.offsetWidth/2) - mid);
+        if(d < bd){ bd = d; best = i; }
+      });
+      dots.forEach(function(d,i){ d.setAttribute('aria-current', i===best ? 'true':'false'); });
+    }, 80);
+  },{passive:true});
+
+  /* ---- Toasts (design.md §25) ---- */
+  var toasts = document.getElementById('toasts');
+  function toast(title, body){
+    var el = document.createElement('div');
+    el.className = 'toast';
+    el.setAttribute('role','status');
+    el.innerHTML =
+      '<span class="toast__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg></span>' +
+      '<div><div class="toast__title"></div><div class="toast__body"></div></div>' +
+      '<button class="toast__x" aria-label="Dismiss"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>';
+    el.querySelector('.toast__title').textContent = title;
+    el.querySelector('.toast__body').textContent = body;
+    el.querySelector('.toast__x').addEventListener('click', function(){ el.remove(); });
+    toasts.appendChild(el);
+    while(toasts.children.length > 3) toasts.firstElementChild.remove();
+    setTimeout(function(){ if(el.parentNode) el.remove(); }, 4000);
+  }
+
+  /* ---- Contact form: validate on blur, dummy success (PRD FR-LAND-04) ---- */
+  var form = document.getElementById('contactForm');
+  var checks = {
+    'c-name': function(v){ return v.trim().length > 0; },
+    'c-email': function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); },
+    'c-msg': function(v){ return v.trim().length > 0; }
+  };
+  function validate(id, showError){
+    var input = document.getElementById(id);
+    var wrap = input.closest('.field');
+    var ok = checks[id](input.value);
+    if(!ok && showError){
+      wrap.classList.add('is-error');
+      input.setAttribute('aria-invalid','true');
+    } else if(ok){
+      wrap.classList.remove('is-error');
+      input.removeAttribute('aria-invalid');
+    }
+    return ok;
+  }
+  Object.keys(checks).forEach(function(id){
+    var input = document.getElementById(id);
+    /* validate on blur, not per keystroke — design.md §20 */
+    input.addEventListener('blur', function(){ validate(id, true); });
+    input.addEventListener('input', function(){
+      if(input.closest('.field').classList.contains('is-error')) validate(id, false);
+    });
+  });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var ids = Object.keys(checks), firstBad = null, allOk = true;
+    ids.forEach(function(id){
+      var ok = validate(id, true);
+      if(!ok){ allOk = false; if(!firstBad) firstBad = id; }
+    });
+    if(!allOk){
+      var el = document.getElementById(firstBad);
+      el.focus();
+      el.scrollIntoView({behavior: reduced ? 'auto':'smooth', block:'center'});
+      return;
+    }
+    var btn = document.getElementById('submitBtn');
+    var label = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Sending…';
+    setTimeout(function(){
+      btn.disabled = false; btn.textContent = label;
+      form.reset();
+      toast('Message sent', 'Thanks for reaching out — we’ll reply within one business day.');
+    }, 700);
+  });
+})();
+</script>
+</body>
+</html>
