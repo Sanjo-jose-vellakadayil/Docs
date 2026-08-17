@@ -46,7 +46,7 @@ The following are explicitly **not** in scope for this iteration (userQ):
 5. **No real Google OAuth** — Auth flow is simulated (e.g., clicking "Sign In" sets a dummy session with a selected role). The auth guard and role routing logic must still function correctly.
 6. **No file uploads** — Profile photos and driver documents use placeholder images.
 7. **No Supabase Realtime** — Realtime subscriptions are deferred; status changes are static dummy data.
-8. **No responsive mobile optimization** — Desktop-first; mobile polish is deferred to a later phase.
+8. ~~**No responsive mobile optimization**~~ — **UPDATED (2026-08-17):** Responsive design is now **in scope** for all pages. The application will be fully responsive across mobile, tablet, and desktop from day one. See [design.md](file:///d:/SJ/Business/IT%20Business/VandiPilot/Docs/frontend/design.md) for breakpoint specifications.
 
 ---
 
