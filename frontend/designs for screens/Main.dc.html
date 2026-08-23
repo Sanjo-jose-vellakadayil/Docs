@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+:root{
+  --color-primary:#0F766E;--color-primary-light:#CCFBF1;--color-on-primary:#FFFFFF;
+  --color-accent:#C2740A;
+  --color-background:#FFFBF5;--color-surface:#FFFFFF;--color-foreground:#1A1A2E;
+  --color-foreground-muted:#475569;--color-foreground-subtle:#64748B;
+  --color-border:#E2E8F0;--color-muted:#F1F5F9;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 12px rgba(0,0,0,.08);
+  --radius-md:8px;--radius-lg:12px;--radius-pill:9999px;
+}
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0;background:var(--color-background);color:var(--color-foreground);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+h1,h2,h3{margin:0;line-height:1.2;}
+p{margin:0;}
+a{color:var(--color-primary);text-decoration:none;}
+.wrap{max-width:1040px;margin:0 auto;padding:64px 48px 80px;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--color-primary-light);color:var(--color-primary);
+  padding:6px 14px;border-radius:var(--radius-pill);font-size:.8125rem;font-weight:600;}
+h1.title{font-size:2.75rem;font-weight:800;letter-spacing:-.02em;margin-top:20px;}
+h1.title span{color:var(--color-primary);}
+.lede{font-size:1.125rem;color:var(--color-foreground-muted);max-width:640px;margin-top:16px;line-height:1.6;}
+.source{margin-top:24px;font-size:.8125rem;color:var(--color-foreground-subtle);}
+.source code{background:var(--color-muted);padding:2px 6px;border-radius:4px;}
+.groups{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;}
+.group{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);padding:28px;}
+.group__head{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.group__icon{width:40px;height:40px;border-radius:var(--radius-md);background:var(--color-primary-light);
+  color:var(--color-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.group h2{font-size:1.125rem;font-weight:700;}
+.group__sub{font-size:.75rem;color:var(--color-foreground-subtle);}
+.route-list{display:flex;flex-direction:column;gap:2px;}
+.route{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;}
+.route:hover{background:var(--color-muted);}
+.route__name{font-size:.9375rem;font-weight:500;}
+.route__path{font-size:.75rem;color:var(--color-foreground-subtle);font-family:ui-monospace,'SF Mono',Menlo,monospace;}
+.foot{margin-top:56px;padding-top:32px;border-top:1px solid var(--color-border);
+  display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap;}
+.foot__col{font-size:.8125rem;color:var(--color-foreground-muted);max-width:460px;line-height:1.6;}
+.foot__col strong{color:var(--color-foreground);}
+.legend{display:flex;gap:16px;flex-wrap:wrap;}
+.legend__item{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--color-foreground-muted);}
+.sw{width:12px;height:12px;border-radius:3px;}
+</style>
+</helmet>
+
+<div class="wrap">
+  <span class="eyebrow">Design system × implementation plan</span>
+  <h1 class="title">Vandi<span>Pilot</span> — Screen Map</h1>
+  <p class="lede">Static mockups for all 18 authenticated routes from <code>implementation_plan.md</code>, styled from the tokens and component specs in <code>design.md</code> (Parts I &amp; II). The public landing page already exists as <code>landing-page-preview.html</code> — this canvas covers everything behind sign-in.</p>
+  <p class="source">Sources: <code>development/Docs/frontend/implementation_plan.md</code> · <code>development/Docs/frontend/design.md</code> §16–27 · <code>development/Docs/frontend/PRD.md</code> (dummy-data scope)</p>
+
+  <div class="groups">
+    <div class="group">
+      <div class="group__head">
+        <div class="group__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        </div>
+        <div><h2>Customer</h2><div class="group__sub">4 screens</div></div>
+      </div>
+      <div class="route-list">
+        <div class="route"><span class="route__name">Dashboard</span><span class="route__path">/customer</span></div>
+        <div class="route"><span class="route__name">Book a Pilot</span><span class="route__path">/customer/book</span></div>
+        <div class="route"><span class="route__name">Trip Detail</span><span class="route__path">/customer/trips/[id]</span></div>
+        <div class="route"><span class="route__name">Profile</span><span class="route__path">/customer/profile</span></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group__head">
+        <div class="group__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg>
+        </div>
+        <div><h2>Driver</h2><div class="group__sub">4 screens</div></div>
+      </div>
+      <div class="route-list">
+        <div class="route"><span class="route__name">Dashboard</span><span class="route__path">/driver</span></div>
+        <div class="route"><span class="route__name">Active Trip</span><span class="route__path">/driver/trips/[id]</span></div>
+        <div class="route"><span class="route__name">Earnings</span><span class="route__path">/driver/earnings</span></div>
+        <div class="route"><span class="route__name">Calendar</span><span class="route__path">/driver/calendar</span></div>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group__head">
+        <div class="group__icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9.5" r="2.4"/><path d="M3 20a6 6 0 0112 0M15 20a5 5 0 016-4.8"/></svg>
+        </div>
+        <div><h2>Admin</h2><div class="group__sub">10 screens</div></div>
+      </div>
+      <div class="route-list">
+        <div class="route"><span class="route__name">Dashboard</span><span class="route__path">/admin</span></div>
+        <div class="route"><span class="route__name">Bookings</span><span class="route__path">/admin/bookings</span></div>
+        <div class="route"><span class="route__name">New Booking</span><span class="route__path">/admin/bookings/new</span></div>
+        <div class="route"><span class="route__name">Drivers</span><span class="route__path">/admin/drivers</span></div>
+        <div class="route"><span class="route__name">Add Driver</span><span class="route__path">/admin/drivers/new</span></div>
+        <div class="route"><span class="route__name">Customers</span><span class="route__path">/admin/customers</span></div>
+        <div class="route"><span class="route__name">Commissions</span><span class="route__path">/admin/commissions</span></div>
+        <div class="route"><span class="route__name">Reports</span><span class="route__path">/admin/reports</span></div>
+        <div class="route"><span class="route__name">Pricing</span><span class="route__path">/admin/pricing</span></div>
+        <div class="route"><span class="route__name">Ratings</span><span class="route__path">/admin/ratings</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="foot__col"><strong>Data:</strong> all values are dummy/hardcoded per the PRD's Data Strategy — no live Supabase. Booking refs follow <code>VP-YYYYMMDD-NNN</code>; currency uses Indian lakh/crore grouping (design.md §27).</div>
+    <div class="legend">
+      <span class="legend__item"><span class="sw" style="background:#CCFBF1"></span>Pilot Assigned</span>
+      <span class="legend__item"><span class="sw" style="background:#DBEAFE"></span>Running</span>
+      <span class="legend__item"><span class="sw" style="background:#FEF3C7"></span>Waiting / Pending</span>
+      <span class="legend__item"><span class="sw" style="background:#DCFCE7"></span>Completed / Confirmed</span>
+      <span class="legend__item"><span class="sw" style="background:#FEE2E2"></span>Cancelled / Banned</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
