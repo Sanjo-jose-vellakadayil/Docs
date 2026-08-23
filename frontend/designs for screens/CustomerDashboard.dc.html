@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+:root{
+  --color-primary:#0F766E;--color-primary-hover:#115E59;--color-primary-light:#CCFBF1;--color-on-primary:#FFFFFF;
+  --color-secondary:#10827A;--color-accent:#C2740A;
+  --color-background:#FFFBF5;--color-surface:#FFFFFF;--color-foreground:#1A1A2E;
+  --color-foreground-muted:#475569;--color-foreground-subtle:#64748B;
+  --color-border:#E2E8F0;--color-border-hover:#CBD5E1;--color-muted:#F1F5F9;
+  --color-destructive:#B91C1C;--color-success:#15803D;--color-warning:#B45309;--color-info:#0369A1;
+  --gradient-cta:linear-gradient(135deg,#0F766E 0%,#10827A 100%);
+  --gradient-pricing:linear-gradient(145deg,#F0FDFA 0%,#CCFBF1 100%);
+  --radius-sm:6px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;--radius-pill:9999px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 12px rgba(0,0,0,.08);--shadow-lg:0 8px 24px rgba(0,0,0,.1);
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{background:var(--color-background);}
+body{margin:0;color:var(--color-foreground);font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.5;}
+h1,h2,h3,h4{margin:0;line-height:1.2;}
+p{margin:0;}
+a{color:var(--color-primary);text-decoration:none;}
+ul{margin:0;padding:0;list-style:none;}
+button{font-family:inherit;cursor:pointer;}
+
+.shell{display:flex;min-height:100vh;}
+.sidebar{width:264px;flex-shrink:0;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;padding:var(--space-5) 0;}
+.sidebar__logo{font-size:1.25rem;font-weight:700;padding:0 var(--space-5) var(--space-6);}
+.sidebar__logo span{color:var(--color-primary);}
+.sidebar__nav{display:flex;flex-direction:column;gap:2px;padding:0 var(--space-3);flex:1;}
+.sidebar__link{display:flex;align-items:center;gap:var(--space-3);height:44px;padding:0 var(--space-4);border-radius:var(--radius-md);color:var(--color-foreground-muted);font-size:.9375rem;font-weight:500;position:relative;}
+.sidebar__link svg{flex-shrink:0;}
+.sidebar__link.active{background:var(--color-primary-light);color:var(--color-primary);}
+.sidebar__link.active::before{content:"";position:absolute;left:-12px;top:0;bottom:0;width:3px;background:var(--color-primary);border-radius:0 3px 3px 0;}
+.sidebar__foot{padding:var(--space-3) var(--space-3) 0;border-top:1px solid var(--color-border);margin-top:var(--space-3);}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column;}
+.topbar{height:64px;flex-shrink:0;background:var(--color-surface);border-bottom:1px solid var(--color-border);display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-8);}
+.topbar h1{font-size:1.5rem;font-weight:600;}
+.topbar__right{display:flex;align-items:center;gap:var(--space-5);}
+.bell{position:relative;color:var(--color-foreground-muted);}
+.bell__badge{position:absolute;top:-4px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--color-destructive);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-surface);}
+.usermenu{display:flex;align-items:center;gap:var(--space-2);}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--color-primary-light);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.75rem;flex-shrink:0;}
+.usermenu__name{font-size:.875rem;font-weight:500;}
+.content{max-width:1200px;margin:0 auto;padding:var(--space-8);width:100%;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);height:44px;padding:0 var(--space-6);border-radius:var(--radius-md);font-size:1rem;font-weight:600;border:none;white-space:nowrap;text-decoration:none;}
+.btn--sm{height:36px;padding:0 var(--space-4);font-size:.875rem;border-radius:var(--radius-sm);}
+.btn--primary{background:var(--gradient-cta);color:#fff;box-shadow:0 4px 14px rgba(15,118,110,.3);}
+.btn--secondary{background:var(--color-surface);color:var(--color-foreground);border:1px solid var(--color-border);box-shadow:var(--shadow-sm);}
+
+.badge{display:inline-flex;align-items:center;gap:var(--space-1);height:28px;padding:0 var(--space-3);border-radius:var(--radius-pill);border:1px solid;font-size:.75rem;font-weight:500;flex-shrink:0;}
+.badge--requested{background:#F1F5F9;color:#475569;border-color:#CBD5E1;}
+.badge--assigned{background:#CCFBF1;color:#0F766E;border-color:#5EEAD4;}
+.badge--leg1{background:#DBEAFE;color:#0369A1;border-color:#93C5FD;}
+.badge--completed{background:#DCFCE7;color:#15803D;border-color:#86EFAC;}
+
+.welcome{background:var(--gradient-pricing);border-radius:var(--radius-xl);padding:var(--space-8);display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-md);margin-bottom:var(--space-8);}
+.welcome h2{font-size:1.5rem;font-weight:700;}
+.welcome p{margin-top:6px;color:var(--color-foreground-muted);font-size:.9375rem;}
+
+.section-title{font-size:1.125rem;font-weight:600;margin-bottom:var(--space-4);}
+.section{margin-bottom:var(--space-8);}
+.trip-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-4);}
+.trip-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);box-shadow:var(--shadow-sm);}
+.trip-card__top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--space-4);}
+.trip-card__ref{font-size:.75rem;color:var(--color-foreground-subtle);font-family:ui-monospace,'SF Mono',Menlo,monospace;}
+.trip-card__route{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-4);}
+.trip-card__stop{display:flex;align-items:center;gap:8px;font-size:.875rem;}
+.trip-card__dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.trip-card__foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--color-border);padding-top:var(--space-4);font-size:.8125rem;color:var(--color-foreground-muted);}
+.trip-card__driver{display:flex;align-items:center;gap:8px;}
+.driver-avatar{width:28px;height:28px;border-radius:50%;background:var(--color-primary-light);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:.6875rem;font-weight:700;}
+
+.table-wrap{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:var(--color-muted);text-align:left;font-size:.75rem;text-transform:uppercase;font-weight:600;color:var(--color-foreground-muted);padding:0 var(--space-4);height:44px;}
+tbody td{padding:var(--space-4);height:56px;font-size:.875rem;border-top:1px solid var(--color-border);}
+tbody tr:hover{background:var(--color-muted);}
+.num{text-align:right;font-variant-numeric:tabular-nums;}
+.stars{color:var(--color-accent);display:inline-flex;gap:2px;}
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4);border-top:1px solid var(--color-border);font-size:.875rem;color:var(--color-foreground-muted);}
+.page-btns{display:flex;gap:4px;}
+.page-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);font-size:.8125rem;}
+.page-btn.active{background:var(--color-primary-light);color:var(--color-primary);font-weight:600;}
+
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);}
+.price-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);box-shadow:var(--shadow-sm);}
+.price-card h4{font-size:1rem;font-weight:600;}
+.price-card__rate{font-size:1.375rem;font-weight:700;color:var(--color-primary);margin-top:6px;}
+.price-card__rate span{font-size:.8125rem;font-weight:400;color:var(--color-foreground-muted);}
+</style>
+</helmet>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar__logo">Vandi<span>Pilot</span></div>
+    <nav class="sidebar__nav">
+      <a class="sidebar__link active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>Dashboard</a>
+      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/><path d="M9 15l2 2 4-4"/></svg>Book a Pilot</a>
+      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg>My Trips</a>
+      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3.2"/><path d="M6 19a6.5 6.5 0 0112 0"/></svg>Profile</a>
+    </nav>
+    <div class="sidebar__foot">
+      <a class="sidebar__link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Sign Out</a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <h1>Dashboard</h1>
+      <div class="topbar__right">
+        <div class="bell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 004 0"/></svg><span class="bell__badge">2</span></div>
+        <div class="usermenu"><div class="avatar">PN</div><span class="usermenu__name">Priya Nair</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="welcome">
+        <div>
+          <h2>Welcome back, Priya</h2>
+          <p>You have 2 upcoming trips this week.</p>
+        </div>
+        <a class="btn btn--primary">
+          Book a Pilot
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Active &amp; Upcoming Trips</div>
+        <div class="trip-grid">
+          <div class="trip-card">
+            <div class="trip-card__top">
+              <span class="trip-card__ref">VP-20260824-003</span>
+              <span class="badge badge--leg1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/></svg>On the Way</span>
+            </div>
+            <div class="trip-card__route">
+              <div class="trip-card__stop"><span class="trip-card__dot" style="background:#0F766E"></span>Kadavanthra, Kochi</div>
+              <div class="trip-card__stop"><span class="trip-card__dot" style="background:#C2740A"></span>Lulu Mall, Edappally</div>
+            </div>
+            <div class="trip-card__foot">
+              <span>Today, 4:30 PM</span>
+              <div class="trip-card__driver"><div class="driver-avatar">AS</div>Arun Shankar</div>
+            </div>
+          </div>
+
+          <div class="trip-card">
+            <div class="trip-card__top">
+              <span class="trip-card__ref">VP-20260826-001</span>
+              <span class="badge badge--assigned"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0114 0"/><path d="M16 11l2 2 4-4"/></svg>Pilot Assigned</span>
+            </div>
+            <div class="trip-card__route">
+              <div class="trip-card__stop"><span class="trip-card__dot" style="background:#0F766E"></span>Kadavanthra, Kochi</div>
+              <div class="trip-card__stop"><span class="trip-card__dot" style="background:#C2740A"></span>Cochin Airport (COK)</div>
+            </div>
+            <div class="trip-card__foot">
+              <span>26 Aug, 5:00 AM</span>
+              <div class="trip-card__driver"><div class="driver-avatar">RM</div>Ravi Menon</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Trip History</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Ref</th><th>Route</th><th>Date</th><th>Driver</th><th>Rating</th><th class="num">Fare</th></tr></thead>
+            <tbody>
+              <tr><td>VP-20260816-001</td><td>Kadavanthra → Fort Kochi</td><td>16 Aug 2026</td><td>Arun Shankar</td><td><span class="stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg></span></td><td class="num">₹840</td></tr>
+              <tr><td>VP-20260809-004</td><td>Kadavanthra → Kochi Airport</td><td>09 Aug 2026</td><td>Ravi Menon</td><td><span class="stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg></span></td><td class="num">₹1,250</td></tr>
+              <tr><td>VP-20260728-002</td><td>Kadavanthra → Service Centre</td><td>28 Jul 2026</td><td>Arun Shankar</td><td><span class="stars"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg></span></td><td class="num">₹500</td></tr>
+            </tbody>
+          </table>
+          <div class="pagination">
+            <span>Showing 1–3 of 12</span>
+            <div class="page-btns">
+              <div class="page-btn active">1</div><div class="page-btn">2</div><div class="page-btn">3</div><div class="page-btn">4</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" style="margin-bottom:0">
+        <div class="section-title">Services &amp; Pricing</div>
+        <div class="price-grid">
+          <div class="price-card"><h4>Hourly Local</h4><div class="price-card__rate">₹150 <span>/ hour</span></div></div>
+          <div class="price-card"><h4>Daily · Within 200km</h4><div class="price-card__rate">₹1,500 <span>/ day</span></div></div>
+          <div class="price-card"><h4>Service Centre Trip</h4><div class="price-card__rate">₹500 <span>flat</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
