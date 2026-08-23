@@ -11,6 +11,7 @@
     { "file": "DriverTrip.dc.html", "x": 1520, "y": 2590, "w": 1440, "h": 1250 },
     { "file": "DriverEarnings.dc.html", "x": 3040, "y": 2590, "w": 1440, "h": 1150 },
     { "file": "DriverCalendar.dc.html", "x": 4560, "y": 2590, "w": 1440, "h": 1350 },
+    { "file": "DriverProfile.dc.html", "x": 6080, "y": 2590, "w": 1440, "h": 1390 },
 
     { "file": "AdminDashboard.dc.html", "x": 0, "y": 4080, "w": 1440, "h": 1300 },
     { "file": "AdminBookings.dc.html", "x": 1520, "y": 4080, "w": 1440, "h": 1150 },
@@ -26,7 +27,7 @@
   ],
   "annotations": [
     { "id": "lbl-customer", "x": 0, "y": 860, "w": 320, "text": "Customer — 4 screens" },
-    { "id": "lbl-driver", "x": 0, "y": 2550, "w": 320, "text": "Driver (Pilot) — 4 screens" },
+    { "id": "lbl-driver", "x": 0, "y": 2550, "w": 320, "text": "Driver (Pilot) — 5 screens" },
     { "id": "lbl-admin", "x": 0, "y": 4040, "w": 320, "text": "Admin — 10 screens" }
   ],
   "launch": { "view": "canvas" }
