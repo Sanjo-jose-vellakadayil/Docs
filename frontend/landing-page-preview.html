@@ -339,6 +339,30 @@ section{padding:var(--space-16) 0;}
   border-radius:var(--radius-pill);font-size:var(--text-caption);font-weight:500;
 }
 .price-card--featured .price-card__min{background:rgba(255,255,255,.7);}
+.price-scroll--three{}
+@media(min-width:1024px){.price-scroll.price-scroll--three{grid-template-columns:repeat(3,1fr);}}
+.price-card__plus{font-size:var(--text-body-sm);color:var(--color-foreground-muted);margin-top:var(--space-1);}
+.price-note{margin-top:var(--space-6);text-align:center;font-size:var(--text-body-sm);color:var(--color-foreground-muted);}
+
+/* ---------- Book a Pilot popup ---------- */
+.bp{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:var(--space-4);background:rgba(26,26,46,.55);opacity:0;visibility:hidden;transition:opacity 200ms ease,visibility 200ms ease;}
+.bp--open{opacity:1;visibility:visible;}
+.bp__dialog{position:relative;width:100%;max-width:480px;max-height:calc(100vh - 32px);overflow-y:auto;background:var(--color-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);padding:var(--space-8) var(--space-6) var(--space-6);transform:translateY(12px);transition:transform 200ms ease;}
+.bp--open .bp__dialog{transform:none;}
+@media(min-width:640px){.bp__dialog{padding:var(--space-8);}}
+@media(prefers-reduced-motion:reduce){.bp,.bp__dialog{transition:none;}}
+.bp__close{position:absolute;top:var(--space-4);right:var(--space-4);width:40px;height:40px;border:none;background:transparent;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--color-foreground-muted);}
+.bp__close:hover{background:var(--color-muted);}
+.bp__title{font-size:var(--text-h3-mobile);font-weight:700;margin-bottom:var(--space-2);}
+.bp__sub{color:var(--color-foreground-muted);font-size:var(--text-body-sm);margin-bottom:var(--space-6);}
+.bp__row{display:grid;grid-template-columns:1fr;gap:0 var(--space-4);}
+@media(min-width:480px){.bp__row{grid-template-columns:1fr 1fr;}}
+.bp .field input{width:100%;}
+.bp__note{font-size:var(--text-caption);color:var(--color-foreground-subtle);margin-top:var(--space-3);text-align:center;}
+.bp__done{display:none;text-align:center;padding:var(--space-4) 0;}
+.bp--sent .bp__done{display:block;}
+.bp--sent .bp__form{display:none;}
+.bp__tick{width:56px;height:56px;border-radius:50%;background:var(--color-primary-light);color:var(--color-primary);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-4);}
 .scroll-hint{
   display:flex;justify-content:center;gap:var(--space-2);margin-top:var(--space-2);
   font-size:var(--text-caption);color:var(--color-foreground-subtle);
@@ -542,7 +566,7 @@ body{padding-bottom:0;}
     </nav>
     <div class="nav__actions">
       <a href="#" class="btn btn--ghost">Sign In</a>
-      <a href="#" class="btn btn--primary">Book a Pilot</a>
+      <a href="#book-pilot" data-open-booking class="btn btn--primary">Book a Pilot</a>
     </div>
     <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -567,7 +591,7 @@ body{padding-bottom:0;}
   </nav>
   <div class="drawer__actions">
     <a href="#" class="btn btn--secondary btn--block">Sign In</a>
-    <a href="#" class="btn btn--primary btn--block">Book a Pilot</a>
+    <a href="#book-pilot" data-open-booking class="btn btn--primary btn--block">Book a Pilot</a>
   </div>
 </aside>
 
@@ -581,7 +605,7 @@ body{padding-bottom:0;}
         <h1>Your Car.<br>Our Pilot.<br>Your Peace of Mind.</h1>
         <p class="hero__sub">Book a professional driver for your own car. Safe, reliable, always on time — for city errands, outstation trips and everything between.</p>
         <div class="hero__ctas">
-          <a href="#" class="btn btn--primary btn--lg">
+          <a href="#book-pilot" data-open-booking class="btn btn--primary btn--lg">
             Book a Pilot
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
@@ -702,59 +726,37 @@ body{padding-bottom:0;}
     </div>
 
     <div class="price-group reveal">
-      <h3 class="price-group__title">Regular Services</h3>
-      <div class="price-scroll">
+      <div class="price-scroll price-scroll--three">
         <article class="price-card">
           <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
-          <h4>Hourly Local</h4>
-          <div class="price-card__rate">₹150 <span class="price-card__unit">/ hour</span></div>
-          <span class="price-card__min">Min ₹300 · 2 hrs</span>
-        </article>
-        <article class="price-card">
-          <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></div>
-          <h4>Hourly Outstation</h4>
-          <div class="price-card__rate">₹200 <span class="price-card__unit">/ hour</span></div>
-          <span class="price-card__min">Min ₹400 · 2 hrs</span>
+          <h4>Hourly Charge</h4>
+          <div class="price-card__rate">₹199 <span class="price-card__unit">/ hour</span></div>
+          <p class="price-card__plus">+ 10% platform charge</p>
+          <span class="price-card__min">Minimum charge ₹299</span>
         </article>
         <article class="price-card">
           <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18c0-3 3-3 3-6s-3-3-3-6"/><path d="M20 6c0 3-3 3-3 6s3 3 3 6"/><circle cx="4" cy="18" r="1.6"/><circle cx="20" cy="6" r="1.6"/></svg></div>
-          <h4>Daily · Within 200km</h4>
-          <div class="price-card__rate">₹1,500 <span class="price-card__unit">/ day</span></div>
-          <span class="price-card__min">Min ₹1,500 · 1 day</span>
+          <h4>Full Day · Within 200km</h4>
+          <div class="price-card__rate">₹1,999 <span class="price-card__unit">/ full day</span></div>
+          <p class="price-card__plus">+ 10% platform charge</p>
+          <span class="price-card__min">Maximum per day, not a fixed fee</span>
         </article>
         <article class="price-card">
           <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l8-1.5V5a1.5 1.5 0 013 0v6.5L22 13v2l-8-1v4l2.5 2v1.5L12 20l-4.5 1.5V20L10 18v-4l-7 1z"/></svg></div>
-          <h4>Daily · Above 200km</h4>
-          <div class="price-card__rate">₹2,000 <span class="price-card__unit">/ day</span></div>
-          <span class="price-card__min">Min ₹2,000 · 1 day</span>
+          <h4>Full Day · Above 200km</h4>
+          <div class="price-card__rate">₹2,999 <span class="price-card__unit">/ full day</span></div>
+          <p class="price-card__plus">+ 10% platform charge</p>
+          <span class="price-card__min">Maximum per day, not a fixed fee</span>
         </article>
       </div>
       <p class="scroll-hint">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         Swipe for more
       </p>
-    </div>
-
-    <div class="price-group reveal">
-      <h3 class="price-group__title">Special Services</h3>
-      <div class="price-scroll price-scroll--special">
-        <article class="price-card price-card--featured">
-          <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5a4 4 0 105.7 5.7L21 10.4 13.6 3l-.8.8z" transform="translate(-1 1)"/><path d="M12.5 11.5L4 20a2 2 0 002.8 2.8l8.5-8.5" transform="translate(-1 -1)"/></svg></div>
-          <h4>Service Centre Trip</h4>
-          <div class="price-card__rate">₹500 <span class="price-card__unit">flat</span></div>
-          <span class="price-card__min">Drop &amp; collect</span>
-        </article>
-        <article class="price-card price-card--featured">
-          <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9.5" r="2.4"/><path d="M3 20a6 6 0 0112 0M15 20a5 5 0 016-4.8"/></svg></div>
-          <h4>Family Function</h4>
-          <div class="price-card__rate">₹1,200 <span class="price-card__unit">/ day</span></div>
-          <span class="price-card__min">Min ₹1,200 · 1 day</span>
-        </article>
-      </div>
+      <p class="price-note">Full-day prices are the <strong>maximum</strong> we charge for a day, not a fixed amount. A 10% platform charge is added to every price shown.</p>
     </div>
   </div>
 </section>
-
 <!-- ============ WHY US ============ -->
 <section id="why" class="bg-base">
   <div class="container">
@@ -968,7 +970,53 @@ body{padding-bottom:0;}
 
 <!-- Sticky CTA (< 1024px) -->
 <div class="sticky-cta" id="stickyCta">
-  <a href="#" class="btn btn--primary btn--block">Book a Pilot</a>
+  <a href="#book-pilot" data-open-booking class="btn btn--primary btn--block">Book a Pilot</a>
+</div>
+
+<!-- Book a Pilot popup -->
+<div class="bp" id="bookingModal" role="dialog" aria-modal="true" aria-labelledby="bpTitle" hidden>
+  <div class="bp__dialog">
+    <button class="bp__close" id="bpClose" type="button" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <form class="bp__form" id="bookingForm" novalidate>
+      <h2 class="bp__title" id="bpTitle">Book a Pilot</h2>
+      <p class="bp__sub">Tell us where and when. We’ll confirm your pilot by phone.</p>
+      <div class="field">
+        <label for="bpName">Name <span class="req">*</span></label>
+        <input id="bpName" type="text" autocomplete="name" placeholder="Your full name" required>
+        <div class="field__err">Please enter your name.</div>
+      </div>
+      <div class="field">
+        <label for="bpPlace">Place <span class="req">*</span></label>
+        <input id="bpPlace" type="text" placeholder="Pickup location, e.g. Kadavanthra, Kochi" required>
+        <div class="field__err">Please enter the pickup place.</div>
+      </div>
+      <div class="bp__row">
+        <div class="field">
+          <label for="bpDate">Date <span class="req">*</span></label>
+          <input id="bpDate" type="date" required>
+          <div class="field__err">Choose a date.</div>
+        </div>
+        <div class="field">
+          <label for="bpTime">Time <span class="req">*</span></label>
+          <input id="bpTime" type="time" required>
+          <div class="field__err">Choose a time.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="bpPhone">Contact number <span class="req">*</span></label>
+        <input id="bpPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+91 90000 00000" required>
+        <div class="field__err">Enter a valid phone number.</div>
+      </div>
+      <button class="btn btn--primary btn--lg btn--block" type="submit">Request Booking</button>
+      <p class="bp__note">A 10% platform charge is added to the listed rates.</p>
+    </form>
+    <div class="bp__done" id="bpDone" aria-live="polite">
+      <div class="bp__tick"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></div>
+      <h2 class="bp__title">Request received</h2>
+      <p class="bp__sub">Thanks! We’ll call you shortly to confirm your pilot.</p>
+      <button class="btn btn--secondary" type="button" id="bpDoneClose">Close</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast-wrap" id="toasts" aria-live="polite" aria-atomic="false"></div>
@@ -1162,6 +1210,57 @@ body{padding-bottom:0;}
       form.reset();
       toast('Message sent', 'Thanks for reaching out — we’ll reply within one business day.');
     }, 700);
+  });
+})();
+</script>
+<script>
+(function(){
+  'use strict';
+  var modal = document.getElementById('bookingModal');
+  var form = document.getElementById('bookingForm');
+  var closeBtn = document.getElementById('bpClose');
+  var lastFocus = null;
+  function focusables(){ return modal.querySelectorAll('a[href], button:not([disabled]), input, select, textarea'); }
+  function open(e){
+    if(e) e.preventDefault();
+    lastFocus = document.activeElement;
+    modal.hidden = false;
+    requestAnimationFrame(function(){ modal.classList.add('bp--open'); });
+    document.body.style.overflow = 'hidden';
+    var today = new Date().toISOString().slice(0,10);
+    document.getElementById('bpDate').min = today;
+    document.addEventListener('keydown', onKey, true);
+    setTimeout(function(){ document.getElementById('bpName').focus(); }, 50);
+  }
+  function close(){
+    modal.classList.remove('bp--open');
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKey, true);
+    setTimeout(function(){ modal.hidden = true; modal.classList.remove('bp--sent'); form.reset(); form.querySelectorAll('.field').forEach(function(f){ f.classList.remove('is-error'); }); }, 200);
+    if(lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function onKey(e){
+    if(e.key === 'Escape'){ e.preventDefault(); close(); return; }
+    if(e.key !== 'Tab') return;
+    var f = focusables(); if(!f.length) return;
+    var first = f[0], last = f[f.length-1];
+    if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+  }
+  document.querySelectorAll('[data-open-booking]').forEach(function(a){ a.addEventListener('click', open); });
+  closeBtn.addEventListener('click', close);
+  document.getElementById('bpDoneClose').addEventListener('click', close);
+  modal.addEventListener('click', function(e){ if(e.target === modal) close(); });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var ok = true;
+    ['bpName','bpPlace','bpDate','bpTime','bpPhone'].forEach(function(id){
+      var el = document.getElementById(id), v = el.value.trim(), good = !!v;
+      if(id === 'bpPhone') good = /^[+\d][\d\s-]{8,}$/.test(v);
+      el.closest('.field').classList.toggle('is-error', !good);
+      if(!good && ok){ ok = false; el.focus(); }
+    });
+    if(ok) modal.classList.add('bp--sent');
   });
 })();
 </script>

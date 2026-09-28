@@ -52,7 +52,7 @@ button{font-family:inherit;cursor:pointer;}
 .btn--primary{background:var(--gradient-cta);color:#fff;box-shadow:0 4px 14px rgba(15,118,110,.3);}
 .btn--secondary{background:var(--color-surface);color:var(--color-foreground);border:1px solid var(--color-border);box-shadow:var(--shadow-sm);}
 
-.form-layout{display:grid;grid-template-columns:560px 1fr;gap:var(--space-8);align-items:start;}
+.form-layout{display:grid;grid-template-columns:minmax(0,640px);gap:var(--space-8);align-items:start;}
 .form-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-8);box-shadow:var(--shadow-sm);}
 .group-heading{font-size:1.125rem;font-weight:600;margin-bottom:var(--space-5);}
 .field{margin-bottom:var(--space-5);}
@@ -124,17 +124,9 @@ button{font-family:inherit;cursor:pointer;}
             <div class="field">
               <label>Time <span class="req">*</span></label>
               <select><option>4:30 PM</option></select>
-              <p class="help">30-minute slots</p>
             </div>
           </div>
 
-          <div class="toggle-row">
-            <div>
-              <div class="toggle-row__label">Round trip</div>
-              <div class="toggle-row__sub">All VandiPilot trips are round-trip by default</div>
-            </div>
-            <div class="switch"></div>
-          </div>
 
           <div class="group-heading">Your Vehicle</div>
           <div class="field-row">
@@ -155,14 +147,6 @@ button{font-family:inherit;cursor:pointer;}
           </div>
         </div>
 
-        <div class="summary-card">
-          <h3>Fare Estimate</h3>
-          <div class="sum-row"><span class="lbl">Service type</span><span>Hourly Local</span></div>
-          <div class="sum-row"><span class="lbl">Rate</span><span>₹150 / hour</span></div>
-          <div class="sum-row"><span class="lbl">Minimum charge</span><span>₹300 (2 hrs)</span></div>
-          <div class="sum-total"><span>Estimated total</span><span>₹300+</span></div>
-          <p class="est-note">Final fare is calculated from actual running &amp; waiting time at trip completion.</p>
-        </div>
       </div>
     </div>
   </div>

@@ -57,7 +57,7 @@ h1.title span{color:var(--color-primary);}
 <div class="wrap">
   <span class="eyebrow">Design system × implementation plan</span>
   <h1 class="title">Vandi<span>Pilot</span> — Screen Map</h1>
-  <p class="lede">Static mockups for all 18 authenticated routes from <code>implementation_plan.md</code>, plus a Driver Profile screen the plan didn't specify (added to close the gap — Customer has one, Driver never did), styled from the tokens and component specs in <code>design.md</code> (Parts I &amp; II). The public landing page already exists as <code>landing-page-preview.html</code> — this canvas covers everything behind sign-in.</p>
+  <p class="lede">Static mockups for the authenticated routes from <code>implementation_plan.md</code> (updated after the design review: My Trips list pages, Driver Trips, Admin detail pages, Assign Driver popup and Add Customer), plus a Driver Profile screen the plan didn't specify (added to close the gap — Customer has one, Driver never did), styled from the tokens and component specs in <code>design.md</code> (Parts I &amp; II). The public landing page already exists as <code>landing-page-preview.html</code> — this canvas covers everything behind sign-in.</p>
   <p class="source">Sources: <code>development/Docs/frontend/implementation_plan.md</code> · <code>development/Docs/frontend/design.md</code> §16–27 · <code>development/Docs/frontend/PRD.md</code> (dummy-data scope)</p>
 
   <div class="groups">
@@ -66,11 +66,12 @@ h1.title span{color:var(--color-primary);}
         <div class="group__icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
         </div>
-        <div><h2>Customer</h2><div class="group__sub">4 screens</div></div>
+        <div><h2>Customer</h2><div class="group__sub">5 screens</div></div>
       </div>
       <div class="route-list">
         <div class="route"><span class="route__name">Dashboard</span><span class="route__path">/customer</span></div>
         <div class="route"><span class="route__name">Book a Pilot</span><span class="route__path">/customer/book</span></div>
+        <div class="route"><span class="route__name">My Trips</span><span class="route__path">/customer/trips</span></div>
         <div class="route"><span class="route__name">Trip Detail</span><span class="route__path">/customer/trips/[id]</span></div>
         <div class="route"><span class="route__name">Profile</span><span class="route__path">/customer/profile</span></div>
       </div>
@@ -81,10 +82,11 @@ h1.title span{color:var(--color-primary);}
         <div class="group__icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg>
         </div>
-        <div><h2>Driver</h2><div class="group__sub">5 screens</div></div>
+        <div><h2>Driver</h2><div class="group__sub">6 screens</div></div>
       </div>
       <div class="route-list">
         <div class="route"><span class="route__name">Dashboard</span><span class="route__path">/driver</span></div>
+        <div class="route"><span class="route__name">Trips</span><span class="route__path">/driver/trips</span></div>
         <div class="route"><span class="route__name">Active Trip</span><span class="route__path">/driver/trips/[id]</span></div>
         <div class="route"><span class="route__name">Earnings</span><span class="route__path">/driver/earnings</span></div>
         <div class="route"><span class="route__name">Calendar</span><span class="route__path">/driver/calendar</span></div>
@@ -97,15 +99,20 @@ h1.title span{color:var(--color-primary);}
         <div class="group__icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><circle cx="17" cy="9.5" r="2.4"/><path d="M3 20a6 6 0 0112 0M15 20a5 5 0 016-4.8"/></svg>
         </div>
-        <div><h2>Admin</h2><div class="group__sub">10 screens</div></div>
+        <div><h2>Admin</h2><div class="group__sub">15 screens</div></div>
       </div>
       <div class="route-list">
         <div class="route"><span class="route__name">Dashboard</span><span class="route__path">/admin</span></div>
         <div class="route"><span class="route__name">Bookings</span><span class="route__path">/admin/bookings</span></div>
+        <div class="route"><span class="route__name">Booking Details</span><span class="route__path">/admin/bookings/[id]</span></div>
+        <div class="route"><span class="route__name">Assign Driver</span><span class="route__path">popup · /admin/bookings</span></div>
         <div class="route"><span class="route__name">New Booking</span><span class="route__path">/admin/bookings/new</span></div>
         <div class="route"><span class="route__name">Drivers</span><span class="route__path">/admin/drivers</span></div>
+        <div class="route"><span class="route__name">Driver Details</span><span class="route__path">/admin/drivers/[id]</span></div>
         <div class="route"><span class="route__name">Add Driver</span><span class="route__path">/admin/drivers/new</span></div>
         <div class="route"><span class="route__name">Customers</span><span class="route__path">/admin/customers</span></div>
+        <div class="route"><span class="route__name">Customer Details</span><span class="route__path">/admin/customers/[id]</span></div>
+        <div class="route"><span class="route__name">Add Customer</span><span class="route__path">/admin/customers/new</span></div>
         <div class="route"><span class="route__name">Commissions</span><span class="route__path">/admin/commissions</span></div>
         <div class="route"><span class="route__name">Reports</span><span class="route__path">/admin/reports</span></div>
         <div class="route"><span class="route__name">Pricing</span><span class="route__path">/admin/pricing</span></div>

@@ -67,6 +67,83 @@ button{font-family:inherit;cursor:pointer;}
 .inline-panel{background:var(--color-muted);border-radius:var(--radius-md);padding:var(--space-5);margin-bottom:var(--space-2);}
 .inline-panel__label{font-size:.8125rem;font-weight:600;color:var(--color-foreground-muted);margin-bottom:var(--space-4);display:flex;align-items:center;gap:6px;}
 .actions{display:flex;gap:var(--space-3);margin-top:var(--space-6);}
+
+.btn--secondary{background:var(--color-surface);color:var(--color-foreground);border:1px solid var(--color-border);box-shadow:var(--shadow-sm);}
+.btn--danger{background:var(--color-surface);color:#B91C1C;border:1px solid #FCA5A5;}
+.tinybtn{display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap;}
+.tinybtn--outline{background:var(--color-surface);color:var(--color-primary);border:1px solid var(--color-primary);}
+.tinybtn--danger{background:#FEE2E2;color:#B91C1C;}
+.tinybtn.disabled{opacity:.4;}
+.row-actions{display:flex;gap:8px;align-items:center;}
+.badge{white-space:nowrap;}
+.table-scroll{max-height:400px;overflow-y:auto;}
+.table-scroll thead th{position:sticky;top:0;z-index:1;}
+.ref-link{color:var(--color-primary);font-weight:600;}
+.card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-6);box-shadow:var(--shadow-sm);margin-bottom:var(--space-6);}
+.card h3{font-size:1.0625rem;font-weight:600;margin-bottom:var(--space-5);}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);}
+.card-head h3{margin-bottom:0;}
+.grid2{display:grid;grid-template-columns:1fr 380px;gap:var(--space-6);align-items:start;}
+.kv{display:flex;justify-content:space-between;gap:var(--space-4);font-size:.875rem;padding:var(--space-3) 0;border-bottom:1px solid var(--color-border);}
+.kv:last-child{border-bottom:none;}
+.kv .lbl{color:var(--color-foreground-muted);}
+.kv .val{text-align:right;font-weight:500;}
+.kv--total{font-weight:700;font-size:1.0625rem;}
+.person{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4);}
+.av{width:48px;height:48px;border-radius:50%;background:var(--color-primary-light);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
+.person__name{font-weight:600;}
+.person__sub{font-size:.8125rem;color:var(--color-foreground-muted);margin-top:2px;}
+.crumb-back{display:inline-flex;align-items:center;gap:6px;font-size:.875rem;font-weight:500;color:var(--color-foreground-muted);margin-bottom:var(--space-4);}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-4);margin-bottom:var(--space-6);}
+.stat{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);box-shadow:var(--shadow-sm);}
+.stat__label{font-size:.8125rem;color:var(--color-foreground-muted);}
+.stat__value{font-size:1.5rem;font-weight:700;margin-top:8px;font-variant-numeric:tabular-nums;}
+.tl__row{display:flex;gap:var(--space-4);}
+.tl__rail{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0;}
+.tl__node{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
+.tl__node.done{background:var(--color-primary);}
+.tl__node.current{width:18px;height:18px;background:var(--color-primary);box-shadow:0 0 0 4px var(--color-primary-light);}
+.tl__node.upcoming{background:var(--color-surface);border:2px solid var(--color-border);}
+.tl__line{width:2px;flex:1;background:var(--color-primary);min-height:26px;}
+.tl__line.dash{background:none;border-left:2px dashed var(--color-border);}
+.tl__body{flex:1;padding-bottom:var(--space-4);display:flex;justify-content:space-between;font-size:.9375rem;}
+.tl__body.upcoming{color:var(--color-foreground-subtle);}
+.tl__time{font-size:.75rem;color:var(--color-foreground-muted);}
+.overlay{position:fixed;inset:0;background:rgba(26,26,46,.55);display:flex;align-items:center;justify-content:center;z-index:50;}
+.modal{width:560px;max-height:92vh;overflow:auto;background:var(--color-surface);border-radius:var(--radius-lg);box-shadow:0 24px 60px rgba(0,0,0,.25);padding:var(--space-6);}
+.modal__head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:var(--space-4);}
+.modal__head h3{font-size:1.25rem;font-weight:700;}
+.modal__sub{font-size:.8125rem;color:var(--color-foreground-muted);margin-top:4px;line-height:1.5;}
+.modal__x{color:var(--color-foreground-subtle);}
+.modal h4{font-size:.8125rem;text-transform:uppercase;letter-spacing:.04em;color:var(--color-foreground-muted);margin:var(--space-5) 0 var(--space-3);}
+.opt{display:flex;align-items:center;gap:var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-2);}
+.opt.sel{border-color:var(--color-primary);background:#F0FDFA;}
+.opt.off{opacity:.5;background:var(--color-muted);}
+.radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--color-border);flex-shrink:0;}
+.opt.sel .radio{border-color:var(--color-primary);box-shadow:inset 0 0 0 4px #fff;background:var(--color-primary);}
+.opt__main{flex:1;}
+.opt__title{font-weight:600;font-size:.9375rem;}
+.opt__sub{font-size:.75rem;color:var(--color-foreground-muted);margin-top:2px;}
+.opt__side{font-size:.8125rem;font-weight:600;color:var(--color-foreground);white-space:nowrap;}
+.fare-box{background:var(--color-muted);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);margin-top:var(--space-4);}
+.modal__foot{display:flex;gap:var(--space-3);margin-top:var(--space-6);}
+
+.searchbox{display:flex;align-items:center;gap:8px;height:48px;border:1px solid var(--color-primary);border-radius:var(--radius-sm);padding:0 var(--space-3);box-shadow:0 0 0 3px var(--color-primary-light);}
+.searchbox input{border:none;outline:none;flex:1;height:100%;font-family:inherit;font-size:1rem;background:transparent;}
+.results{border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:6px;overflow:hidden;background:var(--color-surface);}
+.result{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);border-top:1px solid var(--color-border);font-size:.875rem;}
+.result:first-child{border-top:none;}
+.result.hl{background:var(--color-primary-light);}
+.result .av{width:32px;height:32px;font-size:.75rem;}
+.result__meta{margin-left:auto;font-size:.75rem;color:var(--color-foreground-muted);}
+.picked{display:flex;align-items:center;gap:var(--space-4);margin-top:var(--space-4);padding:var(--space-4);background:var(--color-muted);border-radius:var(--radius-md);}
+.picked__change{margin-left:auto;font-size:.8125rem;font-weight:600;color:var(--color-primary);}
+.dt-group{display:flex;align-items:center;height:48px;border:1px solid var(--color-border);border-radius:var(--radius-sm);overflow:hidden;background:var(--color-surface);}
+.dt-cell{display:flex;align-items:center;gap:8px;flex:1;padding-left:var(--space-3);color:var(--color-foreground-muted);}
+.dt-cell input{border:none !important;outline:none;height:100% !important;padding:0 var(--space-3) 0 0 !important;background:transparent !important;}
+.dt-sep{width:1px;height:24px;background:var(--color-border);}
+.help{font-size:.75rem;color:var(--color-foreground-subtle);margin-top:6px;}
+.picked + .help{margin-top:var(--space-3);}
 </style>
 </helmet>
 
@@ -101,24 +178,35 @@ button{font-family:inherit;cursor:pointer;}
       <div class="form-card">
         <div class="group-heading">Customer</div>
         <div class="toggle-group">
-          <div class="toggle-btn">Existing Customer</div>
-          <div class="toggle-btn active">New Customer</div>
+          <div class="toggle-btn active">Existing Customer</div>
+          <div class="toggle-btn">New Customer</div>
         </div>
-        <div class="inline-panel">
-          <div class="inline-panel__label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Create customer inline</div>
-          <div class="field-row">
-            <div class="field" style="margin-bottom:0"><label>Full Name <span class="req">*</span></label><input placeholder="e.g. Vinod Pillai"></div>
-            <div class="field" style="margin-bottom:0"><label>Phone <span class="req">*</span></label><input placeholder="+91 90000 00000"></div>
+        <div class="field">
+          <label>Find customer <span class="req">*</span></label>
+          <div class="searchbox"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input value="Priya" placeholder="Search by name or phone"></div>
+          <div class="results">
+            <div class="result hl"><div class="av">PN</div><div>Priya Nair<div class="person__sub">+91 91234 56789</div></div><span class="result__meta">12 bookings</span></div>
+            <div class="result"><div class="av">PM</div><div>Priyanka Menon<div class="person__sub">+91 90123 45678</div></div><span class="result__meta">2 bookings</span></div>
           </div>
-          <div class="field" style="margin-top:var(--space-5);margin-bottom:0"><label>Email (Gmail)</label><input placeholder="name@gmail.com"></div>
+          <div class="picked">
+            <div class="av">PN</div>
+            <div><div class="person__name">Priya Nair</div><div class="person__sub">+91 91234 56789 · Sedan · Automatic</div></div>
+            <span class="picked__change">Change</span>
+          </div>
+          <p class="help">Pickup address and vehicle are pre-filled from the customer’s saved details.</p>
         </div>
 
         <div class="group-heading">Trip Details</div>
-        <div class="field"><label>Pickup Location <span class="req">*</span></label><input placeholder="Enter pickup address"></div>
+        <div class="field"><label>Pickup Location <span class="req">*</span></label><input value="Kadavanthra, Kochi, Kerala"></div>
         <div class="field"><label>Destination <span class="req">*</span></label><input placeholder="Enter destination"></div>
-        <div class="field-row">
-          <div class="field"><label>Date <span class="req">*</span></label><input placeholder="Select date"></div>
-          <div class="field"><label>Time <span class="req">*</span></label><select><option>Select time slot</option></select></div>
+        <div class="field">
+          <label>Date &amp; Time <span class="req">*</span></label>
+          <div class="dt-group">
+            <div class="dt-cell"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg><input type="date" value="2026-08-28"></div>
+            <div class="dt-sep"></div>
+            <div class="dt-cell"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><input type="time" value="16:30"></div>
+          </div>
+          <p class="help">Choose the pickup date and time together.</p>
         </div>
         <div class="field-row">
           <div class="field"><label>Car Type</label><select><option>Sedan</option></select></div>

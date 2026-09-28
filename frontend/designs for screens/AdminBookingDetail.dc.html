@@ -163,7 +163,7 @@ tbody tr:hover{background:var(--color-muted);}
 
   <div class="main">
     <header class="topbar">
-      <h1>Bookings</h1>
+      <div><h1>Booking Details</h1><div class="topbar__crumb">Bookings / VP-20260824-003</div></div>
       <div class="topbar__right">
         <div class="bell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 004 0"/></svg><span class="bell__badge">5</span></div>
         <div class="usermenu"><div class="avatar">SJ</div><span class="usermenu__name">Sanjay (Admin)</span></div>
@@ -171,37 +171,52 @@ tbody tr:hover{background:var(--color-muted);}
     </header>
 
     <div class="content">
+      <a class="crumb-back"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Back to bookings</a>
       <div class="pageheader">
-        <div><h2 style="font-size:1.25rem;font-weight:700">All Bookings</h2><p>128 total · 2 pending assignment</p></div>
-        <a class="btn btn--primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New Booking</a>
+        <div style="display:flex;align-items:center;gap:var(--space-4)"><h2 style="font-size:1.25rem;font-weight:700">VP-20260824-003</h2><span class="badge badge--waiting">Waiting at Destination</span></div>
+        <div class="row-actions"><a class="btn btn--secondary">Reassign Driver</a><a class="btn btn--danger">Cancel Trip</a></div>
       </div>
 
-      <div class="table-wrap">
-        <div class="filters">
-          <div class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>Search customer or driver…</div>
-          <div class="filter-chip filter-chip--active">Status: All <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
-          <div class="filter-chip"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Last 30 days</div>
+      <div class="grid2">
+        <div>
+          <div class="card">
+            <h3>Trip Details</h3>
+            <div class="kv"><span class="lbl">Pickup</span><span class="val">Kadavanthra, Kochi</span></div>
+            <div class="kv"><span class="lbl">Destination</span><span class="val">Lulu Mall, Edappally</span></div>
+            <div class="kv"><span class="lbl">Scheduled</span><span class="val">24 Aug 2026, 4:30 PM</span></div>
+            <div class="kv"><span class="lbl">Trip type</span><span class="val">Hourly</span></div>
+            <div class="kv"><span class="lbl">Vehicle</span><span class="val">Sedan · Automatic · KL-07-AX-4521</span></div>
+            <div class="kv"><span class="lbl">Booked by</span><span class="val">Customer (app) · 24 Aug 2026, 3:58 PM</span></div>
+          </div>
+          <div class="card" style="margin-bottom:0">
+            <h3>Status Timeline</h3>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><span>Requested</span><span class="tl__time">24 Aug, 3:58 PM</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><span>Pilot Assigned</span><span class="tl__time">24 Aug, 4:05 PM</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><span>On the Way</span><span class="tl__time">24 Aug, 4:30 PM</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node current"></div><div class="tl__line dash"></div></div><div class="tl__body"><span>Waiting at Destination</span><span class="tl__time">24 Aug, 5:12 PM</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node upcoming"></div><div class="tl__line dash"></div></div><div class="tl__body upcoming"><span>Returning</span><span class="tl__time">—</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node upcoming"></div></div><div class="tl__body upcoming"><span>Completed</span><span class="tl__time">—</span></div></div>
+          </div>
         </div>
-        <div class="table-scroll">
-        <table>
-          <thead><tr><th>Ref</th><th>Customer</th><th>Driver</th><th>Date</th><th>Status</th><th class="num">Fare</th><th>Actions</th></tr></thead>
-          <tbody>
-            <tr><td><a class="ref-link">VP-20260825-002</a></td><td>Meena Thomas</td><td>—</td><td>25 Aug 2026</td><td><span class="badge badge--requested"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Requested</span></td><td class="num">—</td><td><div class="row-actions"><div class="tinybtn tinybtn--outline">Assign Driver</div><div class="tinybtn tinybtn--danger">Cancel</div></div></td></tr>
-            <tr><td><a class="ref-link">VP-20260825-001</a></td><td>Rajesh Kumar</td><td>Ravi Menon</td><td>26 Aug 2026</td><td><span class="badge badge--assigned"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0114 0"/></svg>Pilot Assigned</span></td><td class="num">—</td><td><div class="row-actions"><div class="tinybtn tinybtn--outline">Assign Driver</div><div class="tinybtn tinybtn--danger">Cancel</div></div></td></tr>
-            <tr><td><a class="ref-link">VP-20260824-003</a></td><td>Priya Nair</td><td>Arun Shankar</td><td>24 Aug 2026</td><td><span class="badge badge--waiting"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></svg>Waiting</span></td><td class="num">₹208</td><td><div class="row-actions"><div class="tinybtn tinybtn--outline disabled">Assign Driver</div><div class="tinybtn tinybtn--danger">Cancel</div></div></td></tr>
-            <tr><td><a class="ref-link">VP-20260824-002</a></td><td>Arun Shankar Jr.</td><td>Ravi Menon</td><td>24 Aug 2026</td><td><span class="badge badge--completed"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Completed</span></td><td class="num">₹1,500</td><td><div class="row-actions"><div class="tinybtn tinybtn--outline disabled">Assign Driver</div><div class="tinybtn tinybtn--danger disabled">Cancel</div></div></td></tr>
-            <tr><td><a class="ref-link">VP-20260824-001</a></td><td>Lakshmi Menon</td><td>Arun Shankar</td><td>24 Aug 2026</td><td><span class="badge badge--completed"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Completed</span></td><td class="num">₹560</td><td><div class="row-actions"><div class="tinybtn tinybtn--outline disabled">Assign Driver</div><div class="tinybtn tinybtn--danger disabled">Cancel</div></div></td></tr>
-            <tr><td><a class="ref-link">VP-20260823-004</a></td><td>Vinod Pillai</td><td>—</td><td>23 Aug 2026</td><td><span class="badge badge--cancelled"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 9.5l5 5M14.5 9.5l-5 5"/></svg>Cancelled</span></td><td class="num">—</td><td><div class="row-actions"><div class="tinybtn tinybtn--outline disabled">Assign Driver</div><div class="tinybtn tinybtn--danger disabled">Cancel</div></div></td></tr>
-            <tr><td><a class="ref-link">VP-20260822-002</a></td><td>Sneha Rao</td><td>Ravi Menon</td><td>22 Aug 2026</td><td><span class="badge badge--completed"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Completed</span></td><td class="num">₹1,250</td><td><div class="row-actions"><div class="tinybtn tinybtn--outline disabled">Assign Driver</div><div class="tinybtn tinybtn--danger disabled">Cancel</div></div></td></tr>
-            <tr><td><a class="ref-link">VP-20260822-001</a></td><td>Anil George</td><td>Arun Shankar</td><td>22 Aug 2026</td><td><span class="badge badge--completed"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Completed</span></td><td class="num">₹840</td><td><div class="row-actions"><div class="tinybtn tinybtn--outline disabled">Assign Driver</div><div class="tinybtn tinybtn--danger disabled">Cancel</div></div></td></tr>
-            <tr><td><a class="ref-link">VP-20260821-003</a></td><td>Divya Nair</td><td>—</td><td>21 Aug 2026</td><td><span class="badge badge--requested"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Requested</span></td><td class="num">—</td><td><div class="row-actions"><div class="tinybtn tinybtn--outline">Assign Driver</div><div class="tinybtn tinybtn--danger">Cancel</div></div></td></tr>
-            <tr><td><a class="ref-link">VP-20260821-001</a></td><td>Mohan Das</td><td>Suresh Kumar</td><td>21 Aug 2026</td><td><span class="badge badge--cancelled"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 9.5l5 5M14.5 9.5l-5 5"/></svg>Cancelled</span></td><td class="num">—</td><td><div class="row-actions"><div class="tinybtn tinybtn--outline disabled">Assign Driver</div><div class="tinybtn tinybtn--danger disabled">Cancel</div></div></td></tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="pagination">
-          <span>Showing 1–10 of 128</span>
-          <div class="page-btns"><div class="page-btn active">1</div><div class="page-btn">2</div><div class="page-btn">3</div><div class="page-btn">…</div><div class="page-btn">13</div></div>
+        <div>
+          <div class="card">
+            <h3>Customer</h3>
+            <div class="person"><div class="av">PN</div><div><div class="person__name">Priya Nair</div><div class="person__sub">+91 91234 56789 · priya.nair@gmail.com</div></div></div>
+            <a class="ref-link" style="font-size:.875rem">View customer profile →</a>
+          </div>
+          <div class="card">
+            <h3>Driver</h3>
+            <div class="person"><div class="av">AS</div><div><div class="person__name">Arun Shankar</div><div class="person__sub">+91 98765 43210 · <svg width="14" height="14" viewBox="0 0 24 24" fill="#C2740A"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg> 4.9</div></div></div>
+            <a class="ref-link" style="font-size:.875rem">View driver profile →</a>
+          </div>
+          <div class="card" style="margin-bottom:0">
+            <h3>Fare Breakdown</h3>
+            <div class="kv"><span class="lbl">Running time</span><span class="val">1h 05m</span></div>
+            <div class="kv"><span class="lbl">Waiting time</span><span class="val">18m</span></div>
+            <div class="kv"><span class="lbl">Driver earning (minimum charge applied)</span><span class="val">₹299</span></div>
+            <div class="kv"><span class="lbl">Platform commission (10%)</span><span class="val">₹30</span></div>
+            <div class="kv kv--total"><span>Customer pays</span><span>₹329</span></div>
+          </div>
         </div>
       </div>
     </div>
