@@ -207,6 +207,38 @@ tbody tr:hover{background:var(--color-muted);}
     </div>
   </div>
 </div>
+
+<div class="overlay">
+  <div class="modal">
+    <div class="modal__head">
+      <div>
+        <h3>Assign Driver</h3>
+        <div class="modal__sub">VP-20260825-002 · Meena Thomas<br>25 Aug 2026, 4:00 PM · Kaloor → Cochin Airport (COK)</div>
+      </div>
+      <div class="modal__x"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+    </div>
+
+    <h4>Select driver</h4>
+    <div class="opt sel"><span class="radio"></span><div class="opt__main"><div class="opt__title">Arun Shankar</div><div class="opt__sub">Available · Sedan, SUV · Manual &amp; Automatic</div></div><div class="opt__side"><svg width="14" height="14" viewBox="0 0 24 24" fill="#C2740A"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg> 4.9</div></div>
+    <div class="opt"><span class="radio"></span><div class="opt__main"><div class="opt__title">Ravi Menon</div><div class="opt__sub">Available · Sedan · Automatic</div></div><div class="opt__side"><svg width="14" height="14" viewBox="0 0 24 24" fill="#C2740A"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg> 4.7</div></div>
+    <div class="opt off"><span class="radio"></span><div class="opt__main"><div class="opt__title">Suresh Kumar</div><div class="opt__sub">Day off on 25 Aug</div></div><div class="opt__side"><svg width="14" height="14" viewBox="0 0 24 24" fill="#C2740A"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg> 4.5</div></div>
+
+    <h4>Trip type (for fare calculation)</h4>
+    <div class="opt sel"><span class="radio"></span><div class="opt__main"><div class="opt__title">Within 200 km</div><div class="opt__sub">Full-day rate</div></div><div class="opt__side">₹1,999 / day</div></div>
+    <div class="opt"><span class="radio"></span><div class="opt__main"><div class="opt__title">Above 200 km</div><div class="opt__sub">Full-day rate</div></div><div class="opt__side">₹2,999 / day</div></div>
+
+    <div class="fare-box">
+      <div class="kv"><span class="lbl">Driver earning</span><span class="val">₹1,999</span></div>
+      <div class="kv"><span class="lbl">Platform commission (10%, max ₹300)</span><span class="val">₹200</span></div>
+      <div class="kv kv--total"><span>Customer pays</span><span>₹2,199</span></div>
+    </div>
+
+    <div class="modal__foot">
+      <a class="btn btn--primary">Assign Driver</a>
+      <a class="btn btn--secondary">Cancel</a>
+    </div>
+  </div>
+</div>
 </x-dc>
 </body>
 </html>

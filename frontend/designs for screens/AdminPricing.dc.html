@@ -65,6 +65,21 @@ tbody td{padding:var(--space-4);height:60px;font-size:.875rem;border-top:1px sol
 .switch.off{background:var(--color-border);}
 .switch.off::after{right:auto;left:3px;}
 .footnote{padding:var(--space-4) var(--space-5);border-top:1px solid var(--color-border);font-size:.8125rem;color:var(--color-foreground-muted);background:var(--color-muted);}
+.commission{display:grid;grid-template-columns:1fr auto;gap:var(--space-6);align-items:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5) var(--space-6);box-shadow:var(--shadow-sm);margin-bottom:var(--space-6);}
+.commission h3{font-size:1.0625rem;font-weight:600;}
+.commission p{font-size:.8125rem;color:var(--color-foreground-muted);margin-top:4px;max-width:520px;line-height:1.5;}
+.commission__fields{display:flex;gap:var(--space-4);align-items:flex-end;}
+.cfield label{display:block;font-size:.75rem;font-weight:600;color:var(--color-foreground-muted);margin-bottom:6px;}
+.cfield .rate-input{width:130px;}
+.cfield .rate-input .cur{margin-left:auto;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 var(--space-5);border-radius:var(--radius-md);font-size:.875rem;font-weight:600;border:none;white-space:nowrap;}
+.btn--primary{background:var(--gradient-cta);color:#fff;box-shadow:0 4px 14px rgba(15,118,110,.3);}
+.iconbtn{width:36px;height:36px;border-radius:var(--radius-md);border:1px solid #FCA5A5;color:#B91C1C;background:#FEF2F2;display:flex;align-items:center;justify-content:center;}
+.pageheader{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-6);}
+.newrow td{background:#F8FAFC;border-top:2px dashed var(--color-border);}
+.newrow input,.newrow select{height:36px;border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:0 var(--space-3);font-family:inherit;font-size:.875rem;width:100%;background:var(--color-surface);}
+.pays{font-variant-numeric:tabular-nums;font-weight:600;}
+.pays small{display:block;font-weight:400;color:var(--color-foreground-subtle);font-size:.75rem;margin-top:2px;}
 </style>
 </helmet>
 
@@ -96,21 +111,34 @@ tbody td{padding:var(--space-4);height:60px;font-size:.875rem;border-top:1px sol
     </header>
 
     <div class="content">
-      <div class="pageheader"><h2 style="font-size:1.25rem;font-weight:700">Pricing Tiers</h2><p>Changes reflect immediately on the landing page and fare calculations</p></div>
+      <div class="pageheader">
+        <div><h2 style="font-size:1.25rem;font-weight:700">Pricing Tiers</h2><p style="color:var(--color-foreground-muted);font-size:.875rem;margin-top:4px">Rates are what the driver earns. The platform commission is added on top of the customer’s total.</p></div>
+        <a class="btn btn--primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Add Pricing</a>
+      </div>
+
+      <div class="commission">
+        <div>
+          <h3>Platform Commission</h3>
+          <p>Customer pays = driver earning + commission. Commission is a percentage of the driver’s earning, limited to a maximum amount per ride per day.</p>
+        </div>
+        <div class="commission__fields">
+          <div class="cfield"><label>Commission %</label><div class="rate-input"><span class="v">10</span><span class="cur">%</span></div></div>
+          <div class="cfield"><label>Max per ride / day</label><div class="rate-input"><span class="cur">₹</span><span class="v">300</span></div></div>
+          <div class="btn btn--primary">Save</div>
+        </div>
+      </div>
 
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Pricing Type</th><th class="num">Rate</th><th>Unit</th><th class="num">Min Charge</th><th>Min Duration</th><th>Active</th></tr></thead>
+          <thead><tr><th>Pricing Type</th><th class="num">Driver Earning</th><th>Unit</th><th class="num">Min Charge</th><th class="num">Customer Pays</th><th>Active</th><th></th></tr></thead>
           <tbody>
-            <tr><td><div class="type-name">Hourly Local</div><div class="type-sub">hourly_local</div></td><td class="num"><div class="rate-input"><span class="cur">₹</span><span class="v">150</span></div></td><td>per hour</td><td class="num">₹300</td><td>2 hours</td><td><div class="switch"></div></td></tr>
-            <tr><td><div class="type-name">Hourly Outstation</div><div class="type-sub">hourly_outstation</div></td><td class="num"><div class="rate-input"><span class="cur">₹</span><span class="v">200</span></div></td><td>per hour</td><td class="num">₹400</td><td>2 hours</td><td><div class="switch"></div></td></tr>
-            <tr><td><div class="type-name">Daily · Within 200km</div><div class="type-sub">daily_within_200</div></td><td class="num"><div class="rate-input"><span class="cur">₹</span><span class="v">1,500</span></div></td><td>per day</td><td class="num">₹1,500</td><td>1 day</td><td><div class="switch"></div></td></tr>
-            <tr><td><div class="type-name">Daily · Above 200km</div><div class="type-sub">daily_above_200</div></td><td class="num"><div class="rate-input"><span class="cur">₹</span><span class="v">2,000</span></div></td><td>per day</td><td class="num">₹2,000</td><td>1 day</td><td><div class="switch"></div></td></tr>
-            <tr><td><div class="type-name">Service Centre Trip</div><div class="type-sub">special_service_centre</div></td><td class="num"><div class="rate-input"><span class="cur">₹</span><span class="v">500</span></div></td><td>flat</td><td class="num">₹500</td><td>—</td><td><div class="switch"></div></td></tr>
-            <tr><td><div class="type-name">Family Function</div><div class="type-sub">special_family_function</div></td><td class="num"><div class="rate-input"><span class="cur">₹</span><span class="v">1,200</span></div></td><td>per day</td><td class="num">₹1,200</td><td>1 day</td><td><div class="switch off"></div></td></tr>
+            <tr><td><div class="type-name">Hourly Charge</div><div class="type-sub">hourly_charge</div></td><td class="num"><div class="rate-input"><span class="cur">₹</span><span class="v">199</span></div></td><td>per hour</td><td class="num">₹299</td><td class="num"><div class="pays">₹219 / hour<small>+ ₹20 commission · min ₹329</small></div></td><td><div class="switch"></div></td><td><div class="iconbtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></div></td></tr>
+            <tr><td><div class="type-name">Full Day · Within 200km</div><div class="type-sub">full_day_within_200</div></td><td class="num"><div class="rate-input"><span class="cur">₹</span><span class="v">1,999</span></div></td><td>per day (max)</td><td class="num">—</td><td class="num"><div class="pays">₹2,199<small>+ ₹200 commission</small></div></td><td><div class="switch"></div></td><td><div class="iconbtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></div></td></tr>
+            <tr><td><div class="type-name">Full Day · Above 200km</div><div class="type-sub">full_day_above_200</div></td><td class="num"><div class="rate-input"><span class="cur">₹</span><span class="v">2,999</span></div></td><td>per day (max)</td><td class="num">—</td><td class="num"><div class="pays">₹3,299<small>+ ₹300 commission (capped)</small></div></td><td><div class="switch"></div></td><td><div class="iconbtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg></div></td></tr>
+            <tr class="newrow"><td><input placeholder="New pricing name"></td><td class="num"><input placeholder="₹ Rate" style="text-align:right"></td><td><select><option>per hour</option><option>per day (max)</option><option>flat</option></select></td><td class="num"><input placeholder="₹ Min" style="text-align:right"></td><td class="num" style="color:var(--color-foreground-subtle);font-size:.8125rem">Calculated on save</td><td><div class="switch"></div></td><td><div class="btn btn--primary" style="height:36px;padding:0 var(--space-4)">Add</div></td></tr>
           </tbody>
         </table>
-        <div class="footnote">Commission is fixed at 10% of total fare across all pricing types — not editable per tier.</div>
+        <div class="footnote">Full-day amounts are the maximum charged for the day, not a fixed amount. Changes reflect immediately on the landing page and fare calculations.</div>
       </div>
     </div>
   </div>

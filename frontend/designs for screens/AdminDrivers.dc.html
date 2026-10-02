@@ -72,6 +72,14 @@ tbody tr:hover{background:var(--color-muted);}
 .tinybtn{height:30px;padding:0 12px;border-radius:6px;font-size:.75rem;font-weight:600;border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-foreground-muted);}
 .tinybtn--danger{color:var(--color-destructive);border-color:#FCA5A5;}
 .pagination{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4);border-top:1px solid var(--color-border);font-size:.875rem;color:var(--color-foreground-muted);}
+.tinybtn{display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap;}
+.tinybtn--outline{background:var(--color-surface);color:var(--color-primary);border:1px solid var(--color-primary);}
+.badge{white-space:nowrap;}
+.row-actions{display:flex;gap:8px;align-items:center;}
+.table-scroll{max-height:400px;overflow-y:auto;}
+.table-scroll thead th{position:sticky;top:0;z-index:1;}
+.name-link{font-weight:600;color:var(--color-foreground);}
+.name-link:hover{color:var(--color-primary);}
 </style>
 </helmet>
 
@@ -109,44 +117,78 @@ tbody tr:hover{background:var(--color-muted);}
       </div>
 
       <div class="table-wrap">
+        <div class="table-scroll">
         <table>
           <thead><tr><th>Name</th><th>Phone</th><th>Status</th><th class="num">Total Trips</th><th class="num">Avg Rating</th><th></th></tr></thead>
           <tbody>
             <tr>
-              <td><div class="driver-cell"><div class="driver-avatar">AS</div><span class="driver-name">Arun Shankar</span></div></td>
+              <td><div class="driver-cell"><div class="driver-avatar">AS</div><a class="name-link">Arun Shankar</a></div></td>
               <td>+91 98765 43210</td>
               <td><span class="badge badge--active"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Active</span></td>
               <td class="num">142</td>
               <td class="num"><span class="stars-cell"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>4.9</span></td>
-              <td><div class="row-actions"><div class="tinybtn">Deactivate</div><div class="tinybtn tinybtn--danger">Ban</div></div></td>
+              <td><div class="row-actions"><div class="tinybtn tinybtn--outline">View</div><div class="tinybtn">Deactivate</div><div class="tinybtn tinybtn--danger">Ban</div></div></td>
             </tr>
             <tr>
-              <td><div class="driver-cell"><div class="driver-avatar">RM</div><span class="driver-name">Ravi Menon</span></div></td>
+              <td><div class="driver-cell"><div class="driver-avatar">RM</div><a class="name-link">Ravi Menon</a></div></td>
               <td>+91 90000 11223</td>
               <td><span class="badge badge--active"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Active</span></td>
               <td class="num">98</td>
               <td class="num"><span class="stars-cell"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>4.7</span></td>
-              <td><div class="row-actions"><div class="tinybtn">Deactivate</div><div class="tinybtn tinybtn--danger">Ban</div></div></td>
+              <td><div class="row-actions"><div class="tinybtn tinybtn--outline">View</div><div class="tinybtn">Deactivate</div><div class="tinybtn tinybtn--danger">Ban</div></div></td>
             </tr>
             <tr>
-              <td><div class="driver-cell"><div class="driver-avatar">SK</div><span class="driver-name">Suresh Kumar</span></div></td>
+              <td><div class="driver-cell"><div class="driver-avatar">SK</div><a class="name-link">Suresh Kumar</a></div></td>
               <td>+91 87654 32109</td>
               <td><span class="badge badge--inactive"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>Inactive</span></td>
               <td class="num">64</td>
               <td class="num"><span class="stars-cell"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>4.5</span></td>
-              <td><div class="row-actions"><div class="tinybtn">Reactivate</div><div class="tinybtn tinybtn--danger">Ban</div></div></td>
+              <td><div class="row-actions"><div class="tinybtn tinybtn--outline">View</div><div class="tinybtn">Reactivate</div><div class="tinybtn tinybtn--danger">Ban</div></div></td>
             </tr>
             <tr>
-              <td><div class="driver-cell"><div class="driver-avatar">JT</div><span class="driver-name">Joseph Thomas</span></div></td>
+              <td><div class="driver-cell"><div class="driver-avatar">JT</div><a class="name-link">Joseph Thomas</a></div></td>
               <td>+91 99887 76655</td>
               <td><span class="badge badge--banned"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M6.5 6.5l11 11"/></svg>Banned</span></td>
               <td class="num">31</td>
               <td class="num"><span class="stars-cell"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>3.2</span></td>
               <td><div class="row-actions"><div class="tinybtn" style="opacity:.5">Banned</div></div></td>
             </tr>
+            <tr>
+              <td><div class="driver-cell"><div class="driver-avatar">MV</div><a class="name-link">Manoj Varghese</a></div></td>
+              <td>+91 94460 55667</td>
+              <td><span class="badge badge--active"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Active</span></td>
+              <td class="num">55</td>
+              <td class="num"><span class="stars-cell"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>4.6</span></td>
+              <td><div class="row-actions"><div class="tinybtn tinybtn--outline">View</div><div class="tinybtn">Deactivate</div><div class="tinybtn tinybtn--danger">Ban</div></div></td>
+            </tr>
+            <tr>
+              <td><div class="driver-cell"><div class="driver-avatar">BT</div><a class="name-link">Biju Thomas</a></div></td>
+              <td>+91 98470 66778</td>
+              <td><span class="badge badge--active"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Active</span></td>
+              <td class="num">41</td>
+              <td class="num"><span class="stars-cell"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>4.8</span></td>
+              <td><div class="row-actions"><div class="tinybtn tinybtn--outline">View</div><div class="tinybtn">Deactivate</div><div class="tinybtn tinybtn--danger">Ban</div></div></td>
+            </tr>
+            <tr>
+              <td><div class="driver-cell"><div class="driver-avatar">NR</div><a class="name-link">Nithin Raj</a></div></td>
+              <td>+91 99470 77889</td>
+              <td><span class="badge badge--active"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Active</span></td>
+              <td class="num">23</td>
+              <td class="num"><span class="stars-cell"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>4.4</span></td>
+              <td><div class="row-actions"><div class="tinybtn tinybtn--outline">View</div><div class="tinybtn">Deactivate</div><div class="tinybtn tinybtn--danger">Ban</div></div></td>
+            </tr>
+            <tr>
+              <td><div class="driver-cell"><div class="driver-avatar">AJ</div><a class="name-link">Abin Joy</a></div></td>
+              <td>+91 97470 88990</td>
+              <td><span class="badge badge--active"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>Active</span></td>
+              <td class="num">12</td>
+              <td class="num"><span class="stars-cell"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>4.7</span></td>
+              <td><div class="row-actions"><div class="tinybtn tinybtn--outline">View</div><div class="tinybtn">Deactivate</div><div class="tinybtn tinybtn--danger">Ban</div></div></td>
+            </tr>
           </tbody>
         </table>
-        <div class="pagination"><span>Showing 1–4 of 18</span></div>
+        </div>
+        <div class="pagination"><span>Showing 1–8 of 18</span></div>
       </div>
     </div>
   </div>
