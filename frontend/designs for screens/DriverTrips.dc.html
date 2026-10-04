@@ -78,6 +78,9 @@ button{font-family:inherit;cursor:pointer;}
 .stat__label{font-size:.875rem;color:var(--color-foreground-muted);}
 .stat__value{font-size:2rem;font-weight:700;margin-top:var(--space-2);font-variant-numeric:tabular-nums;}
 .stat__sub{font-size:.75rem;color:var(--color-foreground-subtle);margin-top:6px;}
+.badge--completed{background:#DCFCE7;color:#15803D;border-color:#86EFAC;}
+.trip-row__chev{color:var(--color-foreground-subtle);}
+.stack{display:flex;align-items:center;gap:var(--space-4);}
 </style>
 </helmet>
 
@@ -85,8 +88,8 @@ button{font-family:inherit;cursor:pointer;}
   <aside class="sidebar">
     <div class="sidebar__logo">Vandi<span>Pilot</span></div>
     <nav class="sidebar__nav">
-      <a class="sidebar__link active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>Dashboard</a>
-      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg>Trips</a>
+      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>Dashboard</a>
+      <a class="sidebar__link active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg>Trips</a>
       <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h9a3 3 0 010 6H7a3 3 0 000 6h10"/><path d="M9 2v4M9 14v4M4 8h4M4 16h4"/></svg>Earnings</a>
       <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Calendar</a>
       <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3.2"/><path d="M6 19a6.5 6.5 0 0112 0"/></svg>Profile</a>
@@ -98,7 +101,7 @@ button{font-family:inherit;cursor:pointer;}
 
   <div class="main">
     <header class="topbar">
-      <h1>Dashboard</h1>
+      <h1>Trips</h1>
       <div class="topbar__right">
         <div class="calico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></div>
         <div class="bell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 004 0"/></svg><span class="bell__badge">1</span></div>
@@ -110,19 +113,16 @@ button{font-family:inherit;cursor:pointer;}
       <div class="active-card">
         <div class="active-card__top">
           <div>
-            <div class="active-card__eyebrow">Active Trip · VP-20260824-003</div>
+            <div class="active-card__eyebrow">Current Trip · VP-20260824-003</div>
             <div class="active-card__customer">Priya Nair</div>
           </div>
-          <span class="active-card__badge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></svg>Waiting at Destination</span>
+          <span class="active-card__badge">Waiting at Destination</span>
         </div>
         <div class="active-card__route">
-          <div class="active-card__stop"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/></svg>Kadavanthra, Kochi</div>
-          <div class="active-card__stop"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/></svg>Lulu Mall, Edappally</div>
+          <div class="active-card__stop"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>Kadavanthra, Kochi</div>
+          <div class="active-card__stop"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>Lulu Mall, Edappally</div>
         </div>
-        <div class="bigbtn">
-          Left Destination
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </div>
+        <div class="bigbtn">Open Current Trip</div>
       </div>
 
       <div class="section">
@@ -130,33 +130,45 @@ button{font-family:inherit;cursor:pointer;}
         <div class="trip-list">
           <div class="trip-row">
             <div class="trip-row__main">
-              <div class="trip-row__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3.2"/><path d="M6 19a6.5 6.5 0 0112 0"/></svg></div>
+              <div class="trip-row__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg></div>
               <div><div class="trip-row__name">Rajesh Kumar</div><div class="trip-row__route">Kaloor → Cochin Airport (COK)</div></div>
             </div>
-            <div style="display:flex;align-items:center;gap:var(--space-4)">
-              <span class="trip-row__time">Tomorrow, 4:00 AM</span>
-              <span class="badge badge--assigned">Assigned</span>
-            </div>
+            <div class="stack"><span class="trip-row__time">Tomorrow, 4:00 AM</span><span class="badge badge--assigned">Assigned</span></div>
           </div>
           <div class="trip-row">
             <div class="trip-row__main">
-              <div class="trip-row__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3.2"/><path d="M6 19a6.5 6.5 0 0112 0"/></svg></div>
+              <div class="trip-row__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg></div>
               <div><div class="trip-row__name">Meena Thomas</div><div class="trip-row__route">Panampilly Nagar → Service Centre</div></div>
             </div>
-            <div style="display:flex;align-items:center;gap:var(--space-4)">
-              <span class="trip-row__time">27 Aug, 10:00 AM</span>
-              <span class="badge badge--assigned">Assigned</span>
-            </div>
+            <div class="stack"><span class="trip-row__time">27 Aug, 10:00 AM</span><span class="badge badge--assigned">Assigned</span></div>
           </div>
         </div>
       </div>
 
       <div class="section" style="margin-bottom:0">
-        <div class="section-title">Quick Stats</div>
-        <div class="stat-grid">
-          <div class="stat"><div class="stat__label">Trips This Week</div><div class="stat__value">6</div><div class="stat__sub">2 remaining</div></div>
-          <div class="stat"><div class="stat__label">Trips This Month</div><div class="stat__value">24</div><div class="stat__sub">↑ from 19 last month</div></div>
-          <div class="stat"><div class="stat__label">Earnings This Month</div><div class="stat__value">₹18,240</div><div class="stat__sub">Net after 10% commission</div></div>
+        <div class="section-title">Completed Trips</div>
+        <div class="trip-list">
+          <div class="trip-row">
+            <div class="trip-row__main">
+              <div class="trip-row__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg></div>
+              <div><div class="trip-row__name">Priya Nair</div><div class="trip-row__route">Kadavanthra → Fort Kochi</div></div>
+            </div>
+            <div class="stack"><span class="trip-row__time">16 Aug, 10:00 AM</span><span class="badge badge--completed">Completed</span></div>
+          </div>
+          <div class="trip-row">
+            <div class="trip-row__main">
+              <div class="trip-row__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg></div>
+              <div><div class="trip-row__name">Lakshmi Menon</div><div class="trip-row__route">Edappally → Kakkanad</div></div>
+            </div>
+            <div class="stack"><span class="trip-row__time">13 Aug, 2:30 PM</span><span class="badge badge--completed">Completed</span></div>
+          </div>
+          <div class="trip-row">
+            <div class="trip-row__main">
+              <div class="trip-row__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg></div>
+              <div><div class="trip-row__name">Vinod Pillai</div><div class="trip-row__route">Kaloor → Ernakulam South</div></div>
+            </div>
+            <div class="stack"><span class="trip-row__time">10 Aug, 9:00 AM</span><span class="badge badge--completed">Completed</span></div>
+          </div>
         </div>
       </div>
     </div>

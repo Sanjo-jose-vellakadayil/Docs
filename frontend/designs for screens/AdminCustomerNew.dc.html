@@ -40,39 +40,33 @@ button{font-family:inherit;cursor:pointer;}
 .main{flex:1;min-width:0;display:flex;flex-direction:column;}
 .topbar{height:64px;flex-shrink:0;background:var(--color-surface);border-bottom:1px solid var(--color-border);display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-8);}
 .topbar h1{font-size:1.5rem;font-weight:600;}
+.topbar__crumb{font-size:.75rem;color:var(--color-foreground-subtle);margin-top:2px;}
 .topbar__right{display:flex;align-items:center;gap:var(--space-5);}
 .bell{position:relative;color:var(--color-foreground-muted);}
 .bell__badge{position:absolute;top:-4px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--color-destructive);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-surface);}
 .usermenu{display:flex;align-items:center;gap:var(--space-2);}
 .avatar{width:32px;height:32px;border-radius:50%;background:var(--color-primary-light);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.75rem;}
 .usermenu__name{font-size:.875rem;font-weight:500;}
-.content{max-width:720px;margin:0 auto;padding:var(--space-8);width:100%;}
+.content{max-width:640px;margin:0 auto;padding:var(--space-8);width:100%;}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);height:44px;padding:0 var(--space-6);border-radius:var(--radius-md);font-size:1rem;font-weight:600;border:none;white-space:nowrap;}
 .btn--primary{background:var(--gradient-cta);color:#fff;box-shadow:0 4px 14px rgba(15,118,110,.3);}
 .btn--secondary{background:var(--color-surface);color:var(--color-foreground);border:1px solid var(--color-border);}
-
-.profile-head{display:flex;align-items:center;gap:var(--space-5);margin-bottom:var(--space-8);}
-.profile-avatar{width:80px;height:80px;border-radius:50%;background:var(--color-primary-light);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.5rem;flex-shrink:0;}
-.profile-head h2{font-size:1.375rem;font-weight:700;}
-.profile-head p{margin-top:4px;color:var(--color-foreground-muted);font-size:.875rem;}
-.photo-tag{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:var(--color-foreground-subtle);margin-top:8px;}
-.rating-pill{display:inline-flex;align-items:center;gap:4px;background:var(--color-primary-light);color:var(--color-primary);padding:3px 10px;border-radius:var(--radius-pill);font-size:.75rem;font-weight:600;margin-top:8px;}
 
 .form-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-8);box-shadow:var(--shadow-sm);}
 .group-heading{font-size:1.0625rem;font-weight:600;margin-bottom:var(--space-5);padding-bottom:var(--space-3);border-bottom:1px solid var(--color-border);}
 .group-heading:not(:first-child){margin-top:var(--space-8);}
 .field{margin-bottom:var(--space-5);}
 .field label{display:block;font-size:.875rem;font-weight:500;margin-bottom:var(--space-2);}
+.field .req{color:var(--color-destructive);}
 .field .opt{color:var(--color-foreground-subtle);font-weight:400;}
 .field input,.field select{width:100%;font-family:inherit;font-size:1rem;color:var(--color-foreground);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:0 var(--space-3);height:48px;}
-.field--ro input{background:var(--color-muted);color:var(--color-foreground-muted);}
-.field--ro label{display:flex;align-items:center;gap:6px;}
-.ro-pill{font-size:.625rem;text-transform:uppercase;letter-spacing:.04em;background:var(--color-muted);color:var(--color-foreground-subtle);padding:2px 6px;border-radius:4px;font-weight:600;}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);}
 .chip-input{display:flex;flex-wrap:wrap;gap:6px;padding:var(--space-2);border:1px solid var(--color-border);border-radius:var(--radius-sm);min-height:48px;align-items:center;}
 .chip{display:inline-flex;align-items:center;gap:6px;background:var(--color-primary-light);color:var(--color-primary);padding:5px 10px;border-radius:var(--radius-pill);font-size:.8125rem;font-weight:500;}
 .chip-ghost{display:inline-flex;align-items:center;gap:6px;background:var(--color-surface);color:var(--color-foreground-subtle);border:1px dashed var(--color-border);padding:5px 10px;border-radius:var(--radius-pill);font-size:.8125rem;}
+.upload-box{border:2px dashed var(--color-border);border-radius:var(--radius-md);padding:var(--space-6);text-align:center;color:var(--color-foreground-subtle);}
+.upload-box svg{margin:0 auto var(--space-2);color:var(--color-foreground-subtle);}
 .actions{display:flex;gap:var(--space-3);margin-top:var(--space-6);}
 </style>
 </helmet>
@@ -82,10 +76,13 @@ button{font-family:inherit;cursor:pointer;}
     <div class="sidebar__logo">Vandi<span>Pilot</span></div>
     <nav class="sidebar__nav">
       <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>Dashboard</a>
-      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg>Trips</a>
-      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h9a3 3 0 010 6H7a3 3 0 000 6h10"/><path d="M9 2v4M9 14v4M4 8h4M4 16h4"/></svg>Earnings</a>
-      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Calendar</a>
-      <a class="sidebar__link active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3.2"/><path d="M6 19a6.5 6.5 0 0112 0"/></svg>Profile</a>
+      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2 3h6l2-3h4"/><path d="M5 12L3 6a1 1 0 011-1h16a1 1 0 011 1l-2 6"/><path d="M3 12v6a1 1 0 001 1h16a1 1 0 001-1v-6"/></svg>Bookings</a>
+      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16h16M4 16l1.7-6.3A2.4 2.4 0 018 8h8a2.4 2.4 0 012.3 1.7L20 16M4 16v2.5M20 16v2.5"/><circle cx="7" cy="13" r="1.1"/><circle cx="17" cy="13" r="1.1"/></svg>Drivers</a>
+      <a class="sidebar__link active"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3.2"/><path d="M6 19a6.5 6.5 0 0112 0"/></svg>Customers</a>
+      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h9a3 3 0 010 6H7a3 3 0 000 6h10"/><path d="M9 2v4M9 14v4M4 8h4M4 16h4"/></svg>Commissions</a>
+      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>Reports</a>
+      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12l-8 8-9-9V4h7z"/><circle cx="7.5" cy="7.5" r="1.3" fill="currentColor" stroke="none"/></svg>Pricing</a>
+      <a class="sidebar__link"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>Ratings</a>
     </nav>
     <div class="sidebar__foot">
       <a class="sidebar__link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>Sign Out</a>
@@ -94,67 +91,32 @@ button{font-family:inherit;cursor:pointer;}
 
   <div class="main">
     <header class="topbar">
-      <h1>Profile</h1>
+      <div><h1>Add Customer</h1><div class="topbar__crumb">Customers / New</div></div>
       <div class="topbar__right">
-        <div class="bell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 004 0"/></svg><span class="bell__badge">1</span></div>
-        <div class="usermenu"><div class="avatar">AS</div><span class="usermenu__name">Arun Shankar</span></div>
+        <div class="bell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 004 0"/></svg><span class="bell__badge">5</span></div>
+        <div class="usermenu"><div class="avatar">SJ</div><span class="usermenu__name">Sanjay (Admin)</span></div>
       </div>
     </header>
 
     <div class="content">
-      <div class="profile-head">
-        <div class="profile-avatar">AS</div>
-        <div>
-          <h2>Arun Shankar</h2>
-          <p>Pilot since Feb 2025 · 142 trips completed</p>
-          <span class="rating-pill"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>4.9 average rating</span>
-        </div>
-      </div>
-
       <div class="form-card">
         <div class="group-heading">Personal Details</div>
         <div class="field-row">
-          <div class="field"><label>Full Name</label><input value="Arun Shankar"></div>
-          <div class="field"><label>Phone</label><input value="+91 98765 43210"></div>
+          <div class="field"><label>Full Name <span class="req">*</span></label><input placeholder="e.g. Priya Nair"></div>
+          <div class="field"><label>Phone <span class="req">*</span></label><input placeholder="+91 90000 00000"></div>
         </div>
-        <div class="field field--ro">
-          <label>Gmail <span class="ro-pill">Read-only</span></label>
-          <input value="arun.shankar@gmail.com" readonly>
-        </div>
-        <div class="field"><label>Address</label><input value="Panampilly Nagar, Kochi, Kerala 682036"></div>
-        <div class="field"><label>Years of Experience</label><input value="8"></div>
+        <div class="field"><label>Gmail <span class="req">*</span></label><input placeholder="name@gmail.com"></div>
+        <div class="field"><label>Default Pickup Address <span class="opt">Optional</span></label><input placeholder="House / area, city, PIN"></div>
 
-        <div class="group-heading">Vehicle Skills</div>
-        <div class="field">
-          <label>Vehicle Types</label>
-          <div class="chip-input">
-            <span class="chip">Sedan <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
-            <span class="chip">SUV <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
-            <span class="chip-ghost">+ Add</span>
-          </div>
-        </div>
-        <div class="field">
-          <label>Transmission Skills</label>
-          <div class="chip-input">
-            <span class="chip">Manual <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
-            <span class="chip">Automatic <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 6l12 12M18 6L6 18"/></svg></span>
-          </div>
-        </div>
-
-        <div class="group-heading">Payment &amp; Safety</div>
-        <div class="field"><label>Bank Account / UPI ID</label><input value="arun.shankar@upi"></div>
-        <div class="field"><label>Emergency Contact</label><input value="+91 90000 11223"></div>
+        <div class="group-heading">Default Vehicle</div>
         <div class="field-row">
-          <div class="field"><label>Driving License No. <span class="opt">Optional</span></label><input value="KL-07-20180012345"></div>
-          <div class="field"><label>License Expiry <span class="opt">Optional</span></label><input value="14 Mar 2030"></div>
+          <div class="field"><label>Car Type</label><select><option>Sedan</option></select></div>
+          <div class="field"><label>Transmission</label><select><option>Automatic</option></select></div>
         </div>
-        <div class="field field--ro">
-          <label>Aadhaar Number <span class="ro-pill">Verified</span></label>
-          <input value="XXXX XXXX 4821" readonly>
-        </div>
+        <div class="field"><label>Registration No. <span class="opt">Optional</span></label><input placeholder="KL-00-XX-0000"></div>
 
         <div class="actions">
-          <a class="btn btn--primary">Save Changes</a>
+          <a class="btn btn--primary">Add Customer</a>
           <a class="btn btn--secondary">Cancel</a>
         </div>
       </div>

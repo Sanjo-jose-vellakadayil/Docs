@@ -70,6 +70,26 @@ button{font-family:inherit;cursor:pointer;}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);}
 .field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-4);}
 .actions{display:flex;gap:var(--space-3);margin-top:var(--space-6);}
+
+.veh-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-5);padding-bottom:var(--space-3);border-bottom:1px solid var(--color-border);margin-top:var(--space-8);}
+.veh-head .group-heading{margin:0;padding:0;border:none;}
+.btn--sm{height:36px;padding:0 var(--space-4);font-size:.875rem;}
+.veh-list{display:flex;flex-direction:column;gap:var(--space-3);}
+.veh{display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);}
+.veh.default{border-color:var(--color-primary);background:#F0FDFA;}
+.veh__radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--color-border-hover);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.veh.default .veh__radio{border-color:var(--color-primary);}
+.veh.default .veh__radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--color-primary);}
+.veh__info{flex:1;min-width:0;}
+.veh__name{font-weight:600;font-size:.9375rem;}
+.veh__meta{font-size:.8125rem;color:var(--color-foreground-muted);margin-top:2px;}
+.veh__badge{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:var(--color-primary-light);color:var(--color-primary);padding:3px 8px;border-radius:var(--radius-pill);}
+.veh__set{font-size:.8125rem;font-weight:600;color:var(--color-primary);}
+.veh__rm{font-size:.8125rem;color:var(--color-destructive);font-weight:500;margin-left:var(--space-2);}
+.veh-add{margin-top:var(--space-4);border:1px dashed var(--color-border-hover);border-radius:var(--radius-md);padding:var(--space-5);background:var(--color-muted);}
+.veh-add h4{font-size:.9375rem;font-weight:600;margin-bottom:var(--space-4);}
+.veh-add .field{margin-bottom:var(--space-4);}
+.veh-add .actions{margin-top:var(--space-2);}
 </style>
 </helmet>
 
@@ -92,7 +112,6 @@ button{font-family:inherit;cursor:pointer;}
       <h1>Profile</h1>
       <div class="topbar__right">
         <div class="bell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 004 0"/></svg><span class="bell__badge">2</span></div>
-        <div class="usermenu"><div class="avatar">PN</div><span class="usermenu__name">Priya Nair</span></div>
       </div>
     </header>
 
@@ -121,11 +140,36 @@ button{font-family:inherit;cursor:pointer;}
           <input value="Kadavanthra, Kochi, Kerala 682020">
         </div>
 
-        <div class="group-heading">Default Vehicle</div>
-        <div class="field-row-3">
-          <div class="field"><label>Car Type</label><select><option>Sedan</option></select></div>
-          <div class="field"><label>Transmission</label><select><option>Automatic</option></select></div>
-          <div class="field"><label>Registration No.</label><input value="KL-07-AX-4521"></div>
+        <div class="veh-head">
+          <div class="group-heading">My Vehicles</div>
+          <a class="btn btn--secondary btn--sm">+ Add New Vehicle</a>
+        </div>
+        <div class="veh-list">
+          <div class="veh default">
+            <span class="veh__radio"></span>
+            <div class="veh__info"><div class="veh__name">Sedan &middot; Automatic</div><div class="veh__meta">KL-07-AX-4521</div></div>
+            <span class="veh__badge">Default</span>
+          </div>
+          <div class="veh">
+            <span class="veh__radio"></span>
+            <div class="veh__info"><div class="veh__name">Hatchback &middot; Manual</div><div class="veh__meta">KL-07-BH-1180</div></div>
+            <a class="veh__set">Set as default</a><a class="veh__rm">Remove</a>
+          </div>
+          <div class="veh">
+            <span class="veh__radio"></span>
+            <div class="veh__info"><div class="veh__name">SUV &middot; Automatic</div><div class="veh__meta">KL-41-C-7702</div></div>
+            <a class="veh__set">Set as default</a><a class="veh__rm">Remove</a>
+          </div>
+        </div>
+        <div class="veh-add">
+          <h4>Add New Vehicle</h4>
+          <div class="field-row-3">
+            <div class="field"><label>Car Type</label><select><option>Select type</option><option>Hatchback</option><option>Sedan</option><option>SUV</option></select></div>
+            <div class="field"><label>Transmission</label><select><option>Select</option><option>Manual</option><option>Automatic</option></select></div>
+            <div class="field"><label>Registration No.</label><input placeholder="KL-00-XX-0000"></div>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:.875rem;"><span class="veh__radio" style="width:18px;height:18px;border-radius:4px;"></span>Make this my default vehicle</label>
+          <div class="actions"><a class="btn btn--primary btn--sm">Save Vehicle</a><a class="btn btn--secondary btn--sm">Cancel</a></div>
         </div>
 
         <div class="actions">
