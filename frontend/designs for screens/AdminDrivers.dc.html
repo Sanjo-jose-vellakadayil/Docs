@@ -56,6 +56,7 @@ button{font-family:inherit;cursor:pointer;}
 .badge{display:inline-flex;align-items:center;gap:var(--space-1);height:26px;padding:0 var(--space-3);border-radius:var(--radius-pill);border:1px solid;font-size:.75rem;font-weight:500;}
 .badge--active{background:#DCFCE7;color:#15803D;border-color:#86EFAC;}
 .badge--inactive{background:#F1F5F9;color:#475569;border-color:#CBD5E1;}
+.tinybtn--success{color:var(--color-success);border-color:#86EFAC;background:#F0FDF4;}
 .badge--banned{background:#FEE2E2;color:#B91C1C;border-color:#FCA5A5;}
 
 .table-wrap{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;}
@@ -151,7 +152,7 @@ tbody tr:hover{background:var(--color-muted);}
               <td><span class="badge badge--banned"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M6.5 6.5l11 11"/></svg>Banned</span></td>
               <td class="num">31</td>
               <td class="num"><span class="stars-cell"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>3.2</span></td>
-              <td><div class="row-actions"><div class="tinybtn" style="opacity:.5">Banned</div></div></td>
+              <td><div class="row-actions"><div class="tinybtn tinybtn--outline">View</div><div class="tinybtn tinybtn--success">Unban</div></div></td>
             </tr>
             <tr>
               <td><div class="driver-cell"><div class="driver-avatar">MV</div><a class="name-link">Manoj Varghese</a></div></td>
@@ -188,7 +189,6 @@ tbody tr:hover{background:var(--color-muted);}
           </tbody>
         </table>
         </div>
-        <div class="pagination"><span>Showing 1–8 of 18</span></div>
       </div>
     </div>
   </div>

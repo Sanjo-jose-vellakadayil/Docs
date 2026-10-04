@@ -140,6 +140,9 @@ tbody tr:hover{background:var(--color-muted);}
 .fare-box{background:var(--color-muted);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);margin-top:var(--space-4);}
 .modal__foot{display:flex;gap:var(--space-3);margin-top:var(--space-6);}
 
+.trip-tools{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4) var(--space-6);border-bottom:1px solid var(--color-border);}
+.trip-search{flex:1;display:flex;align-items:center;gap:8px;height:40px;padding:0 var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-sm);color:var(--color-foreground-subtle);background:var(--color-surface);font-size:.875rem;}
+.trip-sort{display:flex;align-items:center;gap:6px;height:40px;padding:0 var(--space-3);border:1px solid var(--color-border);border-radius:var(--radius-sm);font-size:.875rem;font-weight:500;color:var(--color-foreground);white-space:nowrap;}
 </style>
 </helmet>
 
@@ -187,6 +190,10 @@ tbody tr:hover{background:var(--color-muted);}
       <div class="grid2">
         <div class="card" style="padding:0;overflow:hidden;margin-bottom:0">
           <div class="card-head" style="padding:var(--space-5) var(--space-6) 0"><h3>All Trips</h3><span style="font-size:.8125rem;color:var(--color-foreground-muted)">Completed to date</span></div>
+          <div class="trip-tools">
+            <div class="trip-search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Search by customer name</div>
+            <div class="trip-sort">Sort by date: Newest first <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+          </div>
           <div class="table-scroll" style="max-height:380px">
             <table>
               <thead><tr><th>Ref</th><th>Date</th><th>Customer</th><th>Route</th><th class="num">Fare</th><th class="num">Rating</th></tr></thead>
@@ -202,7 +209,6 @@ tbody tr:hover{background:var(--color-muted);}
               </tbody>
             </table>
           </div>
-          <div class="pagination"><span>Showing 1–8 of 142</span><div class="page-btns"><div class="page-btn active">1</div><div class="page-btn">2</div><div class="page-btn">3</div><div class="page-btn">…</div><div class="page-btn">18</div></div></div>
         </div>
         <div class="card" style="margin-bottom:0">
           <h3>Profile</h3>

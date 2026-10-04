@@ -93,11 +93,13 @@ tbody tr:hover{background:var(--color-muted);}
 .card h3{font-size:1.0625rem;font-weight:600;margin-bottom:var(--space-5);}
 .card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-5);}
 .card-head h3{margin-bottom:0;}
-.grid2{display:grid;grid-template-columns:1fr 380px;gap:var(--space-6);align-items:start;}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:var(--space-6);align-items:start;}
 .kv{display:flex;justify-content:space-between;gap:var(--space-4);font-size:.875rem;padding:var(--space-3) 0;border-bottom:1px solid var(--color-border);}
 .kv:last-child{border-bottom:none;}
 .kv .lbl{color:var(--color-foreground-muted);}
-.kv .val{text-align:right;font-weight:500;}
+.kv .lbl{flex-shrink:0;white-space:nowrap;}
+.kv .val{text-align:right;font-weight:500;min-width:0;overflow-wrap:anywhere;}
+.card{min-width:0;}
 .kv--total{font-weight:700;font-size:1.0625rem;}
 .person{display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4);}
 .av{width:48px;height:48px;border-radius:50%;background:var(--color-primary-light);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
@@ -207,7 +209,7 @@ tbody tr:hover{background:var(--color-muted);}
             <h3>Contact &amp; Vehicle</h3>
             <div class="kv"><span class="lbl">Phone</span><span class="val">+91 91234 56789</span></div>
             <div class="kv"><span class="lbl">Email</span><span class="val">priya.nair@gmail.com</span></div>
-            <div class="kv"><span class="lbl">Default pickup</span><span class="val">Kadavanthra, Kochi, Kerala 682020</span></div>
+            <div class="kv" style="flex-direction:column;gap:4px;"><span class="lbl">Default pickup</span><span class="val" style="text-align:left">Kadavanthra, Kochi, Kerala 682020</span></div>
             <div class="kv"><span class="lbl">Car type</span><span class="val">Sedan</span></div>
             <div class="kv"><span class="lbl">Transmission</span><span class="val">Automatic</span></div>
             <div class="kv"><span class="lbl">Registration no.</span><span class="val">KL-07-AX-4521</span></div>

@@ -118,6 +118,10 @@ tbody tr:hover{background:var(--color-muted);}
 .tl__line.dash{background:none;border-left:2px dashed var(--color-border);}
 .tl__body{flex:1;padding-bottom:var(--space-4);display:flex;justify-content:space-between;font-size:.9375rem;}
 .tl__body.upcoming{color:var(--color-foreground-subtle);}
+.tl__by{display:inline-block;margin-left:8px;font-size:.625rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:4px;vertical-align:middle;}
+.tl__by--admin{background:#E0F2FE;color:var(--color-info);}
+.tl__by--driver{background:var(--color-primary-light);color:var(--color-primary);}
+.tl__note{font-size:.75rem;color:var(--color-foreground-muted);margin-top:4px;}
 .tl__time{font-size:.75rem;color:var(--color-foreground-muted);}
 .overlay{position:fixed;inset:0;background:rgba(26,26,46,.55);display:flex;align-items:center;justify-content:center;z-index:50;}
 .modal{width:560px;max-height:92vh;overflow:auto;background:var(--color-surface);border-radius:var(--radius-lg);box-shadow:0 24px 60px rgba(0,0,0,.25);padding:var(--space-6);}
@@ -190,12 +194,14 @@ tbody tr:hover{background:var(--color-muted);}
           </div>
           <div class="card" style="margin-bottom:0">
             <h3>Status Timeline</h3>
-            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><span>Requested</span><span class="tl__time">24 Aug, 3:58 PM</span></div></div>
-            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><span>Pilot Assigned</span><span class="tl__time">24 Aug, 4:05 PM</span></div></div>
-            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><span>On the Way</span><span class="tl__time">24 Aug, 4:30 PM</span></div></div>
-            <div class="tl__row"><div class="tl__rail"><div class="tl__node current"></div><div class="tl__line dash"></div></div><div class="tl__body"><span>Waiting at Destination</span><span class="tl__time">24 Aug, 5:12 PM</span></div></div>
-            <div class="tl__row"><div class="tl__rail"><div class="tl__node upcoming"></div><div class="tl__line dash"></div></div><div class="tl__body upcoming"><span>Returning</span><span class="tl__time">—</span></div></div>
-            <div class="tl__row"><div class="tl__rail"><div class="tl__node upcoming"></div></div><div class="tl__body upcoming"><span>Completed</span><span class="tl__time">—</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><div><span>Requested</span><span class="tl__by tl__by--admin">Admin</span></div><span class="tl__time">24 Aug, 3:58 PM</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><div><span>Assigned</span><span class="tl__by tl__by--admin">Admin</span></div><span class="tl__time">24 Aug, 4:05 PM</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><div><span>Driver on the Way</span><span class="tl__by tl__by--driver">Driver</span></div><span class="tl__time">24 Aug, 4:30 PM</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><div><span>Trip Started</span><span class="tl__by tl__by--driver">Driver</span></div><span class="tl__time">24 Aug, 4:52 PM</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node done"></div><div class="tl__line"></div></div><div class="tl__body"><div><span>Paused &rarr; Continued</span><span class="tl__by tl__by--driver">Driver</span><div class="tl__note">Optional &middot; shown only when the driver marks it &middot; waiting time 12 min</div></div><span class="tl__time">24 Aug, 5:00 PM</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node current"></div><div class="tl__line dash"></div></div><div class="tl__body"><div><span>Reached Destination</span><span class="tl__by tl__by--driver">Driver</span></div><span class="tl__time">24 Aug, 5:12 PM</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node upcoming"></div><div class="tl__line dash"></div></div><div class="tl__body upcoming"><div><span>Returning</span><span class="tl__by tl__by--driver">Driver</span></div><span class="tl__time">&mdash;</span></div></div>
+            <div class="tl__row"><div class="tl__rail"><div class="tl__node upcoming"></div></div><div class="tl__body upcoming"><div><span>Completed</span><span class="tl__by tl__by--driver">Driver</span></div><span class="tl__time">&mdash;</span></div></div>
           </div>
         </div>
         <div>

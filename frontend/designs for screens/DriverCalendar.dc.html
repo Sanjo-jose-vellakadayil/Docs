@@ -46,7 +46,7 @@ button{font-family:inherit;cursor:pointer;}
 .usermenu{display:flex;align-items:center;gap:var(--space-2);}
 .avatar{width:32px;height:32px;border-radius:50%;background:var(--color-primary-light);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.75rem;}
 .usermenu__name{font-size:.875rem;font-weight:500;}
-.content{max-width:900px;margin:0 auto;padding:var(--space-8);width:100%;}
+.content{max-width:1120px;margin:0 auto;padding:var(--space-8);width:100%;}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);height:40px;padding:0 var(--space-5);border-radius:var(--radius-md);font-size:.875rem;font-weight:600;border:none;white-space:nowrap;}
 .btn--secondary{background:var(--color-surface);color:var(--color-foreground);border:1px solid var(--color-border);}
@@ -64,7 +64,7 @@ button{font-family:inherit;cursor:pointer;}
 .cal__navbtn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);border:1px solid var(--color-border);color:var(--color-foreground-muted);}
 .cal__grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
 .cal__dow{text-align:center;font-size:.6875rem;text-transform:uppercase;color:var(--color-foreground-muted);padding-bottom:8px;font-weight:600;}
-.cal__cell{aspect-ratio:1;min-height:76px;border-radius:var(--radius-md);padding:8px;font-size:.8125rem;position:relative;border:1px solid transparent;}
+.cal__cell{min-height:72px;min-width:0;border-radius:var(--radius-md);padding:8px;font-size:.8125rem;position:relative;border:1px solid transparent;}
 .cal__cell.avail{border-color:var(--color-border);}
 .cal__cell.trip{background:#CCFBF1;color:#0F766E;font-weight:600;}
 .cal__cell.dayoff{background:repeating-linear-gradient(45deg,#F1F5F9,#F1F5F9 5px,#E5E9ED 5px,#E5E9ED 10px);color:#475569;}
@@ -79,12 +79,15 @@ button{font-family:inherit;cursor:pointer;}
 .off-row{display:flex;justify-content:space-between;align-items:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);font-size:.875rem;}
 .off-row__reason{color:var(--color-foreground-muted);}
 .cal__cell.selected{box-shadow:inset 0 0 0 2px var(--color-accent);background:#FFF7E6;}
-.cal-layout{display:grid;grid-template-columns:1fr 320px;gap:var(--space-6);align-items:start;}
-.mark{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-6);box-shadow:var(--shadow-sm);position:sticky;top:var(--space-6);}
+.cal-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:var(--space-6);align-items:start;}
+.mark{min-width:0;overflow:hidden;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-6);box-shadow:var(--shadow-sm);position:sticky;top:var(--space-6);}
 .mark h3{font-size:1.0625rem;font-weight:600;margin-bottom:4px;}
 .mark__date{font-size:.8125rem;color:var(--color-foreground-muted);margin-bottom:var(--space-5);}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--color-muted);border-radius:var(--radius-md);padding:4px;gap:4px;margin-bottom:var(--space-5);}
 .seg__opt{height:40px;display:flex;align-items:center;justify-content:center;gap:8px;border-radius:6px;font-size:.875rem;font-weight:600;color:var(--color-foreground-muted);}
+.seg__opt.on-off{background:var(--color-surface);color:var(--color-destructive);box-shadow:var(--shadow-sm);}
+.mark__alt{margin-top:var(--space-5);padding-top:var(--space-5);border-top:1px dashed var(--color-border-hover);}
+.mark__alt-tag{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--color-foreground-subtle);margin-bottom:var(--space-3);}
 .seg__opt.on-avail{background:var(--color-surface);color:var(--color-primary);box-shadow:var(--shadow-sm);}
 .mark label{display:block;font-size:.875rem;font-weight:500;margin-bottom:var(--space-2);}
 .mark input{width:100%;height:44px;border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:0 var(--space-3);font-family:inherit;font-size:.9375rem;color:var(--color-foreground);}
@@ -152,11 +155,16 @@ button{font-family:inherit;cursor:pointer;}
           <h3>Mark availability</h3>
           <div class="mark__date">Tuesday, 25 Aug 2026 · selected</div>
           <div class="seg"><div class="seg__opt on-avail">Available</div><div class="seg__opt">Day off</div></div>
-          <label>Reason <span style="color:var(--color-foreground-subtle);font-weight:400">(optional)</span></label>
-          <input placeholder="e.g. Family function">
           <p class="mark__hint">Tap any day on the calendar to select it. Select several days to mark them together.</p>
           <div class="mark__btn">Save</div>
           <p class="mark__warn">Days with a scheduled trip can’t be marked as a day off.</p>
+          <div class="mark__alt">
+            <div class="mark__alt-tag">When &ldquo;Day off&rdquo; is selected</div>
+            <div class="seg"><div class="seg__opt">Available</div><div class="seg__opt on-off">Day off</div></div>
+            <label>Reason <span style="color:var(--color-foreground-subtle);font-weight:400">(optional)</span></label>
+            <input placeholder="e.g. Family function">
+            <p class="mark__hint">Reason is only asked when marking a day off.</p>
+          </div>
         </div>
       </div>
 

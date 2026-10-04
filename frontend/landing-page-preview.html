@@ -229,11 +229,11 @@ section{padding:var(--space-16) 0;}
 
 /* ---------- Hero — design.md §7.2 ---------- */
 .hero{
-  background:var(--gradient-hero);padding-top:calc(var(--nav-h) + var(--space-16));
+  background:var(--gradient-hero);padding-top:var(--space-8);
   padding-bottom:var(--space-16);
 }
 @media(min-width:1024px){
-  .hero{padding-top:calc(var(--nav-h) + var(--space-32));padding-bottom:var(--space-32);}
+  .hero{padding-top:var(--space-12);padding-bottom:var(--space-24);}
 }
 .hero__grid{display:grid;grid-template-columns:1fr;gap:var(--space-12);align-items:center;}
 @media(min-width:1024px){.hero__grid{grid-template-columns:1fr 1fr;gap:var(--space-16);}}
@@ -343,6 +343,15 @@ section{padding:var(--space-16) 0;}
 @media(min-width:1024px){.price-scroll.price-scroll--three{grid-template-columns:repeat(3,1fr);}}
 .price-card__plus{font-size:var(--text-body-sm);color:var(--color-foreground-muted);margin-top:var(--space-1);}
 .price-note{margin-top:var(--space-6);text-align:center;font-size:var(--text-body-sm);color:var(--color-foreground-muted);}
+
+
+/* ---------- Quick booking section (ON-14) ---------- */
+.qb{max-width:880px;margin:0 auto;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-md);}
+.qb__grid{display:grid;grid-template-columns:1fr;gap:0 var(--space-4);}
+@media(min-width:768px){.qb{padding:var(--space-8);}.qb__grid{grid-template-columns:1fr 1fr;}}
+.qb__cta{align-self:end;margin-bottom:var(--space-5);}
+.qb .bp__note{margin-top:0;}
+.qb--err{color:var(--color-destructive)!important;}
 
 /* ---------- Book a Pilot popup ---------- */
 .bp{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:var(--space-4);background:rgba(26,26,46,.55);opacity:0;visibility:hidden;transition:opacity 200ms ease,visibility 200ms ease;}
@@ -565,7 +574,6 @@ body{padding-bottom:0;}
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav__actions">
-      <a href="#" class="btn btn--ghost">Sign In</a>
       <a href="#book-pilot" data-open-booking class="btn btn--primary">Book a Pilot</a>
     </div>
     <button class="nav__burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="drawer">
@@ -590,7 +598,6 @@ body{padding-bottom:0;}
     <a href="#contact">Contact</a>
   </nav>
   <div class="drawer__actions">
-    <a href="#" class="btn btn--secondary btn--block">Sign In</a>
     <a href="#book-pilot" data-open-booking class="btn btn--primary btn--block">Book a Pilot</a>
   </div>
 </aside>
@@ -609,7 +616,7 @@ body{padding-bottom:0;}
             Book a Pilot
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-          <a href="#" class="btn btn--secondary btn--lg">Sign In</a>
+          <a href="#quick-booking" class="btn btn--secondary btn--lg">Quick Booking</a>
         </div>
         <div class="hero__proof">
           <div>
@@ -677,6 +684,29 @@ body{padding-bottom:0;}
         </svg>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ============ QUICK BOOKING (ON-14) ============ -->
+<section id="quick-booking" class="bg-base">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>Quick Booking</h2>
+      <p>Need a pilot fast? Share your details and we’ll call you to confirm.</p>
+    </div>
+    <form class="qb reveal" id="quickForm" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" novalidate>
+      <input type="hidden" name="_subject" value="New quick booking enquiry — VandiPilot">
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
+      <div class="qb__grid">
+        <div class="field"><label for="qName">Name <span class="req">*</span></label><input id="qName" name="name" type="text" autocomplete="name" placeholder="Your full name" required><div class="field__err">Please enter your name.</div></div>
+        <div class="field"><label for="qPlace">Place <span class="req">*</span></label><input id="qPlace" name="place" type="text" placeholder="Pickup location, e.g. Kadavanthra, Kochi" required><div class="field__err">Please enter the pickup place.</div></div>
+        <div class="field"><label for="qPhone">Mobile number <span class="req">*</span></label><input id="qPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+91 90000 00000" required><div class="field__err">Enter a valid mobile number.</div></div>
+        <div class="field"><label for="qDate">Date <span class="req">*</span></label><input id="qDate" name="date" type="date" required><div class="field__err">Choose a date.</div></div>
+        <div class="field"><label for="qTime">Time <span class="req">*</span></label><input id="qTime" name="time" type="time" required><div class="field__err">Choose a time.</div></div>
+        <div class="qb__cta"><button class="btn btn--primary btn--lg btn--block" type="submit" id="qSubmit">Book the Driver</button></div>
+      </div>
+      <p class="bp__note" id="qStatus" aria-live="polite">A 10% platform charge is added to the listed rates.</p>
+    </form>
   </div>
 </section>
 
@@ -977,34 +1007,34 @@ body{padding-bottom:0;}
 <div class="bp" id="bookingModal" role="dialog" aria-modal="true" aria-labelledby="bpTitle" hidden>
   <div class="bp__dialog">
     <button class="bp__close" id="bpClose" type="button" aria-label="Close"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <form class="bp__form" id="bookingForm" novalidate>
+    <form class="bp__form" id="bookingForm" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" novalidate>
       <h2 class="bp__title" id="bpTitle">Book a Pilot</h2>
       <p class="bp__sub">Tell us where and when. We’ll confirm your pilot by phone.</p>
       <div class="field">
         <label for="bpName">Name <span class="req">*</span></label>
-        <input id="bpName" type="text" autocomplete="name" placeholder="Your full name" required>
+        <input id="bpName" name="name" type="text" autocomplete="name" placeholder="Your full name" required>
         <div class="field__err">Please enter your name.</div>
       </div>
       <div class="field">
         <label for="bpPlace">Place <span class="req">*</span></label>
-        <input id="bpPlace" type="text" placeholder="Pickup location, e.g. Kadavanthra, Kochi" required>
+        <input id="bpPlace" name="place" type="text" placeholder="Pickup location, e.g. Kadavanthra, Kochi" required>
         <div class="field__err">Please enter the pickup place.</div>
       </div>
       <div class="bp__row">
         <div class="field">
           <label for="bpDate">Date <span class="req">*</span></label>
-          <input id="bpDate" type="date" required>
+          <input id="bpDate" name="date" type="date" required>
           <div class="field__err">Choose a date.</div>
         </div>
         <div class="field">
           <label for="bpTime">Time <span class="req">*</span></label>
-          <input id="bpTime" type="time" required>
+          <input id="bpTime" name="time" type="time" required>
           <div class="field__err">Choose a time.</div>
         </div>
       </div>
       <div class="field">
         <label for="bpPhone">Contact number <span class="req">*</span></label>
-        <input id="bpPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+91 90000 00000" required>
+        <input id="bpPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+91 90000 00000" required>
         <div class="field__err">Enter a valid phone number.</div>
       </div>
       <button class="btn btn--primary btn--lg btn--block" type="submit">Request Booking</button>
@@ -1214,6 +1244,37 @@ body{padding-bottom:0;}
 })();
 </script>
 <script>
+/* Shared Formspree submit — replace YOUR_FORMSPREE_ID in the form action attributes with the real form id. */
+function sendToFormspree(form, source){
+  var data = new FormData(form);
+  data.append('source', source);
+  return fetch(form.action, {method:'POST', body:data, headers:{'Accept':'application/json'}})
+    .then(function(r){ if(!r.ok) throw new Error('Formspree ' + r.status); return r; });
+}
+(function(){
+  var f = document.getElementById('quickForm'); if(!f) return;
+  var st = document.getElementById('qStatus'), btn = document.getElementById('qSubmit');
+  document.getElementById('qDate').min = new Date().toISOString().slice(0,10);
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    var ok = true;
+    ['qName','qPlace','qPhone','qDate','qTime'].forEach(function(id){
+      var el = document.getElementById(id), v = el.value.trim(), good = !!v;
+      if(id === 'qPhone') good = /^[+\d][\d\s-]{8,}$/.test(v);
+      el.closest('.field').classList.toggle('is-error', !good);
+      if(!good && ok){ ok = false; el.focus(); }
+    });
+    if(!ok) return;
+    var label = btn.textContent; btn.disabled = true; btn.textContent = 'Sending…'; st.classList.remove('qb--err');
+    sendToFormspree(f, 'quick-booking').then(function(){
+      f.reset(); st.textContent = 'Thanks! Your request is in — we’ll call you shortly to confirm your pilot.';
+    }).catch(function(){
+      st.classList.add('qb--err'); st.textContent = 'Could not send your request. Please try again or call us.';
+    }).then(function(){ btn.disabled = false; btn.textContent = label; });
+  });
+})();
+</script>
+<script>
 (function(){
   'use strict';
   var modal = document.getElementById('bookingModal');
@@ -1260,7 +1321,12 @@ body{padding-bottom:0;}
       el.closest('.field').classList.toggle('is-error', !good);
       if(!good && ok){ ok = false; el.focus(); }
     });
-    if(ok) modal.classList.add('bp--sent');
+    if(!ok) return;
+    var btn = form.querySelector('button[type=submit]'), label = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Sending…';
+    sendToFormspree(form, 'popup').then(function(){ modal.classList.add('bp--sent'); })
+      .catch(function(){ alert('Sorry, we could not send your request. Please try again.'); })
+      .then(function(){ btn.disabled = false; btn.textContent = label; });
   });
 })();
 </script>

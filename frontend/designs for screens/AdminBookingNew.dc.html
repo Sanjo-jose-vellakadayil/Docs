@@ -144,6 +144,9 @@ button{font-family:inherit;cursor:pointer;}
 .dt-sep{width:1px;height:24px;background:var(--color-border);}
 .help{font-size:.75rem;color:var(--color-foreground-subtle);margin-top:6px;}
 .picked + .help{margin-top:var(--space-3);}
+.state-note{display:flex;align-items:center;gap:8px;margin:var(--space-5) 0 var(--space-3);font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--color-foreground-subtle);}
+.state-note::before,.state-note::after{content:"";flex:1;height:1px;background:var(--color-border);}
+.alt-state{border:1px dashed var(--color-border-hover);border-radius:var(--radius-md);padding:var(--space-4);}
 </style>
 </helmet>
 
@@ -194,6 +197,23 @@ button{font-family:inherit;cursor:pointer;}
             <span class="picked__change">Change</span>
           </div>
           <p class="help">Pickup address and vehicle are pre-filled from the customer’s saved details.</p>
+        </div>
+
+        <div class="state-note">Shown instead when &ldquo;New Customer&rdquo; is selected</div>
+        <div class="alt-state">
+          <div class="toggle-group">
+            <div class="toggle-btn">Existing Customer</div>
+            <div class="toggle-btn active">New Customer</div>
+          </div>
+          <div class="inline-panel">
+            <div class="inline-panel__label"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Create customer inline</div>
+            <div class="field-row">
+              <div class="field" style="margin-bottom:0"><label>Full Name <span class="req">*</span></label><input placeholder="e.g. Vinod Pillai"></div>
+              <div class="field" style="margin-bottom:0"><label>Phone <span class="req">*</span></label><input placeholder="+91 90000 00000"></div>
+            </div>
+            <div class="field" style="margin-top:var(--space-5);margin-bottom:0"><label>Email (Gmail)</label><input placeholder="name@gmail.com"></div>
+          </div>
+          <p class="help" style="margin-top:var(--space-3)">Pickup address and vehicle are entered manually below for new customers.</p>
         </div>
 
         <div class="group-heading">Trip Details</div>
