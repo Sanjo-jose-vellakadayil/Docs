@@ -1,0 +1,71 @@
+<!-- VandiPilot testimonials section — REMOVED FROM THE LIVE PAGE.
+     Taken out before launch per Jira ON-19: the quotes, names and star ratings
+     below are placeholder content, not real customer reviews.
+     To restore: paste this block back into index.html between the "WHY CHOOSE"
+     and "CONTACT" sections, re-add <a href="#testimonials">Reviews</a> to the
+     drawer nav, and replace every quote with a real, attributable review. -->
+
+<!-- ============ TESTIMONIALS (PRD FR-LAND-03) ============ -->
+<section id="testimonials" class="bg-muted">
+  <div class="container">
+    <div class="sec-head reveal">
+      <h2>What Our Customers Say</h2>
+      <p>Real journeys, in their words.</p>
+    </div>
+    <div class="tst-track" id="tstTrack">
+      <article class="tst reveal" data-i style="--i:0">
+        <span class="tst__mark" aria-hidden="true">&ldquo;</span>
+        <div class="tst__stars" role="img" aria-label="Rated 5 out of 5 stars">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+        </div>
+        <p class="tst__quote">I was nervous about handing my car keys to someone, but my VandiPilot was incredibly professional. Now I book every week for my hospital visits.</p>
+        <div class="tst__who">
+          <div class="tst__avatar" aria-hidden="true">PN</div>
+          <div><div class="tst__name">Priya Nair</div><div class="tst__ctx">Regular Customer</div></div>
+        </div>
+      </article>
+
+      <article class="tst reveal" data-i style="--i:1">
+        <span class="tst__mark" aria-hidden="true">&ldquo;</span>
+        <div class="tst__stars" role="img" aria-label="Rated 5 out of 5 stars">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+        </div>
+        <p class="tst__quote">Airport runs at 4 AM? No problem. My pilot is always on time, and I can relax instead of dealing with early morning traffic.</p>
+        <div class="tst__who">
+          <div class="tst__avatar" aria-hidden="true">RK</div>
+          <div><div class="tst__name">Rajesh Kumar</div><div class="tst__ctx">Business Professional</div></div>
+        </div>
+      </article>
+
+      <article class="tst reveal" data-i style="--i:2">
+        <span class="tst__mark" aria-hidden="true">&ldquo;</span>
+        <div class="tst__stars" role="img" aria-label="Rated 5 out of 5 stars">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.8 6.1 6.7.8-5 4.6 1.4 6.5L12 17.2l-5.9 3.3 1.4-6.5-5-4.6 6.7-.8z"/></svg>
+        </div>
+        <p class="tst__quote">At my age, driving long distances is tiring. VandiPilot gives me the freedom to travel in my own car without the stress.</p>
+        <div class="tst__who">
+          <div class="tst__avatar" aria-hidden="true">MT</div>
+          <div><div class="tst__name">Meena Thomas</div><div class="tst__ctx">Senior Citizen</div></div>
+        </div>
+      </article>
+    </div>
+    <div class="dots" id="tstDots" role="tablist" aria-label="Testimonial navigation">
+      <button role="tab" aria-current="true" aria-label="Testimonial 1"></button>
+      <button role="tab" aria-current="false" aria-label="Testimonial 2"></button>
+      <button role="tab" aria-current="false" aria-label="Testimonial 3"></button>
+    </div>
+  </div>
+</section>
+

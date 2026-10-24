@@ -1,0 +1,44 @@
+# VandiPilot landing page — Netlify configuration (Jira ON-19)
+# The site is a single static page; there is no build step.
+
+[build]
+  publish = "."
+  command = ""
+
+# --- Canonical host -----------------------------------------------------
+# Netlify serves the site on both the apex and www. Pick ONE as canonical and
+# redirect the other, so Google does not index two copies of the page.
+# Uncomment the block that matches the canonical URL in index.html.
+#
+# [[redirects]]                                   # www  ->  apex
+#   from = "https://www.vandipilot.com/*"
+#   to   = "https://vandipilot.com/:splat"
+#   status = 301
+#   force  = true
+
+# --- Security headers ---------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), camera=(), microphone=(), payment=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# --- Caching ------------------------------------------------------------
+# The HTML must stay fresh so copy/price changes go live on the next deploy.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/favicon.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
