@@ -541,6 +541,11 @@ section{padding:var(--space-16) 0;}
 .modal-open .sticky-cta{visibility:hidden;}
 @media(prefers-reduced-motion:reduce){.sticky-cta,.sticky-cta--show{transition:none;}}
 @media(min-width:1024px){.sticky-cta{display:none;}}
+/* The fixed "Book a Pilot" bar (< 1024px) sat on top of the last row of the footer (copyright, Terms, Privacy).
+   Reserve its height at the bottom of the footer so the whole footer can be scrolled into view. */
+@media(max-width:1023.98px){
+  .footer{padding-bottom:calc(var(--space-6) + 76px + env(safe-area-inset-bottom,0px));}
+}
 body{padding-bottom:0;}
 
 /* ---------- Toast — design.md §25 ---------- */
