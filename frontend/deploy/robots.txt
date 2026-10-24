@@ -1,0 +1,6 @@
+# VandiPilot — https://vandipilot.com/
+
+User-agent: *
+Allow: /
+
+Sitemap: https://vandipilot.com/sitemap.xml
