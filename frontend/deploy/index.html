@@ -267,8 +267,9 @@ section{padding:var(--space-16) 0;}
   margin-top:var(--space-5);font-size:var(--text-body-lg);
   color:var(--color-foreground-muted);max-width:var(--max-width-hero-text);
 }
-.hero__ctas{display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-8);}
-@media(min-width:640px){.hero__ctas{flex-direction:row;}}
+.hero__ctas{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-3);margin-top:var(--space-8);}
+@media(min-width:640px){.hero__ctas{grid-template-columns:minmax(0,max-content);}}
+.hero__ctas .btn--secondary svg{color:#25D366;}
 .hero__proof{
   display:flex;flex-wrap:wrap;gap:var(--space-6);margin-top:var(--space-8);
   font-size:var(--text-body-sm);color:var(--color-foreground-muted);
@@ -369,9 +370,10 @@ section{padding:var(--space-16) 0;}
 
 /* ---------- Quick booking section (ON-14) ---------- */
 .qb{max-width:880px;margin:0 auto;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6);box-shadow:var(--shadow-md);}
-.qb__grid{display:grid;grid-template-columns:1fr;gap:0 var(--space-4);}
-@media(min-width:768px){.qb{padding:var(--space-8);}.qb__grid{grid-template-columns:1fr 1fr;}}
-.qb__cta{align-self:end;margin-bottom:var(--space-5);}
+.qb__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:0 var(--space-4);}
+.qb__grid .field{min-width:0;}
+@media(min-width:768px){.qb{padding:var(--space-8);}.qb__grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+.qb__cta{grid-column:1/-1;margin-bottom:var(--space-5);}
 .qb .bp__note{margin-top:0;}
 .qb--err{color:var(--color-destructive)!important;}
 
@@ -675,6 +677,10 @@ body{padding-bottom:0;}
             Book a Pilot
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
+          <a href="https://wa.me/919074025803?text=Hi%20VandiPilot%2C%20I%27d%20like%20to%20book%20a%20pilot." target="_blank" rel="noopener" class="btn btn--secondary btn--lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1112 20zm4.6-5.9c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.5 6.5 0 01-1.9-1.2 7.2 7.2 0 01-1.3-1.7c-.1-.2 0-.4.1-.5l.5-.6.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 2.9 2.9 0 00-.9 2.2 5 5 0 001 2.6 10.4 10.4 0 004 3.5 9 9 0 002.7.6 2.5 2.5 0 001.8-.7 2.1 2.1 0 00.6-1.5c0-.2 0-.2-.3-.3z"/></svg>
+            WhatsApp Us
+          </a>
         </div>
         <div class="hero__proof">
           <div>
@@ -757,8 +763,9 @@ body{padding-bottom:0;}
       <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
       <div class="qb__grid">
         <div class="field"><label for="qName">Name <span class="req">*</span></label><input id="qName" name="name" type="text" autocomplete="name" placeholder="Your full name" required><div class="field__err">Please enter your name.</div></div>
-        <div class="field"><label for="qPlace">Place <span class="req">*</span></label><input id="qPlace" name="place" type="text" placeholder="Pickup location, e.g. Kadavanthra, Kochi" required><div class="field__err">Please enter the pickup place.</div></div>
         <div class="field"><label for="qPhone">Mobile number <span class="req">*</span></label><input id="qPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+91 90000 00000" required><div class="field__err">Enter a valid mobile number.</div></div>
+        <div class="field"><label for="qPlace">Place <span class="req">*</span></label><input id="qPlace" name="place" type="text" placeholder="Pickup location, e.g. Kadavanthra, Kochi" required><div class="field__err">Please enter the pickup place.</div></div>
+        <div class="field"><label for="qDestination">Destination <span class="req">*</span></label><input id="qDestination" name="destination" type="text" autocomplete="off" placeholder="Where to, e.g. Kozhikode" required><div class="field__err">Please enter the destination.</div></div>
         <div class="field"><label for="qDate">Date <span class="req">*</span></label><input id="qDate" name="date" type="date" required><div class="field__err">Choose a date.</div></div>
         <div class="field"><label for="qTime">Time <span class="req">*</span></label><input id="qTime" name="time" type="time" required><div class="field__err">Choose a time.</div></div>
         <div class="qb__cta"><button class="btn btn--primary btn--lg btn--block" type="submit" id="qSubmit">Book the Driver</button></div>
@@ -825,23 +832,23 @@ body{padding-bottom:0;}
         <article class="price-card">
           <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18c0-3 3-3 3-6s-3-3-3-6"/><path d="M20 6c0 3-3 3-3 6s3 3 3 6"/><circle cx="4" cy="18" r="1.6"/><circle cx="20" cy="6" r="1.6"/></svg></div>
           <h4>Full Day · Within 200km</h4>
-          <div class="price-card__rate">₹1,999 <span class="price-card__unit">/ full day</span></div>
+          <div class="price-card__rate">₹999 <span class="price-card__unit">min / full day</span></div>
           <p class="price-card__plus">+ 10% platform charge</p>
-          <span class="price-card__min">Maximum per day, not a fixed fee</span>
+          <span class="price-card__min">Maximum per day ₹1,999</span>
         </article>
         <article class="price-card">
           <div class="price-card__icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l8-1.5V5a1.5 1.5 0 013 0v6.5L22 13v2l-8-1v4l2.5 2v1.5L12 20l-4.5 1.5V20L10 18v-4l-7 1z"/></svg></div>
           <h4>Full Day · Above 200km</h4>
-          <div class="price-card__rate">₹2,999 <span class="price-card__unit">/ full day</span></div>
+          <div class="price-card__rate">₹1,999 <span class="price-card__unit">min / full day</span></div>
           <p class="price-card__plus">+ 10% platform charge</p>
-          <span class="price-card__min">Maximum per day, not a fixed fee</span>
+          <span class="price-card__min">Maximum per day ₹2,999</span>
         </article>
       </div>
       <p class="scroll-hint">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         Swipe for more
       </p>
-      <p class="price-note">Full-day prices are the <strong>maximum</strong> we charge for a day, not a fixed amount. A 10% platform charge is added to every price shown.</p>
+      <p class="price-note">Full-day prices shown are the <strong>minimum</strong>. The most we charge for a full day is ₹1,999 within 200km and ₹2,999 above 200km. A 10% platform charge is added to every price shown.</p>
     </div>
   </div>
 </section>
@@ -957,10 +964,6 @@ body{padding-bottom:0;}
             <div class="info-card__val">Mon – Sun · 6:00 AM – 11:00 PM</div>
           </div>
         </div>
-        <a class="btn btn--primary btn--block btn--lg" href="https://wa.me/919074025803?text=Hi%20VandiPilot%2C%20I%27d%20like%20to%20book%20a%20pilot." target="_blank" rel="noopener" style="margin-top:var(--space-6)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18a8 8 0 01-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1112 20zm4.6-5.9c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.5 6.5 0 01-1.9-1.2 7.2 7.2 0 01-1.3-1.7c-.1-.2 0-.4.1-.5l.5-.6.2-.4v-.4l-.7-1.7c-.2-.4-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 2.9 2.9 0 00-.9 2.2 5 5 0 001 2.6 10.4 10.4 0 004 3.5 9 9 0 002.7.6 2.5 2.5 0 001.8-.7 2.1 2.1 0 00.6-1.5c0-.2 0-.2-.3-.3z"/></svg>
-          Message us on WhatsApp
-        </a>
       </div>
     </div>
   </div>
@@ -1020,6 +1023,11 @@ body{padding-bottom:0;}
         <label for="bpPlace">Place <span class="req">*</span></label>
         <input id="bpPlace" name="place" type="text" placeholder="Pickup location, e.g. Kadavanthra, Kochi" required>
         <div class="field__err">Please enter the pickup place.</div>
+      </div>
+      <div class="field">
+        <label for="bpDestination">Destination <span class="req">*</span></label>
+        <input id="bpDestination" name="destination" type="text" autocomplete="off" placeholder="Where to, e.g. Kozhikode" required>
+        <div class="field__err">Please enter the destination.</div>
       </div>
       <div class="bp__row">
         <div class="field">
@@ -1270,7 +1278,7 @@ function sendToFormspree(form, source){
   f.addEventListener('submit', function(e){
     e.preventDefault();
     var ok = true;
-    ['qName','qPlace','qPhone','qDate','qTime'].forEach(function(id){
+    ['qName','qPlace','qDestination','qPhone','qDate','qTime'].forEach(function(id){
       var el = document.getElementById(id), v = el.value.trim(), good = !!v;
       if(id === 'qPhone') good = /^[+\d][\d\s-]{8,}$/.test(v);
       el.closest('.field').classList.toggle('is-error', !good);
@@ -1327,7 +1335,7 @@ function sendToFormspree(form, source){
   form.addEventListener('submit', function(e){
     e.preventDefault();
     var ok = true;
-    ['bpName','bpPlace','bpDate','bpTime','bpPhone'].forEach(function(id){
+    ['bpName','bpPlace','bpDestination','bpDate','bpTime','bpPhone'].forEach(function(id){
       var el = document.getElementById(id), v = el.value.trim(), good = !!v;
       if(id === 'bpPhone') good = /^[+\d][\d\s-]{8,}$/.test(v);
       el.closest('.field').classList.toggle('is-error', !good);
