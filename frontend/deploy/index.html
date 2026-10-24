@@ -164,6 +164,7 @@ section{padding:var(--space-16) 0;}
 .btn--secondary:hover{border-color:var(--color-primary);color:var(--color-primary);transform:translateY(-1px);}
 .btn--ghost{background:transparent;color:var(--color-foreground);}
 .btn--ghost:hover{color:var(--color-primary);}
+@media(hover:none){.btn--primary:hover,.btn--primary:hover:active,.btn--secondary:hover{transform:none;}}
 .btn--block{width:100%;}
 @media(prefers-reduced-motion:reduce){.btn:hover{transform:none;}}
 
@@ -378,9 +379,15 @@ section{padding:var(--space-16) 0;}
 .qb--err{color:var(--color-destructive)!important;}
 
 /* ---------- Book a Pilot popup ---------- */
-.bp{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:var(--space-4);background:rgba(26,26,46,.55);opacity:0;visibility:hidden;transition:opacity 200ms ease,visibility 200ms ease;}
+/* iOS: 100vh is taller than what is actually visible while the browser toolbars are showing, which pushed the dialog
+   off-centre and behind the toolbar. --vv-top / --vv-h come from window.visualViewport (see "viewport sync" script);
+   the popup is sized to the visible area and the dialog is centred inside it. */
+.bp{position:fixed;left:0;right:0;top:var(--vv-top,0px);height:var(--vv-h,100dvh);box-sizing:border-box;z-index:300;display:flex;align-items:flex-start;justify-content:center;
+  padding:max(var(--space-4),env(safe-area-inset-top,0px)) max(var(--space-4),env(safe-area-inset-right,0px)) max(var(--space-4),env(safe-area-inset-bottom,0px)) max(var(--space-4),env(safe-area-inset-left,0px));
+  overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  background:rgba(26,26,46,.55);opacity:0;visibility:hidden;transition:opacity 200ms ease,visibility 200ms ease;}
 .bp--open{opacity:1;visibility:visible;}
-.bp__dialog{position:relative;width:100%;max-width:480px;max-height:calc(100vh - 32px);overflow-y:auto;background:var(--color-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);padding:var(--space-8) var(--space-6) var(--space-6);transform:translateY(12px);transition:transform 200ms ease;}
+.bp__dialog{position:relative;box-sizing:border-box;width:100%;max-width:480px;margin:auto;max-height:100%;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--color-surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);padding:var(--space-8) var(--space-6) var(--space-6);transform:translateY(12px);transition:transform 200ms ease;}
 .bp--open .bp__dialog{transform:none;}
 @media(min-width:640px){.bp__dialog{padding:var(--space-8);}}
 @media(prefers-reduced-motion:reduce){.bp,.bp__dialog{transition:none;}}
@@ -524,14 +531,15 @@ section{padding:var(--space-16) 0;}
 
 /* ---------- Sticky CTA — design.md §7.9 / PRD FR-LAND-05 ---------- */
 .sticky-cta{
-  position:fixed;left:0;right:0;bottom:0;z-index:90;
+  position:fixed;left:0;right:0;bottom:var(--vv-bottom,0px);width:100%;box-sizing:border-box;z-index:90;
   background:var(--color-surface);box-shadow:0 -8px 24px rgba(0,0,0,.1);
-  padding:var(--space-3) var(--gutter-mobile);
-  padding-bottom:calc(var(--space-3) + env(safe-area-inset-bottom));
-  transform:translateY(110%);transition:transform .3s ease;
+  padding:var(--space-3) max(var(--gutter-mobile),env(safe-area-inset-right,0px)) calc(var(--space-3) + env(safe-area-inset-bottom,0px)) max(var(--gutter-mobile),env(safe-area-inset-left,0px));
+  -webkit-transform:translate3d(0,110%,0);transform:translate3d(0,110%,0);will-change:transform;
+  visibility:hidden;transition:transform .3s ease,visibility 0s linear .3s;
 }
-.sticky-cta--show{transform:translateY(0);}
-@media(prefers-reduced-motion:reduce){.sticky-cta{transition:none;}}
+.sticky-cta--show{-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0);visibility:visible;transition:transform .3s ease,visibility 0s;}
+.modal-open .sticky-cta{visibility:hidden;}
+@media(prefers-reduced-motion:reduce){.sticky-cta,.sticky-cta--show{transition:none;}}
 @media(min-width:1024px){.sticky-cta{display:none;}}
 body{padding-bottom:0;}
 
@@ -1295,6 +1303,52 @@ function sendToFormspree(form, source){
 })();
 </script>
 <script>
+/* ---- Viewport sync (iOS Safari / Chrome) ----
+   On iPhone the layout viewport and the visible area differ while the browser toolbars are showing or collapsing.
+   Fixed elements sized with 100vh or pinned with bottom:0 then end up off-centre or hidden behind the toolbars.
+   This publishes the visible area as CSS variables so the sticky bar and the popup follow it. */
+(function(){
+  var root = document.documentElement, vv = window.visualViewport;
+  function sync(){
+    var h = vv ? vv.height : window.innerHeight;
+    var top = vv ? vv.offsetTop : 0;
+    root.style.setProperty('--vv-h', h + 'px');
+    root.style.setProperty('--vv-top', top + 'px');
+    /* gap between the bottom of the layout viewport and the bottom of what the user can see (ignored while pinch-zoomed) */
+    var gap = 0;
+    if(vv && Math.abs(vv.scale - 1) < 0.01){
+      gap = Math.max(0, Math.round(root.clientHeight - (vv.offsetTop + vv.height)));
+    }
+    root.style.setProperty('--vv-bottom', gap + 'px');
+  }
+  sync();
+  if(vv){ vv.addEventListener('resize', sync); vv.addEventListener('scroll', sync); }
+  window.addEventListener('resize', sync);
+  window.addEventListener('orientationchange', function(){ setTimeout(sync, 250); });
+  /* iOS ignores overflow:hidden on <body>, so the page kept scrolling behind the popup and dragged the layout with it.
+     Freeze the page in place while a popup is open instead. */
+  var lockY = 0, locked = false;
+  window.vpLockScroll = function(){
+    if(locked) return; locked = true;
+    lockY = window.pageYOffset || root.scrollTop || 0;
+    document.body.style.position = 'fixed';
+    document.body.style.top = (-lockY) + 'px';
+    document.body.style.left = '0'; document.body.style.right = '0'; document.body.style.width = '100%';
+    root.classList.add('modal-open');
+    sync();
+  };
+  window.vpUnlockScroll = function(){
+    if(!locked) return; locked = false;
+    document.body.style.position = ''; document.body.style.top = '';
+    document.body.style.left = ''; document.body.style.right = ''; document.body.style.width = '';
+    root.classList.remove('modal-open');
+    var prev = root.style.scrollBehavior; root.style.scrollBehavior = 'auto';
+    window.scrollTo(0, lockY);
+    root.style.scrollBehavior = prev;
+  };
+})();
+</script>
+<script>
 (function(){
   'use strict';
   var modal = document.getElementById('bookingModal');
@@ -1307,15 +1361,17 @@ function sendToFormspree(form, source){
     lastFocus = document.activeElement;
     modal.hidden = false;
     requestAnimationFrame(function(){ modal.classList.add('bp--open'); });
-    document.body.style.overflow = 'hidden';
+    window.vpLockScroll();
     var today = new Date().toISOString().slice(0,10);
     document.getElementById('bpDate').min = today;
     document.addEventListener('keydown', onKey, true);
-    setTimeout(function(){ document.getElementById('bpName').focus(); }, 50);
+    /* On phones, focusing a field opens the keyboard straight away, which shrinks the visible area and hides the dialog. */
+    if(!window.matchMedia('(pointer:coarse)').matches){ setTimeout(function(){ document.getElementById('bpName').focus(); }, 50); }
+    else { var d = modal.querySelector('.bp__dialog'); if(d){ d.setAttribute('tabindex','-1'); d.focus({preventScroll:true}); } }
   }
   function close(){
     modal.classList.remove('bp--open');
-    document.body.style.overflow = '';
+    window.vpUnlockScroll();
     document.removeEventListener('keydown', onKey, true);
     setTimeout(function(){ modal.hidden = true; modal.classList.remove('bp--sent'); form.reset(); form.querySelectorAll('.field').forEach(function(f){ f.classList.remove('is-error'); }); }, 200);
     if(lastFocus && lastFocus.focus) lastFocus.focus();
