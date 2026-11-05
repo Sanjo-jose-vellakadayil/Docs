@@ -18,6 +18,7 @@ online booking/enquiries".
 | `favicon.svg` / `favicon-32.png`  | Browser tab icon.                                     |
 | `apple-touch-icon.png`            | iOS home-screen icon (180×180).                      |
 | `testimonials-section.html.disabled` | Parked markup, not served. See below.             |
+| `login/`, `driverCalculation/`, `driver/` | Driver trip fare tool (ON-22), not indexed. Setup: `backend/supabase/README.md`. |
 
 ## BEFORE THE FIRST DEPLOY — two placeholders must be replaced
 

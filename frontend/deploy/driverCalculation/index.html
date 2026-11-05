@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trip Fare | VandiPilot Driver</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/driver/driver.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="logo" href="/driverCalculation/">Vandi<span>Pilot</span></a>
+    <div class="who" id="who" hidden>
+      <span class="who__name" id="whoName"></span>
+      <span class="avatar" id="whoAvatar" aria-hidden="true"></span>
+      <button class="btn btn--ghost" id="signOutBtn" type="button">Sign out</button>
+    </div>
+  </div>
+</header>
+
+<main class="page" id="main">
+  <div id="banner" class="banner" role="status" aria-live="polite" hidden></div>
+
+  <!-- Loading -->
+  <div id="loadingView" class="loading"><span class="spinner" aria-hidden="true"></span>Loading…</div>
+
+  <!-- Not configured -->
+  <section id="setupView" class="card" hidden>
+    <h2>Not set up yet</h2>
+    <p class="card__sub">The Supabase details are missing in <code>driver/config.js</code>, so drivers can't sign in yet.</p>
+    <a class="btn btn--secondary btn--block" href="/driverCalculation/?demo=1">Try the demo (data stays on this phone)</a>
+  </section>
+
+  <!-- New trip -->
+  <section id="startView" hidden>
+    <div id="demoNote" class="banner banner--info" hidden>Demo mode: nothing is saved to the server.</div>
+    <form class="card" id="startForm" novalidate>
+      <h2>New trip</h2>
+      <p class="card__sub">Fill in the customer's details, then press Start trip when you begin driving.</p>
+      <div class="field">
+        <label for="custName">Customer name <span class="req" aria-hidden="true">*</span></label>
+        <input id="custName" name="customerName" autocomplete="off" autocapitalize="words" placeholder="e.g. Priya Nair" required>
+        <div class="field__err">Enter the customer's name.</div>
+      </div>
+      <div class="field">
+        <label for="custPhone">Customer mobile number <span class="req" aria-hidden="true">*</span></label>
+        <input id="custPhone" name="customerPhone" type="tel" inputmode="tel" autocomplete="off" placeholder="e.g. 90740 25803" required>
+        <div class="field__err">Enter a 10-digit Indian mobile number.</div>
+      </div>
+      <div class="field">
+        <label for="pickup">Pickup <span class="req" aria-hidden="true">*</span></label>
+        <input id="pickup" name="pickup" autocomplete="off" placeholder="e.g. Thana, Kannur" required>
+        <div class="field__err">Enter the pickup place.</div>
+      </div>
+      <div class="field">
+        <label for="destination">Destination <span class="req" aria-hidden="true">*</span></label>
+        <input id="destination" name="destination" autocomplete="off" placeholder="e.g. Kannur Airport" required>
+        <div class="field__err">Enter the destination.</div>
+      </div>
+      <button class="btn btn--primary btn--block btn--lg" id="startBtn" type="submit">Start trip</button>
+    </form>
+
+    <div class="card" id="lastTripCard" hidden>
+      <div class="last-trip">
+        <div>
+          <div class="eyebrow">Last trip</div>
+          <div><strong id="lastTripId"></strong> · <span id="lastTripTotal"></span></div>
+        </div>
+        <button class="btn btn--secondary" id="lastTripBtn" type="button">View fare</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trip in progress -->
+  <section id="tripView" hidden>
+    <div class="trip-hero">
+      <div class="trip-hero__top">
+        <div>
+          <div class="trip-hero__id" id="tripId"></div>
+          <div class="trip-hero__name" id="tripCustomer"></div>
+          <div class="trip-hero__phone"><a id="tripPhone" href="#"></a></div>
+        </div>
+        <span class="state-pill" id="statePill"><span class="state-pill__dot" aria-hidden="true"></span><span id="stateText"></span></span>
+      </div>
+      <div class="route">
+        <div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-5.4 7-11a7 7 0 10-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg><span><span class="sr-only">Pickup: </span><span id="tripPickup"></span></span></div>
+        <div><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><span><span class="sr-only">Destination: </span><span id="tripDestination"></span></span></div>
+      </div>
+    </div>
+
+    <div class="timers">
+      <div class="timer timer--run" id="runTimer"><div class="timer__lbl">Running time</div><div class="timer__val" id="runVal">0:00:00</div></div>
+      <div class="timer timer--wait" id="waitTimer"><div class="timer__lbl">Waiting time</div><div class="timer__val" id="waitVal">0:00:00</div></div>
+    </div>
+
+    <div class="actions" id="actions"></div>
+    <div class="undo-row"><button class="btn btn--ghost" id="undoBtn" type="button">↶ Undo last step</button></div>
+
+    <div class="card">
+      <h2 style="margin-bottom:16px">Trip log</h2>
+      <ol class="tl" id="timeline"></ol>
+    </div>
+  </section>
+
+  <!-- Fare -->
+  <section id="fareView" hidden>
+    <div class="card">
+      <div class="eyebrow" id="fareTripId"></div>
+      <h2 style="margin:4px 0 16px">Trip fare</h2>
+      <div id="fareRows"></div>
+      <div class="fare-total"><span class="lbl">Total fare</span><span class="val" id="fareTotal"></span></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn--primary btn--block btn--lg" id="shareBtn" type="button">Share fare image</button>
+      <button class="btn btn--secondary btn--block" id="downloadBtn" type="button">Download image</button>
+    </div>
+    <img id="farePreview" class="fare-preview" alt="Fare receipt image that will be shared">
+    <div class="actions">
+      <button class="btn btn--secondary btn--block" id="newTripBtn" type="button">Start a new trip</button>
+    </div>
+    <div class="undo-row"><button class="btn btn--ghost" id="reopenBtn" type="button">↶ Undo “Completed” and continue the trip</button></div>
+  </section>
+</main>
+
+<dialog class="confirm" id="confirmDlg" aria-labelledby="confirmTitle">
+  <form method="dialog">
+    <h3 id="confirmTitle"></h3>
+    <p id="confirmBody"></p>
+    <div class="confirm__btns">
+      <button class="btn btn--secondary" value="cancel">Cancel</button>
+      <button class="btn btn--primary" value="ok" id="confirmOk">Confirm</button>
+    </div>
+  </form>
+</dialog>
+
+<script type="module" src="/driver/calculator.js"></script>
+</body>
+</html>
