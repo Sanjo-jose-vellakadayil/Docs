@@ -39,7 +39,6 @@ create table if not exists public.trips (
   id               text primary key check (id ~ '^VP-[0-9]{8}-[0-9]{3,}$'),
   driver_id        uuid not null references public.drivers (id),
   customer_name    text not null,
-  customer_phone   text not null,
   pickup           text not null,
   destination      text not null,
   status           text not null default 'in_progress'
@@ -98,9 +97,11 @@ $$;
 -- drivers starting at the same moment can never get the same trip ID.
 -- The date is the India date (Asia/Kolkata).
 -- ============================================================
+-- Customer phone numbers are deliberately not stored in this temporary setup
+-- (decided 5 Nov 2026); personal details wait for the permanent database.
+drop function if exists public.create_trip(text, text, text, text);
 create or replace function public.create_trip(
   p_customer_name text,
-  p_customer_phone text,
   p_pickup text,
   p_destination text
 ) returns public.trips
@@ -114,19 +115,19 @@ begin
   if v_driver is null then
     raise exception 'Not an approved driver' using errcode = '42501';
   end if;
-  if coalesce(trim(p_customer_name), '') = '' or coalesce(trim(p_customer_phone), '') = ''
-     or coalesce(trim(p_pickup), '') = '' or coalesce(trim(p_destination), '') = '' then
-    raise exception 'Customer name, phone, pickup and destination are required';
+  if coalesce(trim(p_customer_name), '') = '' or coalesce(trim(p_pickup), '') = ''
+     or coalesce(trim(p_destination), '') = '' then
+    raise exception 'Customer name, pickup and destination are required';
   end if;
 
   insert into public.trip_counters as c (day, last_no) values (v_day, 1)
   on conflict (day) do update set last_no = c.last_no + 1
   returning last_no into v_no;
 
-  insert into public.trips (id, driver_id, customer_name, customer_phone, pickup, destination)
+  insert into public.trips (id, driver_id, customer_name, pickup, destination)
   values (
     'VP-' || to_char(v_day, 'YYYYMMDD') || '-' || lpad(v_no::text, 3, '0'),
-    v_driver, trim(p_customer_name), trim(p_customer_phone), trim(p_pickup), trim(p_destination)
+    v_driver, trim(p_customer_name), trim(p_pickup), trim(p_destination)
   )
   returning * into v_trip;
   return v_trip;
@@ -210,6 +211,6 @@ revoke all on public.drivers, public.fare_settings, public.trips, public.trip_ev
 grant select on public.drivers, public.fare_settings to authenticated;
 grant select, update on public.trips to authenticated;
 grant select, insert, delete on public.trip_events to authenticated;
-grant execute on function public.create_trip(text, text, text, text) to authenticated;
+grant execute on function public.create_trip(text, text, text) to authenticated;
 grant execute on function public.current_driver_id(), public.is_active_driver() to authenticated;
-revoke execute on function public.create_trip(text, text, text, text) from anon, public;
+revoke execute on function public.create_trip(text, text, text) from anon, public;

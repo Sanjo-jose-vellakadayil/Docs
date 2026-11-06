@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   EVENTS as E, STATES, replay, nextActions, segments, calculateFare,
-  stopCharge, calendarDays, normalisePhone, formatDuration, TRIP_ID_PATTERN,
+  stopCharge, calendarDays, formatDuration, TRIP_ID_PATTERN,
 } from '../deploy/driver/fare.js';
 
 // Build events from minute offsets after a fixed IST start (10:00 IST = 04:30Z).
@@ -122,12 +122,7 @@ test('settings from the database override the defaults', () => {
   assert.equal(f.runningCharge, 240);
 });
 
-test('phone numbers and trip IDs', () => {
-  assert.equal(normalisePhone('90740 25803'), '+919074025803');
-  assert.equal(normalisePhone('+91 90740-25803'), '+919074025803');
-  assert.equal(normalisePhone('09074025803'), '+919074025803');
-  assert.equal(normalisePhone('12345'), null);
-  assert.equal(normalisePhone('5074025803'), null);
+test('trip IDs and durations', () => {
   assert.ok(TRIP_ID_PATTERN.test('VP-20261105-001'));
   assert.ok(!TRIP_ID_PATTERN.test('VP-2026115-1'));
   assert.equal(formatDuration(155), '2h 35m');

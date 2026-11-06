@@ -60,7 +60,7 @@ function supabaseApi() {
     getTrip: (id) => run(client.from('trips').select('*').eq('id', id).maybeSingle()),
     getEvents: (tripId) => run(client.from('trip_events').select('id,event,at').eq('trip_id', tripId).order('at', { ascending: true })),
     createTrip: (t) => run(client.rpc('create_trip', {
-      p_customer_name: t.customerName, p_customer_phone: t.customerPhone, p_pickup: t.pickup, p_destination: t.destination,
+      p_customer_name: t.customerName, p_pickup: t.pickup, p_destination: t.destination,
     })),
     insertEvent: (e) => run(client.from('trip_events').upsert(
       { id: e.id, trip_id: e.tripId, event: e.type, at: e.at }, { onConflict: 'id', ignoreDuplicates: true })),
@@ -93,7 +93,7 @@ function demoApi() {
       const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date()).replaceAll('-', '');
       db.counter[day] = (db.counter[day] || 0) + 1;
       const trip = { id: `VP-${day}-${String(db.counter[day]).padStart(3, '0')}`, status: 'in_progress',
-        customer_name: t.customerName, customer_phone: t.customerPhone, pickup: t.pickup, destination: t.destination,
+        customer_name: t.customerName, pickup: t.pickup, destination: t.destination,
         created_at: new Date().toISOString() };
       db.trips.push(trip); save(); return delay(trip);
     },

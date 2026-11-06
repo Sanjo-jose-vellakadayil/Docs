@@ -1,6 +1,6 @@
 /* VandiPilot — fare receipt image (ON-22: "share as a well structured image").
    Drawn on a canvas, so there is no extra library and it works offline. */
-import { formatDuration, formatRupees, formatPhone } from './fare.js';
+import { formatDuration, formatRupees } from './fare.js';
 
 const C = {
   bg: '#FFFFFF', page: '#FFFBF5', teal: '#0F766E', teal2: '#10827A', tealLight: '#CCFBF1',
@@ -103,9 +103,6 @@ export async function drawReceipt({ trip, fare, driver }) {
   y += 46;
   ctx.fillStyle = C.ink; ctx.font = `700 38px ${FONT}`;
   ctx.fillText(trip.customer_name, PAD, y);
-  ctx.textAlign = 'right'; ctx.fillStyle = C.muted; ctx.font = `500 28px ${FONT}`;
-  ctx.fillText(formatPhone(trip.customer_phone), W - PAD, y);
-  ctx.textAlign = 'left';
   y += 56;
   const pin = (yy, color) => { ctx.fillStyle = color; ctx.beginPath(); ctx.arc(PAD + 14, yy - 10, 10, 0, Math.PI * 2); ctx.fill(); };
   ctx.font = `500 30px ${FONT}`;

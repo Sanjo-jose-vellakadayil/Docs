@@ -7,7 +7,7 @@
 import { getApi, NetworkError } from './api.js';
 import {
   EVENTS, STATES, STATE_LABELS, EVENT_LABELS, replay, nextActions, segments, calculateFare,
-  isWaitingState, formatClock, formatDuration, formatRupees, formatPhone, normalisePhone,
+  isWaitingState, formatClock, formatDuration, formatRupees,
 } from './fare.js';
 import { drawReceipt, shareReceipt, canvasToBlob, downloadBlob } from './receipt.js';
 
@@ -135,7 +135,6 @@ function validateStart() {
   const vals = Object.fromEntries(new FormData(form));
   const checks = {
     customerName: vals.customerName.trim().length >= 2,
-    customerPhone: !!normalisePhone(vals.customerPhone),
     pickup: vals.pickup.trim().length >= 2,
     destination: vals.destination.trim().length >= 2,
   };
@@ -147,7 +146,7 @@ function validateStart() {
     if (!ok && !first) first = form.elements[name];
   }
   if (first) { first.focus(); return null; }
-  return { customerName: vals.customerName.trim(), customerPhone: normalisePhone(vals.customerPhone), pickup: vals.pickup.trim(), destination: vals.destination.trim() };
+  return { customerName: vals.customerName.trim(), pickup: vals.pickup.trim(), destination: vals.destination.trim() };
 }
 
 async function onStart(ev) {
@@ -248,8 +247,6 @@ function renderTrip() {
   showView('tripView');
   $('tripId').textContent = t.id;
   $('tripCustomer').textContent = t.customer_name;
-  $('tripPhone').textContent = formatPhone(t.customer_phone);
-  $('tripPhone').href = `tel:${t.customer_phone}`;
   $('tripPickup').textContent = t.pickup;
   $('tripDestination').textContent = t.destination;
 

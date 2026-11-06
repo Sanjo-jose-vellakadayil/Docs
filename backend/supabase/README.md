@@ -8,6 +8,9 @@ Agreed with Sanjo on ON-22 (4 Nov 2026):
 - Drivers are an **approved email list** the admin adds by hand (SQL below).
 - Supabase **Free plan**. Jobin does the setup.
 - Trip ID `VP-YYYYMMDD-NNN`, assigned by the database when the driver starts a trip.
+- The driver enters customer name, pickup and destination. **No customer phone number
+  is collected or stored** in this temporary setup (decided 5 Nov 2026); personal
+  details wait for the permanent database.
 
 ## 1. Create the project
 1. Sign in to supabase.com with **vandipilot@gmail.com** → New project (Free plan,

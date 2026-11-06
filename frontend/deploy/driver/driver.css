@@ -82,8 +82,6 @@ button{cursor:pointer;}
 .trip-hero__top > div{min-width:0;}
 .trip-hero__id{white-space:nowrap;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;opacity:.9;font-variant-numeric:tabular-nums;}
 .trip-hero__name{font-size:1.25rem;font-weight:700;margin-top:2px;}
-.trip-hero__phone{font-size:.875rem;opacity:.9;}
-.trip-hero__phone a{color:#fff;}
 .state-pill{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:var(--radius-pill);
   background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);font-size:.75rem;font-weight:600;white-space:nowrap;}
 .state-pill__dot{width:8px;height:8px;border-radius:50%;background:#fff;}

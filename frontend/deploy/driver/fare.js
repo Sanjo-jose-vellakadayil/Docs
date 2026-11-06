@@ -258,20 +258,5 @@ export function formatClock(ms) {
 
 export const formatRupees = (n) => `₹${Math.round(n).toLocaleString('en-IN')}`;
 
-/** +919123456789 → "+91 91234 56789" for display. */
-export function formatPhone(p) {
-  const m = /^\+91(\d{5})(\d{5})$/.exec(String(p || ''));
-  return m ? `+91 ${m[1]} ${m[2]}` : String(p || '');
-}
-
 /** Trip ID format agreed on ON-22: VP-YYYYMMDD-NNN (the number is assigned by the database). */
 export const TRIP_ID_PATTERN = /^VP-\d{8}-\d{3,}$/;
-
-/** Indian mobile number: 10 digits starting 6–9, optional +91 / 0 prefix. Returns +91XXXXXXXXXX or null. */
-export function normalisePhone(input) {
-  const digits = String(input || '').replace(/\D/g, '');
-  const local = digits.length === 12 && digits.startsWith('91') ? digits.slice(2)
-    : digits.length === 11 && digits.startsWith('0') ? digits.slice(1)
-    : digits;
-  return /^[6-9]\d{9}$/.test(local) ? `+91${local}` : null;
-}
