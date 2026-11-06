@@ -423,9 +423,10 @@ async function renderFare() {
   $('fareRows').innerHTML = html.join('');
   $('fareTotal').textContent = formatRupees(f.total);
 
-  S.canvas = await drawReceipt({ trip: t, fare: f, driver: S.driver });
-  $('farePreview').src = S.canvas.toDataURL('image/png');
   window.scrollTo({ top: 0 });
+  // The image is built now but not shown (the breakdown above is the same
+  // content); having it ready keeps Share inside the tap, which phones require.
+  S.canvas = await drawReceipt({ trip: t, fare: f, driver: S.driver });
 }
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

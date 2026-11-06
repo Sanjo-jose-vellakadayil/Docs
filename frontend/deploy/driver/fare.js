@@ -200,11 +200,16 @@ export function calculateFare(events, settings = {}) {
   const runningMinutes = toMinutes(seg.runningMs);
   const runningCharge = roundRupees((runningMinutes * s.runningRatePerHour) / 60);
 
+  // Stops that round to 0 minutes cost nothing; leave them off the receipt.
+  const charged = seg.stops
+    .map((st) => ({ ...st, ...stopCharge(toMinutes(st.ms), s) }))
+    .filter((st) => st.minutes > 0);
+  const haltCount = charged.filter((st) => st.kind !== 'destination').length;
   let haltNo = 0;
-  const stops = seg.stops.map((st) => {
-    const label = st.kind === 'destination' ? 'Wait at destination' : `Halt ${++haltNo}`;
-    return { ...st, label, ...stopCharge(toMinutes(st.ms), s) };
-  });
+  const stops = charged.map((st) => ({
+    ...st,
+    label: st.kind === 'destination' ? 'Wait at destination' : haltCount === 1 ? 'Halt' : `Halt ${++haltNo}`,
+  }));
   const waitingMinutes = stops.reduce((a, x) => a + x.minutes, 0);
   const waitingCharge = stops.reduce((a, x) => a + x.charge, 0);
 

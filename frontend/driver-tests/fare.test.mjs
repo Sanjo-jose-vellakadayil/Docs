@@ -128,3 +128,18 @@ test('trip IDs and durations', () => {
   assert.equal(formatDuration(155), '2h 35m');
   assert.equal(formatDuration(9), '9m');
 });
+
+test('halts under 30 seconds are left off the receipt; a single halt has no number', () => {
+  const base = Date.parse('2026-11-07T04:30:00Z');
+  const t = (sec) => new Date(base + sec * 1000).toISOString();
+  const f = calculateFare([
+    { type: E.START, at: t(0) },
+    { type: E.HALT, at: t(60) }, { type: E.CONTINUE, at: t(70) },      // 10 s → 0 min, hidden
+    { type: E.HALT, at: t(120) }, { type: E.CONTINUE, at: t(1020) },   // 15 min
+    { type: E.REACHED, at: t(1200) }, { type: E.RETURNING, at: t(1210) }, // 10 s at destination, hidden
+    { type: E.HALT, at: t(1300) }, { type: E.CONTINUE, at: t(1305) },  // 5 s, hidden
+    { type: E.COMPLETED, at: t(2400) },
+  ]);
+  assert.deepEqual(f.stops.map((s) => [s.label, s.minutes]), [['Halt', 15]]);
+  assert.equal(f.waitingCharge, 25);
+});
