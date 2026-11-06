@@ -2,5 +2,9 @@
 
 User-agent: *
 Allow: /
+# Driver tool (ON-22): private, not for search results
+Disallow: /login/
+Disallow: /driverCalculation/
+Disallow: /driver/
 
 Sitemap: https://vandipilot.com/sitemap.xml
