@@ -16,17 +16,28 @@ Agreed with Sanjo on ON-22 (4 Nov 2026):
 1. Sign in to supabase.com with **vandipilot@gmail.com** → New project (Free plan,
    region **Mumbai / ap-south-1**). Save the database password in the Confluence
    *Credentials* page.
-2. Project Settings → API: copy the **Project URL** and the **anon public** key into
-   `frontend/deploy/driver/config.js`. The anon key is meant to be public; the
-   database rules decide what each driver can see. Never put the
-   `service_role` key in the website.
+2. Settings → **API Keys** (or the **Connect** button): copy the **Project URL** and the
+   **publishable key** (`sb_publishable_…`) into `frontend/deploy/driver/config.js`.
+   The publishable key is meant to be public; the database rules decide what each
+   driver can see. Never put a **secret** key (`sb_secret_…`) or the legacy
+   `service_role` key in the website. (The legacy `anon` key also works, but
+   Supabase is retiring the legacy keys by the end of 2026.)
 
 ## 2. Google sign-in
-1. Google Cloud Console (same Gmail) → APIs & Services → Credentials →
-   Create OAuth client ID → *Web application*.
-   - Authorised redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`
-2. Supabase → Authentication → Providers → Google: paste the client ID and secret, enable.
-3. Supabase → Authentication → URL Configuration:
+1. Supabase → Authentication → Sign In / Providers → **Google**: copy the
+   **Callback URL** shown there (`https://<project-ref>.supabase.co/auth/v1/callback`).
+2. Google Cloud Console (same Gmail) → create or pick a project →
+   **Google Auth Platform**:
+   - *Branding*: app name "VandiPilot", support email vandipilot@gmail.com.
+   - *Audience*: **External**, then **Publish app** (in "Testing" only listed test
+     users can sign in).
+   - *Clients* → Create client → **Web application**:
+     - Authorized JavaScript origins: `https://vandipilot.com`
+       (and `http://localhost:8765` while testing locally)
+     - Authorized redirect URIs: the Supabase Callback URL from step 1
+   - Copy the **Client ID** and **Client secret**.
+3. Back in Supabase → Google provider: paste the Client ID and secret, turn it **on**, save.
+4. Supabase → Authentication → URL Configuration:
    - Site URL: `https://vandipilot.com`
    - Redirect URLs: `https://vandipilot.com/driverCalculation/`
      (add `http://localhost:8765/driverCalculation/` for local testing)
