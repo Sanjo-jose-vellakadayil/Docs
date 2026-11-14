@@ -2,9 +2,11 @@
 
 User-agent: *
 Allow: /
-# Driver tool (ON-22): private, not for search results
-Disallow: /login/
+# Driver tool (ON-22): the login page is public so "VandiPilot login" finds it;
+# the signed-in pages stay out of search results.
 Disallow: /driverCalculation/
 Disallow: /driver/
+# ...but let Google load the login page's stylesheet so it renders properly
+Allow: /driver/driver.css
 
 Sitemap: https://vandipilot.com/sitemap.xml
