@@ -15,6 +15,18 @@
      calendar day of the trip (ON-4 pricing rule).
    - Minimum: the whole fare (including the platform charge) is at
      least ₹300.
+
+   Daily minimum and maximum (Sanjo, ON-24, 16 Nov 2026). The old rules
+   above still apply; these are applied to each trip day separately:
+   - A trip day ends at whichever comes first: 15 hours of running time
+     in that day, or 24 hours after the day started. The next day starts
+     at that moment (open question to Sanjo on ON-24, 20 Nov).
+   - Minimum per day: trip time 7h to under 14h → ₹999; 14h or more → ₹1999.
+     Under 7h (e.g. a short last day) → no daily minimum.
+   - Maximum per day: running under 4h and waiting over 10h → ₹1999;
+     otherwise ₹2999.
+   - These amounts exclude the 10% platform charge, which is added on top.
+   - Platform cap: ₹300 × (calendar days or trip days, whichever is more).
    ============================================================ */
 
 export const DEFAULT_SETTINGS = Object.freeze({
@@ -26,6 +38,19 @@ export const DEFAULT_SETTINGS = Object.freeze({
   platformCapPerDay: 300,
   minimumFare: 300,
   timeZone: 'Asia/Kolkata',
+  // Trip day (ON-24)
+  dayLengthMinutes: 24 * 60,
+  dayRunningLimitMinutes: 15 * 60,
+  // Daily minimum (ON-24)
+  dayMinShortFromMinutes: 7 * 60,
+  dayMinShort: 999,
+  dayMinLongFromMinutes: 14 * 60,
+  dayMinLong: 1999,
+  // Daily maximum (ON-24)
+  dayMax: 2999,
+  dayMaxLowRunning: 1999,
+  dayMaxLowRunningUnderMinutes: 4 * 60,
+  dayMaxLowRunningWaitingOverMinutes: 10 * 60,
 });
 
 /* ---------- Status flow ----------
@@ -184,6 +209,85 @@ export function stopCharge(minutes, s = DEFAULT_SETTINGS) {
   return { minutes, tier1Minutes: tier1, tier2Minutes: tier2, tier1Charge, tier2Charge, charge: tier1Charge + tier2Charge };
 }
 
+/** Running and waiting intervals of a completed trip, in time order. */
+function intervals(sorted) {
+  const out = [];
+  let state = STATES.NOT_STARTED;
+  let stopNo = -1;
+  for (let i = 0; i < sorted.length; i++) {
+    state = TRANSITIONS[state][sorted[i].type];
+    if (WAITING_STATES.has(state)) stopNo++;
+    const next = sorted[i + 1];
+    if (!next) break;
+    const a = toMs(sorted[i].at);
+    const b = toMs(next.at);
+    if (b <= a) continue;
+    if (RUNNING_STATES.has(state)) out.push({ running: true, stopNo: null, start: a, end: b });
+    else if (WAITING_STATES.has(state)) out.push({ running: false, stopNo, start: a, end: b });
+  }
+  return out;
+}
+
+/**
+ * Splits a completed trip into trip days (ON-24): a day ends after 15h of
+ * running time in that day or 24h after it started, whichever comes first.
+ * Each waiting piece keeps its offset inside its stop, so the ₹99 → ₹49
+ * tier still counts from when the halt started.
+ */
+export function tripDays(events, settings = {}) {
+  const s = { ...DEFAULT_SETTINGS, ...settings };
+  const sorted = sortEvents(events);
+  const seg = segments(sorted);
+  if (seg.state !== STATES.COMPLETED) throw new Error('The trip is not completed yet');
+  const tripStart = toMs(sorted[0].at);
+  const tripEnd = toMs(sorted[sorted.length - 1].at);
+  const dayMs = s.dayLengthMinutes * 60000;
+  const runCapMs = s.dayRunningLimitMinutes * 60000;
+
+  const newDay = (t) => ({ startMs: t, endMs: t, runningMs: 0, waitingMs: 0, waitPieces: [] });
+  const days = [];
+  let day = newDay(tripStart);
+  for (const iv of intervals(sorted)) {
+    const stopStart = iv.running ? 0 : seg.stops[iv.stopNo].startedAt.getTime();
+    let cur = iv.start;
+    while (cur < iv.end) {
+      const byTime = day.startMs + dayMs;
+      let limit = Math.min(iv.end, byTime);
+      if (iv.running) limit = Math.min(limit, cur + (runCapMs - day.runningMs));
+      const dur = limit - cur;
+      if (iv.running) day.runningMs += dur;
+      else {
+        day.waitingMs += dur;
+        day.waitPieces.push({ stopNo: iv.stopNo, fromMs: cur - stopStart, toMs: limit - stopStart });
+      }
+      day.endMs = limit;
+      cur = limit;
+      const full = limit >= byTime || day.runningMs >= runCapMs;
+      if (full && limit < tripEnd) { days.push(day); day = newDay(limit); }
+    }
+  }
+  day.endMs = tripEnd;
+  days.push(day);
+  return days;
+}
+
+/** Exact (unrounded) waiting charge for part of a stop, from its offset inside the stop. */
+function pieceCharge(fromMs, toMs_, s) {
+  const tierMs = s.waitingTierMinutes * 60000;
+  const t1 = Math.max(0, Math.min(toMs_, tierMs) - fromMs);
+  const t2 = (toMs_ - fromMs) - t1;
+  return (t1 / 3600000) * s.waitingRatePerHour + (t2 / 3600000) * s.waitingRateAfterTierPerHour;
+}
+
+/** Daily minimum and maximum for one trip day (ON-24). */
+export function dayLimits(totalMinutes, runningMinutes, waitingMinutes, settings = {}) {
+  const s = { ...DEFAULT_SETTINGS, ...settings };
+  const min = totalMinutes >= s.dayMinLongFromMinutes ? s.dayMinLong
+    : totalMinutes >= s.dayMinShortFromMinutes ? s.dayMinShort : 0;
+  const lowRunning = runningMinutes < s.dayMaxLowRunningUnderMinutes && waitingMinutes > s.dayMaxLowRunningWaitingOverMinutes;
+  return { min, max: lowRunning ? s.dayMaxLowRunning : s.dayMax, lowRunning };
+}
+
 /**
  * Full fare for a completed trip. Every line is rounded to whole rupees,
  * and the total is the sum of the shown lines, so the receipt always adds up.
@@ -213,8 +317,47 @@ export function calculateFare(events, settings = {}) {
   const waitingMinutes = stops.reduce((a, x) => a + x.minutes, 0);
   const waitingCharge = stops.reduce((a, x) => a + x.charge, 0);
 
-  const subtotal = runningCharge + waitingCharge;
-  const days = calendarDays(startAt, endAt, s.timeZone);
+  const base = runningCharge + waitingCharge;
+
+  // Daily minimum / maximum (ON-24), per trip day.
+  const rawDays = tripDays(sorted, s);
+  const dayList = rawDays.map((d, i) => {
+    const exact = (d.runningMs / 3600000) * s.runningRatePerHour
+      + d.waitPieces.reduce((a, p) => a + pieceCharge(p.fromMs, p.toMs, s), 0);
+    return {
+      day: i + 1,
+      startAt: new Date(d.startMs),
+      endAt: new Date(d.endMs),
+      totalMinutes: toMinutes(d.endMs - d.startMs),
+      runningMinutes: toMinutes(d.runningMs),
+      waitingMinutes: toMinutes(d.waitingMs),
+      exact,
+    };
+  });
+  // Round each day so the days add up to the running + waiting lines shown.
+  let used = 0;
+  dayList.forEach((d, i) => {
+    d.charge = i === dayList.length - 1 ? base - used : roundRupees(d.exact);
+    used += d.charge;
+    delete d.exact;
+    const lim = dayLimits(d.totalMinutes, d.runningMinutes, d.waitingMinutes, s);
+    d.minimum = lim.min;
+    d.maximum = lim.max;
+    const target = Math.min(Math.max(d.charge, lim.min), lim.max);
+    d.adjustment = target - d.charge;
+    d.kind = d.adjustment > 0 ? 'minimum' : d.adjustment < 0 ? 'maximum' : null;
+    d.final = target;
+  });
+  const dayAdjustments = dayList.filter((d) => d.adjustment !== 0).map((d) => ({
+    ...d,
+    label: dayList.length === 1
+      ? (d.kind === 'minimum' ? 'Daily minimum' : 'Daily maximum')
+      : `Day ${d.day} ${d.kind === 'minimum' ? 'minimum' : 'maximum'}`,
+  }));
+  const dailyAdjustment = dayAdjustments.reduce((a, d) => a + d.adjustment, 0);
+
+  const subtotal = base + dailyAdjustment;
+  const days = Math.max(calendarDays(startAt, endAt, s.timeZone), dayList.length);
   const platformCap = s.platformCapPerDay * days;
   const platformUncapped = roundRupees((subtotal * s.platformPercent) / 100);
   const platformCharge = Math.min(platformUncapped, platformCap);
@@ -231,6 +374,9 @@ export function calculateFare(events, settings = {}) {
     stops,
     waitingMinutes,
     waitingCharge,
+    tripDays: dayList,
+    dayAdjustments,
+    dailyAdjustment,
     subtotal,
     days,
     platformPercent: s.platformPercent,
@@ -262,6 +408,16 @@ export function formatClock(ms) {
 }
 
 export const formatRupees = (n) => `₹${Math.round(n).toLocaleString('en-IN')}`;
+
+/** "₹150" for a top-up, "−₹120" for a reduction. */
+export const formatSignedRupees = (n) => (n < 0 ? `−${formatRupees(-n)}` : formatRupees(n));
+
+/** Text under a daily minimum/maximum line on the fare screen and image. */
+export function dayAdjustmentNote(d) {
+  return d.kind === 'minimum'
+    ? `${formatDuration(d.totalMinutes)} trip day: at least ${formatRupees(d.minimum)}`
+    : `Day capped at ${formatRupees(d.maximum)}`;
+}
 
 /** Trip ID format agreed on ON-22: VP-YYYYMMDD-NNN (the number is assigned by the database). */
 export const TRIP_ID_PATTERN = /^VP-\d{8}-\d{3,}$/;

@@ -1,6 +1,6 @@
 /* VandiPilot — fare receipt image (ON-22: "share as a well structured image").
    Drawn on a canvas, so there is no extra library and it works offline. */
-import { formatDuration, formatRupees } from './fare.js';
+import { formatDuration, formatRupees, formatSignedRupees, dayAdjustmentNote } from './fare.js';
 
 const C = {
   bg: '#FFFFFF', page: '#FFFBF5', teal: '#0F766E', teal2: '#10827A', tealLight: '#CCFBF1',
@@ -37,6 +37,7 @@ function rowsFor(fare) {
     rows.push({ label: s.label, sub, value: formatRupees(s.charge), wait: true });
   }
   if (!fare.stops.length) rows.push({ label: 'Waiting time', sub: 'No waiting', value: formatRupees(0), wait: true });
+  for (const d of fare.dayAdjustments || []) rows.push({ label: d.label, sub: dayAdjustmentNote(d), value: formatSignedRupees(d.adjustment) });
   rows.push({ label: 'Subtotal', value: formatRupees(fare.subtotal), strong: true, rule: true });
   rows.push({
     label: `Platform charge (${fare.platformPercent}%)`,
