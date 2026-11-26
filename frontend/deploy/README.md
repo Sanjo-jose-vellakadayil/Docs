@@ -12,13 +12,13 @@ online booking/enquiries".
 |-----------------------------------|------------------------------------------------------|
 | `index.html`                      | The page. All CSS and JS inlined, no external assets. |
 | `robots.txt`                      | Allows indexing, points at the sitemap.              |
-| `sitemap.xml`                     | Single URL, for Google Search Console.               |
+| `sitemap.xml`                     | Home page and `/login/`, for Google Search Console.  |
 | `netlify.toml`                    | Security headers, cache rules, www/apex redirect.    |
 | `og-image.png`                    | 1200×630 social preview card.                        |
 | `favicon.svg` / `favicon-32.png`  | Browser tab icon.                                     |
 | `apple-touch-icon.png`            | iOS home-screen icon (180×180).                      |
 | `testimonials-section.html.disabled` | Parked markup, not served. See below.             |
-| `login/`, `driverCalculation/`, `driver/` | Driver trip fare tool (ON-22), not indexed. Setup: `backend/supabase/README.md`. |
+| `login/`, `driverCalculation/`, `driver/` | Driver trip fare tool (ON-22). `login/` is indexed (for "VandiPilot login" searches); the other two are not. Setup: `backend/supabase/README.md`. |
 
 ## BEFORE THE FIRST DEPLOY — two placeholders must be replaced
 

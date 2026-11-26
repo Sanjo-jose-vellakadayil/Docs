@@ -7,7 +7,7 @@
 import { getApi, NetworkError } from './api.js';
 import {
   EVENTS, STATES, STATE_LABELS, EVENT_LABELS, replay, nextActions, segments, calculateFare,
-  isWaitingState, formatClock, formatDuration, formatRupees,
+  isWaitingState, formatClock, formatDuration, formatRupees, formatSignedRupees, dayAdjustmentNote,
 } from './fare.js';
 import { drawReceipt, shareReceipt, canvasToBlob, downloadBlob } from './receipt.js';
 
@@ -39,18 +39,25 @@ function banner(text, kind = 'warn') {
 }
 
 /* ---------- Confirm dialog ---------- */
-function confirmAsk(title, body, okLabel = 'Confirm') {
+function confirmAsk(title, body, okLabel = 'Confirm', { cancel = true } = {}) {
   const dlg = $('confirmDlg');
   $('confirmTitle').textContent = title;
   $('confirmBody').textContent = body;
   $('confirmOk').textContent = okLabel;
+  $('confirmCancel').hidden = !cancel;
+  $('confirmCancel').parentElement.style.gridTemplateColumns = cancel ? '' : '1fr';
   return new Promise((resolve) => {
     const done = () => { dlg.removeEventListener('close', done); resolve(dlg.returnValue === 'ok'); };
     dlg.returnValue = '';
     dlg.addEventListener('close', done);
-    if (dlg.showModal) dlg.showModal(); else resolve(window.confirm(`${title}\n\n${body}`));
+    if (dlg.showModal) dlg.showModal();
+    else if (cancel) resolve(window.confirm(`${title}\n\n${body}`));
+    else { window.alert(`${title}\n\n${body}`); resolve(true); }
   });
 }
+
+/** Message with a single OK button. */
+const notice = (title, body) => confirmAsk(title, body, 'OK', { cancel: false });
 
 /* ---------- Status buttons ---------- */
 const ACTION_UI = {
@@ -386,6 +393,8 @@ function farePatch(f) {
     total_fare: f.total,
     fare_breakdown: {
       stops: f.stops.map((s) => ({ label: s.label, minutes: s.minutes, tier1Minutes: s.tier1Minutes, tier2Minutes: s.tier2Minutes, charge: s.charge })),
+      tripDays: f.tripDays.map((d) => ({ day: d.day, startAt: d.startAt.toISOString(), endAt: d.endAt.toISOString(), totalMinutes: d.totalMinutes, runningMinutes: d.runningMinutes, waitingMinutes: d.waitingMinutes, charge: d.charge, minimum: d.minimum, maximum: d.maximum, adjustment: d.adjustment })),
+      dailyAdjustment: f.dailyAdjustment,
       subtotal: f.subtotal, days: f.days, platformCap: f.platformCap, platformCapped: f.platformCapped, settings: f.settings,
     },
   };
@@ -417,6 +426,7 @@ async function renderFare() {
       s.tier2Minutes ? `${formatDuration(s.minutes)}: ${formatDuration(s.tier1Minutes)} × ₹${f.settings.waitingRatePerHour}/hr + ${formatDuration(s.tier2Minutes)} × ₹${f.settings.waitingRateAfterTierPerHour}/hr`
         : `${formatDuration(s.minutes)} × ₹${f.settings.waitingRatePerHour}/hr`));
   } else row('Waiting time', formatRupees(0), 'No waiting');
+  (f.dayAdjustments || []).forEach((d) => row(d.label, formatSignedRupees(d.adjustment), dayAdjustmentNote(d)));
   row('Subtotal', formatRupees(f.subtotal), null, 'fare-row--sub');
   row(`Platform charge (${f.platformPercent}%)`, formatRupees(f.platformCharge), f.platformCapped ? `Capped at ${formatRupees(f.platformCap)}` : null);
   if (f.minimumAdjustment > 0) row('Minimum fare adjustment', formatRupees(f.minimumAdjustment), `Minimum fare is ${formatRupees(f.minimumFare)}`);
@@ -445,8 +455,24 @@ async function onReopen() {
 }
 
 async function onSignOut() {
+  // ON-23 (Sanjo, 16 Nov): no sign-out while a trip is running, or before its fare is calculated.
+  // A trip that was created but not started can be signed out of (open question on ON-23).
+  const state = S.trip && S.events.length ? replay(S.events) : STATES.NOT_STARTED;
+  if (S.trip && state !== STATES.NOT_STARTED && state !== STATES.COMPLETED) {
+    await notice('Finish the trip first', `Trip ${S.trip.id} is still running. Mark it “Trip completed” and calculate the fare before you sign out.`);
+    return;
+  }
+  if (S.trip && state === STATES.COMPLETED && !S.fare) {
+    await notice('Calculate the fare first', `Trip ${S.trip.id} is completed. Press “Calculate fare” before you sign out.`);
+    return;
+  }
   const pending = store.get(PENDING, []).length || store.get(FINALIZE, null);
-  if (pending && !(await confirmAsk('Sign out?', 'Some trip steps are not uploaded yet. If you sign out now they stay on this phone and upload next time you sign in.', 'Sign out'))) return;
+  const ok = await confirmAsk('Sign out?',
+    pending
+      ? 'Some trip steps are not uploaded yet. If you sign out now they stay on this phone and upload next time you sign in.'
+      : 'You will need to sign in with Google again to record trips.',
+    'Sign out');
+  if (!ok) return;
   await S.api.signOut();
   store.del(CACHE);
   location.replace('/login/?reason=signed-out');
