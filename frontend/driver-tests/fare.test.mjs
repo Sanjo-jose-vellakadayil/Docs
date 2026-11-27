@@ -3,7 +3,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   EVENTS as E, STATES, replay, nextActions, segments, calculateFare,
-  stopCharge, calendarDays, formatDuration, TRIP_ID_PATTERN,
+  stopCharge, calendarDays, formatDuration, TRIP_ID_PATTERN, tripDays, dayLimits,
+  formatSignedRupees,
 } from '../deploy/driver/fare.js';
 
 // Build events from minute offsets after a fixed IST start (10:00 IST = 04:30Z).
@@ -82,22 +83,121 @@ test('platform charge capped at ₹300 per day of the trip', () => {
   assert.equal(oneDay.days, 1);
   assert.equal(oneDay.platformCapped, false);
 
-  // a two-day trip with a long running time: 10% would be ₹664, cap is 2 × 300
-  const twoDay = calculateFare(ev([E.START, 0], [E.REACHED, 1000], [E.RETURNING, 1000], [E.COMPLETED, 2000]));
-  assert.equal(twoDay.days, 2);
-  assert.equal(twoDay.platformCap, 600);
-  assert.equal(twoDay.platformCharge, 600);
-  assert.equal(twoDay.platformCapped, true);
-  assert.equal(twoDay.total, twoDay.subtotal + 600);
+  // 2000 min of running over 2 calendar days = 3 trip days (15h running each):
+  // 10% is ₹663, cap is 3 × 300 (ON-24: whichever day count is more)
+  const long = calculateFare(ev([E.START, 0], [E.REACHED, 1000], [E.RETURNING, 1000], [E.COMPLETED, 2000]));
+  assert.equal(long.tripDays.length, 3);
+  assert.equal(long.days, 3);
+  assert.equal(long.platformCap, 900);
+  assert.equal(long.platformCharge, 663);
+  assert.equal(long.platformCapped, false);
+
+  // same trip with a ₹200 daily cap: 10% is ₹663 → capped at 3 trip days × ₹200 = ₹600
+  const lowCap = calculateFare(ev([E.START, 0], [E.REACHED, 1000], [E.RETURNING, 1000], [E.COMPLETED, 2000]), { platformCapPerDay: 200 });
+  assert.equal(lowCap.platformCap, 600);
+  assert.equal(lowCap.platformCharge, 600);
+  assert.equal(lowCap.platformCapped, true);
+  assert.equal(lowCap.total, lowCap.subtotal + 600);
 });
 
-test('cap per day on a single long day', () => {
-  // 07:00 to 23:00 IST, 16h running: subtotal ₹3,184, 10% = ₹318 → capped at ₹300
+test('16h of running in one calendar day is 2 trip days (15h running limit)', () => {
+  // 07:00 to 23:00 IST: day 1 = 15h running (₹2,985), day 2 = 1h (₹199)
   const f = calculateFare(ev([E.START, -180], [E.REACHED, 300], [E.RETURNING, 300], [E.COMPLETED, 780]));
+  assert.deepEqual(f.tripDays.map((d) => [d.runningMinutes, d.charge]), [[900, 2985], [60, 199]]);
   assert.equal(f.subtotal, 3184);
-  assert.equal(f.days, 1);
+  assert.equal(f.days, 2);
+  assert.equal(f.platformCharge, 318);
+  assert.equal(f.platformCapped, false);
+});
+
+test('ON-24 daily minimum: 7h to under 14h of trip time → at least ₹999', () => {
+  // 1h run, 6h at destination, 1h run = 8h: ₹398 + ₹394 = ₹792 → ₹999
+  const f = calculateFare(ev([E.START, 0], [E.REACHED, 60], [E.RETURNING, 420], [E.COMPLETED, 480]));
+  assert.equal(f.runningCharge + f.waitingCharge, 792);
+  assert.equal(f.dayAdjustments.length, 1);
+  assert.equal(f.dayAdjustments[0].label, 'Daily minimum');
+  assert.equal(f.dailyAdjustment, 207);
+  assert.equal(f.subtotal, 999);
+  assert.equal(f.platformCharge, 100);
+  assert.equal(f.total, 1099);
+});
+
+test('ON-24 daily minimum: under 7h → no daily minimum (old ₹300 rule only)', () => {
+  const f = calculateFare(ev([E.START, 0], [E.REACHED, 60], [E.RETURNING, 360], [E.COMPLETED, 410])); // 6h 50m
+  assert.equal(f.dailyAdjustment, 0);
+  assert.equal(f.subtotal, f.runningCharge + f.waitingCharge);
+});
+
+test('ON-24 daily minimum: 14h or more → at least ₹1999', () => {
+  // 2h run, 13h wait = 15h: ₹398 + ₹737 = ₹1,135 → ₹1,999
+  const f = calculateFare(ev([E.START, 0], [E.REACHED, 60], [E.RETURNING, 840], [E.COMPLETED, 900]));
+  assert.equal(f.runningCharge + f.waitingCharge, 1135);
+  assert.equal(f.subtotal, 1999);
+  assert.equal(f.total, 1999 + 200);
+});
+
+test('ON-24 daily maximum: ₹2999 for an ordinary long day', () => {
+  // 15h run + 2h wait in one trip day: ₹2,985 + ₹198 = ₹3,183 → ₹2,999
+  const f = calculateFare(ev([E.START, 0], [E.REACHED, 450], [E.RETURNING, 570], [E.COMPLETED, 1020]));
+  assert.equal(f.tripDays.length, 1);
+  assert.equal(f.runningCharge + f.waitingCharge, 3183);
+  assert.equal(f.dayAdjustments[0].label, 'Daily maximum');
+  assert.equal(f.dailyAdjustment, -184);
+  assert.equal(f.subtotal, 2999);
   assert.equal(f.platformCharge, 300);
-  assert.equal(f.platformCapped, true);
+  assert.equal(f.total, 3299);
+});
+
+test('ON-24 daily maximum: running under 4h and waiting over 10h → ₹1999', () => {
+  // ten cycles of 20 min driving + 2h halt, then 20 min more: 220 min running, 20h waiting
+  const list = [[E.START, 0]];
+  let t = 0;
+  for (let i = 0; i < 10; i++) { t += 20; list.push([E.HALT, t]); t += 120; list.push([E.CONTINUE, t]); }
+  t += 0; list.push([E.REACHED, t]); list.push([E.RETURNING, t]); t += 20; list.push([E.COMPLETED, t]);
+  const f = calculateFare(ev(...list));
+  assert.equal(f.tripDays.length, 1);
+  assert.equal(f.runningMinutes, 220);
+  assert.equal(f.waitingMinutes, 1200);
+  assert.equal(f.runningCharge + f.waitingCharge, 730 + 1980);
+  assert.equal(f.subtotal, 1999);
+});
+
+test('ON-24 multi-day: the limits apply to each trip day; a long halt is split across days', () => {
+  // 1h run, 30h at destination, 1h run = 32h → day 1 = first 24h, day 2 = last 8h
+  const f = calculateFare(ev([E.START, 0], [E.REACHED, 60], [E.RETURNING, 1860], [E.COMPLETED, 1920]));
+  assert.equal(f.runningCharge + f.waitingCharge, 398 + 1570);
+  assert.deepEqual(f.tripDays.map((d) => [d.totalMinutes, d.runningMinutes, d.waitingMinutes, d.charge]),
+    [[1440, 60, 1380, 1426], [480, 60, 420, 542]]);
+  // day 1: 24h, running 1h, waiting 23h → min ₹1999 and max ₹1999; day 2: 8h → min ₹999
+  assert.deepEqual(f.dayAdjustments.map((d) => [d.label, d.adjustment]), [['Day 1 minimum', 573], ['Day 2 minimum', 457]]);
+  assert.equal(f.subtotal, 1999 + 999);
+  assert.equal(f.platformCharge, 300);
+  assert.equal(f.total, 3298);
+});
+
+test('ON-24 short last day is charged by the minute only', () => {
+  // 25h at destination: day 2 is the last 1h 10m → no daily minimum on day 2
+  const f = calculateFare(ev([E.START, 0], [E.REACHED, 10], [E.RETURNING, 1510], [E.COMPLETED, 1510]));
+  assert.equal(f.tripDays.length, 2);
+  assert.equal(f.tripDays[1].totalMinutes, 70);
+  assert.ok(f.dayAdjustments.every((d) => d.day === 1));
+});
+
+test('trip days: 15h of running ends the day before 24h', () => {
+  const d = tripDays(ev([E.START, 0], [E.HALT, 600], [E.CONTINUE, 720], [E.REACHED, 1020], [E.RETURNING, 1020], [E.COMPLETED, 1200]));
+  // running 600 + 300 = 900 min at minute 1020 → day 2 starts then
+  assert.equal(d.length, 2);
+  assert.equal((d[1].startMs - d[0].startMs) / 60000, 1020);
+});
+
+test('day limits table', () => {
+  assert.deepEqual(dayLimits(419, 300, 100), { min: 0, max: 2999, lowRunning: false });
+  assert.deepEqual(dayLimits(420, 300, 100), { min: 999, max: 2999, lowRunning: false });
+  assert.deepEqual(dayLimits(840, 300, 540), { min: 1999, max: 2999, lowRunning: false });
+  assert.deepEqual(dayLimits(900, 239, 601), { min: 1999, max: 1999, lowRunning: true });
+  assert.deepEqual(dayLimits(900, 240, 660), { min: 1999, max: 2999, lowRunning: false });
+  assert.equal(formatSignedRupees(-184), '−₹184');
+  assert.equal(formatSignedRupees(207), '₹207');
 });
 
 test('calendar days use India time, not UTC', () => {
